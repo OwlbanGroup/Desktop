@@ -9,9 +9,8 @@ import logging
 from enum import Enum
 from typing import List, Optional
 
-
 # Configure logging
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 

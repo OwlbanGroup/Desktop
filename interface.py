@@ -1,6 +1,7 @@
 import sys
 from organizational_leadership import leadership
 
+
 def run_interface():
     print("Welcome to the Organizational Leadership CLI Interface")
     leader_name = input("Enter leader name: ").strip()
@@ -8,11 +9,10 @@ def run_interface():
     for style in leadership.LeadershipStyle:
         print(f"- {style.name}")
     style_input = input("Enter leadership style: ").strip().upper()
-    try:
-        style = leadership.LeadershipStyle[style_input]
-    except KeyError:
+    if style_input not in leadership.LeadershipStyle.__members__:
         print(f"Invalid leadership style: {style_input}")
         sys.exit(1)
+    style = leadership.LeadershipStyle[style_input]
 
     team = leadership.Team(leadership.Leader(leader_name, style))
 
@@ -20,8 +20,8 @@ def run_interface():
         member_input = input("Add team member (format: Name:Role) or press Enter to finish: ").strip()
         if not member_input:
             break
-        if ':' in member_input:
-            name, role = member_input.split(':', 1)
+        if ":" in member_input:
+            name, role = member_input.split(":", 1)
         else:
             name, role = member_input, None
         try:
@@ -39,6 +39,7 @@ def run_interface():
         print(leadership.make_decision(team.leader, decision))
     else:
         print("No decision entered.")
+
 
 if __name__ == "__main__":
     run_interface()
