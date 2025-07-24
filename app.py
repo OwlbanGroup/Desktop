@@ -1,4 +1,5 @@
 from organizational_leadership import leadership
+from revenue_tracking import RevenueTracker
 import argparse
 
 
@@ -40,6 +41,11 @@ def main():
     leader = leadership.Leader(args.leader_name, style)
     team = leadership.Team(leader)
 
+    # Instantiate RevenueTracker
+    revenue_tracker = RevenueTracker()
+    # Set revenue tracker in leader
+    leader.set_revenue_tracker(revenue_tracker)
+
     for member_str in args.team_members:
         if ":" in member_str:
             name, role = member_str.split(":", 1)
@@ -54,7 +60,7 @@ def main():
 
     print(leader.lead_team())
     print(team.team_status())
-    print(leadership.make_decision(leader, args.decision))
+    print(leadership.make_decision(leader, args.decision, revenue_tracker))
 
 
 if __name__ == "__main__":

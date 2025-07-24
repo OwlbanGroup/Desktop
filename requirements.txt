@@ -1,1 +1,18 @@
-# No external dependencies required for this project
+# Requirements for revenue tracking integration
+
+# Database connector for storing revenue data
+sqlalchemy
+
+# For data analysis and reporting
+pandas
+
+# Optional: For web API if needed
+fastapi
+uvicorn
+
+# Optional: For authentication and security
+python-jose
+passlib[bcrypt]
+
+# Optional: For testing
+pytest

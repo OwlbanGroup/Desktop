@@ -34,12 +34,23 @@ class Leader:
             raise ValueError("Invalid leadership style")
         self.name = name
         self.style = style
+        self._revenue_tracker = None
+
+    def set_revenue_tracker(self, revenue_tracker: RevenueTracker):
+        self._revenue_tracker = revenue_tracker
 
     def lead_team(self):
         """
         Simulate leading a team based on the leadership style.
         """
         logger.info(f"{self.name} is leading the team with style {self.style.value}")
+
+        # Log revenue update if tracker set
+        if self._revenue_tracker:
+            description = f"Team led by {self.name} ({self.style.value})"
+            amount = 500.0  # Example fixed revenue impact
+            self._revenue_tracker.add_record(description, amount)
+
         if self.style == LeadershipStyle.AUTOCRATIC:
             return f"{self.name} leads with a strict, top-down approach."
         elif self.style == LeadershipStyle.DEMOCRATIC:
@@ -103,7 +114,9 @@ class Team:
         return f"Team led by {self.leader.name} with members: {member_names}"
 
 
-def make_decision(leader: Leader, decision: str):
+from revenue_tracking import RevenueTracker
+
+def make_decision(leader: Leader, decision: str, revenue_tracker: RevenueTracker = None):
     """
     Simulate a decision-making process based on the leader's style.
     """
@@ -113,6 +126,13 @@ def make_decision(leader: Leader, decision: str):
         raise ValueError("Decision must not be empty")
 
     logger.info(f"{leader.name} is making a decision: {decision}")
+
+    # Log revenue update if tracker provided
+    if revenue_tracker:
+        description = f"Decision made by {leader.name} ({leader.style.value}): {decision}"
+        # Simulate revenue impact amount (example fixed value)
+        amount = 1000.0
+        revenue_tracker.add_record(description, amount)
 
     if leader.style == LeadershipStyle.AUTOCRATIC:
         return f"{leader.name} makes a quick, unilateral decision: {decision}"
