@@ -114,9 +114,10 @@ class Team:
         return f"Team led by {self.leader.name} with members: {member_names}"
 
 
-from revenue_tracking import RevenueTracker
+# Import moved to avoid circular import
+# from revenue_tracking import RevenueTracker
 
-def make_decision(leader: Leader, decision: str, revenue_tracker: RevenueTracker = None):
+def make_decision(leader: Leader, decision: str, revenue_tracker=None):
     """
     Simulate a decision-making process based on the leader's style.
     """

@@ -9,16 +9,19 @@ A Python project simulating organizational leadership concepts with different le
 - Simulate leadership actions and decision-making processes
 - Command-line interfaces: argument-based and interactive CLI
 - Basic unit tests for core functionality
+- Revenue tracking with live updates
+- NVIDIA technologies and NIM services integration (placeholders)
 
 ## Installation
 
-This project requires Python 3.7 or higher. No external dependencies are needed.
+This project requires Python 3.7 or higher.
 
-Clone the repository and navigate to the project directory:
+### Dependencies
+
+Install required dependencies using pip:
 
 ```bash
-git clone <repository-url>
-cd <project-directory>
+pip install -r requirements.txt
 ```
 
 ## Usage
@@ -55,14 +58,19 @@ Run the unit tests with:
 python -m unittest discover tests
 ```
 
-## Project Structure
+Integration and end-to-end tests cover leadership, revenue tracking, and NVIDIA integration modules.
 
-- `organizational_leadership/`: Core module with leadership classes and functions
-- `app.py`: Argument-based CLI entry point
-- `interface.py`: Interactive CLI interface
-- `tests/`: Unit tests
-- `README.md`: Project documentation
-- `requirements.txt`: Project dependencies (none)
+## Deployment
+
+This project is a CLI application and can be run on any system with Python 3.7+ and the required dependencies installed.
+
+For deployment:
+
+1. Clone the repository.
+2. Install dependencies as above.
+3. Run the CLI application as needed.
+
+No additional deployment scripts or containers are provided at this time.
 
 ## Contributing
 

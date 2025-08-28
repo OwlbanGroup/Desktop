@@ -1,5 +1,6 @@
 import sys
 from organizational_leadership import leadership
+from revenue_tracking import RevenueTracker
 
 
 def run_interface():
@@ -14,7 +15,11 @@ def run_interface():
         sys.exit(1)
     style = leadership.LeadershipStyle[style_input]
 
-    team = leadership.Team(leadership.Leader(leader_name, style))
+    # Initialize revenue tracker
+    revenue_tracker = RevenueTracker()
+    leader = leadership.Leader(leader_name, style)
+    leader.set_revenue_tracker(revenue_tracker)
+    team = leadership.Team(leader)
 
     while True:
         member_input = input("Add team member (format: Name:Role) or press Enter to finish: ").strip()
@@ -33,12 +38,17 @@ def run_interface():
 
     print("\nTeam Summary:")
     print(team.team_status())
+    print(leader.lead_team())
 
     decision = input("Enter a decision for the leader to make: ").strip()
     if decision:
-        print(leadership.make_decision(team.leader, decision))
+        print(leadership.make_decision(team.leader, decision, revenue_tracker))
     else:
         print("No decision entered.")
+    
+    # Show revenue report
+    print("\nRevenue Report:")
+    print(revenue_tracker.generate_report())
 
 
 if __name__ == "__main__":

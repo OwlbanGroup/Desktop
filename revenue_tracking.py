@@ -7,7 +7,7 @@ store them in a SQLite database using SQLAlchemy, and generate simple reports.
 
 from datetime import datetime
 from typing import List, Optional
-from sqlalchemy import create_engine, Column, Integer, String, Float, DateTime
+from sqlalchemy import create_engine, Column, Integer, String, Float, DateTime, func
 from sqlalchemy.orm import declarative_base, sessionmaker
 
 Base = declarative_base()
