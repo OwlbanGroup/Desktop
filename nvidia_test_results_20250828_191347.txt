@@ -1,0 +1,373 @@
+NVIDIA Integration Test Results
+========================================
+Test Run: 2025-08-28T19:13:47.362725
+
+Summary: 4/7 tests passed
+
+
+========================================
+Test File: test_nvidia_simple.py
+Status: PASSED
+Return Code: 0
+
+STDOUT:
+Testing NVIDIA integration...
+Import successful
+Instance created successfully
+NVIDIA available: False
+DALI pipeline result: Simulated DALI pipeline setup complete
+TensorRT engine result: Simulated TensorRT engine build complete
+NIM services result: Simulated NIM services connection complete
+Fraud detection result: {'fraud_probability': 0.15, 'suspicious_transactions': [], 'processing_time': 0.1, 'model_used': 'Simulated NVIDIA Fraud Detection Model'}
+Risk management result: {'risk_score': 0.3, 'risk_level': 'Medium', 'recommendations': ['Diversify portfolio', 'Monitor market trends'], 'processing_time': 0.2}
+Data analytics result: {'insights': ['Revenue growth trend detected', 'Expense ratio stable'], 'predictions': ['Q3 revenue: $1.2M', 'Q4 revenue: $1.4M'], 'processing_time': 0.3, 'confidence_scores': [0.85, 0.78]}
+Colosseum model connection result: Simulated Colosseum Model
+Colosseum prompt result: Simulated response to prompt: What is the future of AI in finance?
+DeepSeek model connection result: Simulated DeepSeek v3.1 Model
+DeepSeek prompt result: Simulated response to prompt: What are the advantages of the DeepSeek v3.1 model?
+Test completed.
+
+
+STDERR:
+WARNING:nvidia_integration:NVIDIA NeMo framework not available: No module named 'torch'
+WARNING:nvidia_integration:NVIDIA NIM SDK not available, using simulation mode
+WARNING:nvidia_integration:NVIDIA NeMo framework or NIM services are not installed or accessible. Functionality will be limited to simulated operations.
+INFO:nvidia_integration:Simulating DALI pipeline setup (NVIDIA SDKs not available)
+INFO:nvidia_integration:Simulating TensorRT engine build (NVIDIA SDKs not available)
+INFO:nvidia_integration:Simulating NIM services connection (NVIDIA SDKs not available)
+INFO:nvidia_integration:Simulating fraud detection (NVIDIA SDKs not available)
+INFO:nvidia_integration:Simulating risk management (NVIDIA SDKs not available)
+INFO:nvidia_integration:Simulating data analytics (NVIDIA SDKs not available)
+INFO:nvidia_integration:Simulating connection to Colosseum model (NVIDIA SDKs not available)
+INFO:nvidia_integration:Simulating sending prompt to Colosseum model (NVIDIA SDKs not available)
+INFO:nvidia_integration:Simulating connection to DeepSeek v3.1 model (NVIDIA SDKs not available)
+INFO:nvidia_integration:Simulating sending prompt to DeepSeek v3.1 model (NVIDIA SDKs not available)
+
+
+========================================
+Test File: test_nvidia_comprehensive.py
+Status: PASSED
+Return Code: 0
+
+STDOUT:
+=== NVIDIA Integration Comprehensive Test ===
+
+NVIDIA SDKs available: False
+
+1. Testing Model Connections:
+------------------------------
+Colosseum connection: Simulated Colosseum Model
+DeepSeek connection: Simulated DeepSeek v3.1 Model
+NIM services: Simulated NIM services connection complete
+
+2. Testing Infrastructure Setup:
+------------------------------
+DALI pipeline: Simulated DALI pipeline setup complete
+TensorRT engine: Simulated TensorRT engine build complete
+
+3. Testing Financial Services:
+------------------------------
+Fraud Detection Results:
+{
+  "fraud_probability": 0.15,
+  "suspicious_transactions": [
+    {
+      "transaction_id": 2,
+      "amount": 2500.0,
+      "currency": "USD",
+      "merchant": "Best Buy"
+    },
+    {
+      "transaction_id": 3,
+      "amount": 7500.0,
+      "currency": "USD",
+      "merchant": "Apple Store"
+    }
+  ],
+  "processing_time": 0.1,
+  "model_used": "Simulated NVIDIA Fraud Detection Model"
+}
+
+Risk Management Results:
+{
+  "risk_score": 0.3,
+  "risk_level": "Medium",
+  "recommendations": [
+    "Diversify portfolio",
+    "Monitor market trends"
+  ],
+  "processing_time": 0.2
+}
+
+Data Analytics Results:
+{
+  "insights": [
+    "Revenue growth trend detected",
+    "Expense ratio stable"
+  ],
+  "predictions": [
+    "Q3 revenue: $1.2M",
+    "Q4 revenue: $1.4M"
+  ],
+  "processing_time": 0.3,
+  "confidence_scores": [
+    0.85,
+    0.78
+  ]
+}
+
+4. Testing Model Interactions:
+------------------------------
+Colosseum response: Simulated response to prompt: What are the key trends in AI-powered financial services for 2024?...
+
+DeepSeek response: Simulated response to prompt: How can DeepSeek v3.1 help with financial data analysis and prediction...
+
+Batch Processing Results:
+  Prompt 1: Simulated response to: Analyze market trends for Q4 2024...
+  Prompt 2: Simulated response to: Predict revenue growth for technology sector...
+  Prompt 3: Simulated response to: Identify potential investment opportunities...
+
+5. Testing Blueprint Integration:
+------------------------------
+Blueprint integration: Integrated Financial Analytics Blueprint successfully with parameters: {'model_type': 'financial_analysis', 'data_source': 'internal_database', 'output_format': 'json', 'confidence_threshold': 0.85}
+
+6. Testing Status Monitoring:
+------------------------------
+System Status:
+{
+  "nvidia_available": false,
+  "dali_pipeline": false,
+  "tensorrt_engine": false,
+  "nim_services": false,
+  "colosseum_model": true,
+  "deepseek_model": true,
+  "llama_model": false,
+  "timestamp": "2024-01-01T00:00:00Z"
+}
+
+=== Test Completed Successfully ===
+
+
+STDERR:
+WARNING:nvidia_integration:NVIDIA NeMo framework not available: No module named 'torch'
+WARNING:nvidia_integration:NVIDIA NIM SDK not available, using simulation mode
+WARNING:nvidia_integration:NVIDIA NeMo framework or NIM services are not installed or accessible. Functionality will be limited to simulated operations.
+INFO:nvidia_integration:Simulating connection to Colosseum model (NVIDIA SDKs not available)
+INFO:nvidia_integration:Simulating connection to DeepSeek v3.1 model (NVIDIA SDKs not available)
+INFO:nvidia_integration:Simulating NIM services connection (NVIDIA SDKs not available)
+INFO:nvidia_integration:Simulating DALI pipeline setup (NVIDIA SDKs not available)
+INFO:nvidia_integration:Simulating TensorRT engine build (NVIDIA SDKs not available)
+INFO:nvidia_integration:Simulating fraud detection (NVIDIA SDKs not available)
+INFO:nvidia_integration:Simulating risk management (NVIDIA SDKs not available)
+INFO:nvidia_integration:Simulating data analytics (NVIDIA SDKs not available)
+INFO:nvidia_integration:Simulating sending prompt to Colosseum model (NVIDIA SDKs not available)
+INFO:nvidia_integration:Simulating sending prompt to DeepSeek v3.1 model (NVIDIA SDKs not available)
+INFO:nvidia_integration:Simulating batch processing of 3 prompts (NVIDIA SDKs not available)
+INFO:nvidia_integration:Integrating blueprint: Financial Analytics Blueprint with parameters: {'model_type': 'financial_analysis', 'data_source': 'internal_database', 'output_format': 'json', 'confidence_threshold': 0.85}
+INFO:nvidia_integration:Model status: {'nvidia_available': False, 'dali_pipeline': False, 'tensorrt_engine': False, 'nim_services': False, 'colosseum_model': True, 'deepseek_model': True, 'llama_model': False, 'timestamp': '2024-01-01T00:00:00Z'}
+
+
+========================================
+Test File: test_nvidia_edge_cases.py
+Status: FAILED
+Return Code: 1
+
+STDOUT:
+Running edge case tests for NVIDIA integration...
+
+
+STDERR:
+WARNING:nvidia_integration:NVIDIA NeMo framework not available: No module named 'torch'
+WARNING:nvidia_integration:NVIDIA NIM SDK not available, using simulation mode
+test_batch_processing_edge_cases (__main__.TestNvidiaEdgeCases)
+Test edge cases for batch processing ... WARNING:nvidia_integration:NVIDIA NeMo framework or NIM services are not installed or accessible. Functionality will be limited to simulated operations.
+INFO:nvidia_integration:Simulating batch processing of 0 prompts (NVIDIA SDKs not available)
+INFO:nvidia_integration:Simulating batch processing of 1 prompts (NVIDIA SDKs not available)
+INFO:nvidia_integration:Simulating batch processing of 1 prompts (NVIDIA SDKs not available)
+FAIL
+test_blueprint_integration_edge_cases (__main__.TestNvidiaEdgeCases)
+Test edge cases for blueprint integration ... WARNING:nvidia_integration:NVIDIA NeMo framework or NIM services are not installed or accessible. Functionality will be limited to simulated operations.
+INFO:nvidia_integration:Integrating blueprint:  with parameters: {'param': 'value'}
+INFO:nvidia_integration:Integrating blueprint: test with parameters: {}
+INFO:nvidia_integration:Integrating blueprint: test with parameters: None
+ok
+test_empty_data_arrays (__main__.TestNvidiaEdgeCases)
+Test handling of empty data arrays ... WARNING:nvidia_integration:NVIDIA NeMo framework or NIM services are not installed or accessible. Functionality will be limited to simulated operations.
+INFO:nvidia_integration:Simulating fraud detection (NVIDIA SDKs not available)
+INFO:nvidia_integration:Simulating risk management (NVIDIA SDKs not available)
+INFO:nvidia_integration:Simulating data analytics (NVIDIA SDKs not available)
+ok
+test_invalid_data_types (__main__.TestNvidiaEdgeCases)
+Test handling of invalid data types ... WARNING:nvidia_integration:NVIDIA NeMo framework or NIM services are not installed or accessible. Functionality will be limited to simulated operations.
+INFO:nvidia_integration:Simulating fraud detection (NVIDIA SDKs not available)
+ERROR
+test_invalid_prompts (__main__.TestNvidiaEdgeCases)
+Test handling of invalid prompts ... WARNING:nvidia_integration:NVIDIA NeMo framework or NIM services are not installed or accessible. Functionality will be limited to simulated operations.
+INFO:nvidia_integration:Simulating sending prompt to Colosseum model (NVIDIA SDKs not available)
+INFO:nvidia_integration:Simulating sending prompt to Colosseum model (NVIDIA SDKs not available)
+INFO:nvidia_integration:Simulating sending prompt to Colosseum model (NVIDIA SDKs not available)
+ok
+test_model_status_consistency (__main__.TestNvidiaEdgeCases)
+Test that model status returns consistent data ... WARNING:nvidia_integration:NVIDIA NeMo framework or NIM services are not installed or accessible. Functionality will be limited to simulated operations.
+INFO:nvidia_integration:Model status: {'nvidia_available': False, 'dali_pipeline': False, 'tensorrt_engine': False, 'nim_services': False, 'colosseum_model': False, 'deepseek_model': False, 'llama_model': False, 'timestamp': '2024-01-01T00:00:00Z'}
+FAIL
+
+======================================================================
+ERROR: test_invalid_data_types (__main__.TestNvidiaEdgeCases)
+Test handling of invalid data types
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\tiffa\OneDrive\Desktop\test_nvidia_edge_cases.py", line 56, in test_invalid_data_types
+    fraud_result = self.nvidia.perform_fraud_detection("invalid")
+  File "C:\Users\tiffa\OneDrive\Desktop\nvidia_integration.py", line 253, in perform_fraud_detection
+    "suspicious_transactions": [t for t in transaction_data if t.get("amount", 0) > 1000],
+  File "C:\Users\tiffa\OneDrive\Desktop\nvidia_integration.py", line 253, in <listcomp>
+    "suspicious_transactions": [t for t in transaction_data if t.get("amount", 0) > 1000],
+AttributeError: 'str' object has no attribute 'get'
+
+======================================================================
+FAIL: test_batch_processing_edge_cases (__main__.TestNvidiaEdgeCases)
+Test edge cases for batch processing
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\tiffa\OneDrive\Desktop\test_nvidia_edge_cases.py", line 81, in test_batch_processing_edge_cases
+    self.assertIn("Unknown model type", invalid_model[0])
+AssertionError: 'Unknown model type' not found in 'Simulated response to: test'
+
+======================================================================
+FAIL: test_model_status_consistency (__main__.TestNvidiaEdgeCases)
+Test that model status returns consistent data
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\tiffa\OneDrive\Desktop\test_nvidia_edge_cases.py", line 106, in test_model_status_consistency
+    self.assertEqual(set(status.keys()), expected_keys)
+AssertionError: Items in the first set but not the second:
+'llama_model'
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.003s
+
+FAILED (failures=2, errors=1)
+
+
+========================================
+Test File: test_nvidia_performance.py
+Status: FAILED
+Return Code: 1
+
+STDERR:
+WARNING:nvidia_integration:NVIDIA NeMo framework not available: No module named 'torch'
+WARNING:nvidia_integration:NVIDIA NIM SDK not available, using simulation mode
+Traceback (most recent call last):
+  File "C:\Users\tiffa\OneDrive\Desktop\test_nvidia_performance.py", line 137, in <module>
+    performance_test()
+  File "C:\Users\tiffa\OneDrive\Desktop\test_nvidia_performance.py", line 13, in performance_test
+    print("\U0001f9ea NVIDIA Integration Performance Test")
+  File "C:\Program Files\Python39\lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f9ea' in position 0: character maps to <undefined>
+
+
+========================================
+Test File: test_nvidia_integration_scenarios.py
+Status: FAILED
+Return Code: 1
+
+STDERR:
+WARNING:nvidia_integration:NVIDIA NeMo framework not available: No module named 'torch'
+WARNING:nvidia_integration:NVIDIA NIM SDK not available, using simulation mode
+Traceback (most recent call last):
+  File "C:\Users\tiffa\OneDrive\Desktop\test_nvidia_integration_scenarios.py", line 167, in <module>
+    main()
+  File "C:\Users\tiffa\OneDrive\Desktop\test_nvidia_integration_scenarios.py", line 137, in main
+    print("\U0001f680 NVIDIA AIQ Integration Scenarios")
+  File "C:\Program Files\Python39\lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f680' in position 0: character maps to <undefined>
+
+
+========================================
+Test File: test_deepseek_comprehensive.py
+Status: PASSED
+Return Code: 0
+
+STDOUT:
+Running comprehensive tests for DeepSeek v3.1 integration...
+
+
+STDERR:
+WARNING:nvidia_integration:NVIDIA NeMo framework not available: No module named 'torch'
+WARNING:nvidia_integration:NVIDIA NIM SDK not available, using simulation mode
+test_deepseek_model_connection (__main__.TestDeepSeekIntegration)
+Test connecting to the DeepSeek model ... WARNING:nvidia_integration:NVIDIA NeMo framework or NIM services are not installed or accessible. Functionality will be limited to simulated operations.
+INFO:nvidia_integration:Simulating connection to DeepSeek v3.1 model (NVIDIA SDKs not available)
+ok
+test_deepseek_prompt_response (__main__.TestDeepSeekIntegration)
+Test sending a prompt to the DeepSeek model ... WARNING:nvidia_integration:NVIDIA NeMo framework or NIM services are not installed or accessible. Functionality will be limited to simulated operations.
+INFO:nvidia_integration:Simulating sending prompt to DeepSeek v3.1 model (NVIDIA SDKs not available)
+ok
+test_multiple_prompts (__main__.TestDeepSeekIntegration)
+Test sending multiple prompts to the DeepSeek model ... WARNING:nvidia_integration:NVIDIA NeMo framework or NIM services are not installed or accessible. Functionality will be limited to simulated operations.
+INFO:nvidia_integration:Simulating sending prompt to DeepSeek v3.1 model (NVIDIA SDKs not available)
+INFO:nvidia_integration:Simulating sending prompt to DeepSeek v3.1 model (NVIDIA SDKs not available)
+ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.001s
+
+OK
+
+
+========================================
+Test File: test_llama_integration.py
+Status: PASSED
+Return Code: 0
+
+STDOUT:
+Starting Llama 3.3 Nemotron Super 49B model integration test...
+
+1. Connecting to Llama model...
+Connection result: Simulated Llama Model
+
+2. Sending prompt to Llama model...
+Prompt: Explain the concept of artificial intelligence in simple terms
+Response: Simulated response to prompt: Explain the concept of artificial intelligence in simple terms
+
+3. Checking model status...
+Model Status:
+  nvidia_available: False
+  dali_pipeline: False
+  tensorrt_engine: False
+  nim_services: False
+  colosseum_model: False
+  deepseek_model: False
+  llama_model: True
+  timestamp: 2024-01-01T00:00:00Z
+
+4. Checking advanced status...
+Advanced Status:
+  nvidia_available: False
+  dali_pipeline: False
+  tensorrt_engine: False
+  nim_services: False
+  colosseum_model: False
+  deepseek_model: False
+  llama_model: True
+  timestamp: 2025-08-28T19:13:47.310464
+  nemo_models_loaded: []
+  nemo_framework_available: False
+  nim_services_available: False
+  rapids_available: False
+
+Llama model integration test completed successfully!
+
+
+STDERR:
+WARNING:nvidia_integration:NVIDIA NeMo framework not available: No module named 'torch'
+WARNING:nvidia_integration:NVIDIA NIM SDK not available, using simulation mode
+WARNING:nvidia_integration:NVIDIA NeMo framework or NIM services are not installed or accessible. Functionality will be limited to simulated operations.
+INFO:nvidia_integration:Simulating connection to Llama model (NVIDIA SDKs not available)
+INFO:nvidia_integration:Simulating sending prompt to Llama model (NVIDIA SDKs not available)
+INFO:nvidia_integration:Model status: {'nvidia_available': False, 'dali_pipeline': False, 'tensorrt_engine': False, 'nim_services': False, 'colosseum_model': False, 'deepseek_model': False, 'llama_model': True, 'timestamp': '2024-01-01T00:00:00Z'}
+INFO:nvidia_integration:Model status: {'nvidia_available': False, 'dali_pipeline': False, 'tensorrt_engine': False, 'nim_services': False, 'colosseum_model': False, 'deepseek_model': False, 'llama_model': True, 'timestamp': '2024-01-01T00:00:00Z'}
+
