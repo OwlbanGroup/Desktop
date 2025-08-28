@@ -1,0 +1,18 @@
+Starting debug test...
+NVIDIA integration initialized
+Connecting to Llama model...
+Connection result: Simulated Llama Model
+Sending prompt to Llama model...
+Prompt: Explain the concept of artificial intelligence in simple terms
+Response: Simulated response to prompt: Explain the concept of artificial intelligence in simple terms
+Checking model status...
+Model Status:
+  nvidia_available: False
+  dali_pipeline: False
+  tensorrt_engine: False
+  nim_services: False
+  colosseum_model: False
+  deepseek_model: False
+  llama_model: True
+  timestamp: 2024-01-01T00:00:00Z
+Debug test completed successfully!

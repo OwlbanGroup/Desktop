@@ -1,10 +1,24 @@
 # Requirements for revenue tracking integration
+# NVIDIA NeMo Framework and related libraries
+nvidia-nemo-toolkit
+nvidia-pyindex
+torch>=2.0.0
+transformers>=4.30.0
+sentencepiece
+protobuf
+onnx
+onnxruntime
+
+# NVIDIA RAPIDS for data analytics
+cudf-cu11
+cuml-cu11
 
 # Database connector for storing revenue data
 sqlalchemy
 
 # For data analysis and reporting
 pandas
+numpy
 
 # Optional: For web API if needed
 fastapi
@@ -16,3 +30,9 @@ passlib[bcrypt]
 
 # Optional: For testing
 pytest
+pytest-asyncio
+
+# Development utilities
+tqdm
+requests
+websockets
