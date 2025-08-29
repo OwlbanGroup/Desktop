@@ -12,6 +12,7 @@ Successfully integrated NVIDIA Control Panel functionality into the NVIDIA NeMo-
   - Dynamic GPU settings modification
   - Comprehensive error handling and fallback mechanisms
   - Windows-specific implementation using `win32api` and `win32con`
+  - **New:** PhysX configuration management (get/set PhysX settings, processor selection, GPU list)
 
 ### 2. `nvidia_integration.py` (Updated)
 - **Added Features**:
@@ -23,6 +24,7 @@ Successfully integrated NVIDIA Control Panel functionality into the NVIDIA NeMo-
 ### 3. Test Scripts
 - `test_nvidia_control_panel_integration.py`: Comprehensive integration test
 - `simple_nvidia_test.py`: Basic functionality verification
+- `test_physx_configuration.py`: New test suite for PhysX configuration functionality
 
 ## Key Capabilities
 

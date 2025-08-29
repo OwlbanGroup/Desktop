@@ -115,6 +115,24 @@ class VideoEnhancement(Enum):
     HIGH = "High"
     ULTRA = "Ultra"
 
+# New PhysX related enums and dataclasses
+
+class PhysXProcessor(Enum):
+    CPU = "CPU"
+    GPU = "GPU"
+    AUTO = "Auto"
+
+@dataclass
+class PhysXConfiguration:
+    enabled: bool = False
+    selected_processor: PhysXProcessor = PhysXProcessor.AUTO
+    available_gpus: List[str] = None
+
+    def __post_init__(self):
+        if self.available_gpus is None:
+            self.available_gpus = []
+
+
 @dataclass
 class DisplayMode:
     width: int
