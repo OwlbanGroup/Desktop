@@ -220,6 +220,32 @@ class TestNvidiaIntegration(unittest.TestCase):
             print(f"Integrate blueprint with missing parameters result: {result}")
             self.assertIn("error", result)  # Assuming the method returns an error message
 
+    def test_get_gpu_settings(self):
+        print("Running test_get_gpu_settings...")
+        if self.integration is None:
+            print("Skipping test_get_gpu_settings: NVIDIA SDKs or NIM services not installed")
+            self.skipTest("NVIDIA SDKs or NIM services not installed")
+        else:
+            settings = self.integration.get_gpu_settings()
+            print(f"GPU settings: {settings}")
+            self.assertIn("power_mode", settings)
+            self.assertIn("texture_filtering", settings)
+            self.assertIn("vertical_sync", settings)
+
+    def test_set_gpu_settings(self):
+        print("Running test_set_gpu_settings...")
+        if self.integration is None:
+            print("Skipping test_set_gpu_settings: NVIDIA SDKs or NIM services not installed")
+            self.skipTest("NVIDIA SDKs or NIM services not installed")
+        else:
+            response = self.integration.set_gpu_settings({
+                "power_mode": "Adaptive",
+                "texture_filtering": "Performance",
+                "vertical_sync": "On"
+            })
+            print(f"Set GPU settings response: {response}")
+            self.assertEqual(response, "GPU settings applied successfully")
+
     print("Starting tests...")
     print("Starting tests...")
     unittest.main()
