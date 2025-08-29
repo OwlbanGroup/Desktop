@@ -1,6 +1,7 @@
 import sys
 from organizational_leadership import leadership
 from revenue_tracking import RevenueTracker
+from nvidia_integration import NvidiaIntegration
 
 
 def run_interface():
@@ -20,6 +21,9 @@ def run_interface():
     leader = leadership.Leader(leader_name, style)
     leader.set_revenue_tracker(revenue_tracker)
     team = leadership.Team(leader)
+
+    # Initialize NVIDIA integration
+    nvidia_integration = NvidiaIntegration()
 
     while True:
         member_input = input("Add team member (format: Name:Role) or press Enter to finish: ").strip()
@@ -49,6 +53,14 @@ def run_interface():
     # Show revenue report
     print("\nRevenue Report:")
     print(revenue_tracker.generate_report())
+
+    # Show NVIDIA GPU status
+    show_gpu = input("\nWould you like to see NVIDIA GPU status? (y/n): ").strip().lower()
+    if show_gpu in ['y', 'yes']:
+        gpu_settings = nvidia_integration.get_gpu_settings()
+        print("\nNVIDIA GPU Status and Settings:")
+        for key, value in gpu_settings.items():
+            print(f"{key}: {value}")
 
 
 if __name__ == "__main__":

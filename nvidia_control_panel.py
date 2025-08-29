@@ -854,4 +854,5 @@ class NVIDIAControlPanel:
                 power_mode_value = self._get_power_mode_value(settings["power_mode"])
                 try:
                     with winreg.CreateKey(winreg.HKEY_CURRENT_USER, 
-                                        r"Software\NVIDIA Corporation\Global\NVTweak") as key
+                                        r"Software\NVIDIA Corporation\Global\NVTweak") as key:
+                        winreg.SetValueEx(key, "PowerMizerMode", 0, winreg.REG_DWORD, power_mode_value)

@@ -40,6 +40,8 @@ class TestNvidiaIntegration(unittest.TestCase):
             self.assertTrue(hasattr(self.integration, "send_prompt_to_colosseum"))
             self.assertTrue(hasattr(self.integration, "connect_to_deepseek_model"))
             self.assertTrue(hasattr(self.integration, "send_prompt_to_deepseek"))
+            self.assertTrue(hasattr(self.integration, "get_gpu_settings"))
+            self.assertTrue(hasattr(self.integration, "set_gpu_settings"))
 
     def test_setup_dali_pipeline(self):
         print("Running test_setup_dali_pipeline...")

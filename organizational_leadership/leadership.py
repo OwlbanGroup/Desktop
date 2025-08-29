@@ -3,11 +3,12 @@ Organizational Leadership Module
 
 This module provides classes and functions related to organizational leadership concepts,
 including leadership styles, team management, and decision making.
+Now includes NVIDIA GPU performance monitoring integration.
 """
 
 import logging
 from enum import Enum
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
@@ -36,7 +37,7 @@ class Leader:
         self.style = style
         self._revenue_tracker = None
 
-    def set_revenue_tracker(self, revenue_tracker: RevenueTracker):
+    def set_revenue_tracker(self, revenue_tracker):
         self._revenue_tracker = revenue_tracker
 
     def lead_team(self):

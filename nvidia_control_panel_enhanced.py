@@ -222,6 +222,57 @@ class PerformanceCounterType(Enum):
     DECODER_USAGE = "Decoder Usage"
     PERFORMANCE_STATE = "Performance State"
 
+# ===== System Topology Enums =====
+
+class TopologyType(Enum):
+    """Types of GPU interconnect topologies."""
+    UNKNOWN = "Unknown"
+    SINGLE_GPU = "Single GPU"
+    SLI = "SLI (Scalable Link Interface)"
+    NVLINK = "NVLink"
+    PCIE = "PCI Express"
+    MOSAIC = "NVIDIA Mosaic"
+    QUADRO_PLEX = "Quadro Plex"
+    VIRTUAL_LINK = "Virtual Link"
+
+class ConnectionType(Enum):
+    """Types of connections between GPUs or displays."""
+    PRIMARY = "Primary"
+    SECONDARY = "Secondary"
+    BRIDGE = "Bridge"
+    MASTER = "Master"
+    SLAVE = "Slave"
+    PEER_TO_PEER = "Peer-to-Peer"
+    CASCADE = "Cascade"
+
+class DisplayTopologyMode(Enum):
+    """Display topology configuration modes."""
+    SINGLE = "Single Display"
+    EXTENDED = "Extended Desktop"
+    CLONE = "Clone Mode"
+    SURROUND = "Surround"
+    MOSAIC = "Mosaic"
+    INDEPENDENT = "Independent"
+
+class PCIeGeneration(Enum):
+    """PCI Express generation versions."""
+    UNKNOWN = "Unknown"
+    PCIE_1_0 = "PCIe 1.0"
+    PCIE_2_0 = "PCIe 2.0"
+    PCIE_3_0 = "PCIe 3.0"
+    PCIE_4_0 = "PCIe 4.0"
+    PCIE_5_0 = "PCIe 5.0"
+    PCIE_6_0 = "PCIe 6.0"
+
+class PCIeLinkWidth(Enum):
+    """PCI Express link widths."""
+    X1 = "x1"
+    X2 = "x2"
+    X4 = "x4"
+    X8 = "x8"
+    X16 = "x16"
+    X32 = "x32"
+
 @dataclass
 class SDIOutputConfig:
     enabled: bool = False
@@ -239,6 +290,107 @@ class SDICaptureConfig:
     enabled: bool = False
     stream_count: int = 1
     buffer_size_mb: int = 256
+
+# ===== System Topology Dataclasses =====
+
+@dataclass
+class GPUTopologyNode:
+    """Represents a GPU node in the system topology."""
+    gpu_index: int
+    name: str
+    pcie_bus_id: str
+    pcie_generation: PCIeGeneration
+    pcie_link_width: PCIeLinkWidth
+    memory_size_mb: int
+    is_primary: bool = False
+    connected_displays: List[int] = field(default_factory=list)
+    sli_bridge_present: bool = False
+    nvlink_connections: List[int] = field(default_factory=list)
+    pcie_slot: Optional[str] = None
+    driver_version: Optional[str] = None
+    
+    def __post_init__(self):
+        """Validate GPU topology node parameters."""
+        if self.gpu_index < 0:
+            raise ValueError("GPU index cannot be negative")
+        if self.memory_size_mb < 0:
+            raise ValueError("Memory size cannot be negative")
+
+@dataclass
+class DisplayTopologyNode:
+    """Represents a display node in the system topology."""
+    display_index: int
+    name: str
+    resolution_width: int
+    resolution_height: int
+    refresh_rate: int
+    connected_gpu_index: int
+    edid_manufacturer: Optional[str] = None
+    edid_product: Optional[str] = None
+    edid_serial: Optional[str] = None
+    display_position_x: int = 0
+    display_position_y: int = 0
+    is_primary: bool = False
+    hdr_capable: bool = False
+    color_depth: int = 8
+    
+    def __post_init__(self):
+        """Validate display topology node parameters."""
+        if self.display_index < 0:
+            raise ValueError("Display index cannot be negative")
+        if self.resolution_width < 640 or self.resolution_width > 7680:
+            raise ValueError(f"Resolution width {self.resolution_width} is outside valid range")
+        if self.resolution_height < 480 or self.resolution_height > 4320:
+            raise ValueError(f"Resolution height {self.resolution_height} is outside valid range")
+        if self.refresh_rate < 24 or self.refresh_rate > 240:
+            raise ValueError(f"Refresh rate {self.refresh_rate} is outside valid range")
+
+@dataclass
+class TopologyConnection:
+    """Represents a connection between nodes in the system topology."""
+    source_node_index: int
+    target_node_index: int
+    connection_type: ConnectionType
+    bandwidth_gbps: Optional[float] = None
+    latency_ns: Optional[float] = None
+    is_active: bool = True
+    description: Optional[str] = None
+    
+    def __post_init__(self):
+        """Validate topology connection parameters."""
+        if self.source_node_index < 0 or self.target_node_index < 0:
+            raise ValueError("Node indices cannot be negative")
+        if self.source_node_index == self.target_node_index:
+            raise ValueError("Source and target nodes cannot be the same")
+
+@dataclass
+class SystemTopology:
+    """Represents the complete system topology including GPUs and displays."""
+    topology_type: TopologyType
+    gpu_nodes: List[GPUTopologyNode]
+    display_nodes: List[DisplayTopologyNode]
+    connections: List[TopologyConnection]
+    timestamp: datetime = field(default_factory=datetime.now)
+    sli_enabled: bool = False
+    nvlink_enabled: bool = False
+    mosaic_enabled: bool = False
+    total_gpu_memory_mb: int = 0
+    total_displays: int = 0
+    description: Optional[str] = None
+    
+    def __post_init__(self):
+        """Calculate derived topology properties."""
+        self.total_gpu_memory_mb = sum(gpu.memory_size_mb for gpu in self.gpu_nodes)
+        self.total_displays = len(self.display_nodes)
+        
+        # Check for SLI/NVLink
+        self.sli_enabled = any(conn.connection_type == ConnectionType.BRIDGE for conn in self.connections)
+        self.nvlink_enabled = any(conn.connection_type == ConnectionType.PEER_TO_PEER for conn in self.connections)
+        
+        # Check for Mosaic
+        mosaic_connections = [conn for conn in self.connections 
+                            if conn.connection_type in [ConnectionType.MASTER, ConnectionType.SLAVE]]
+        self.mosaic_enabled = len(mosaic_connections) > 0
 
 @dataclass
 class PerformanceCounter:
@@ -710,9 +862,321 @@ class NVIDIAControlPanel:
             logger.error(f"Error setting PhysX configuration: {e}")
             return f"Error applying PhysX configuration: {e}"
 
+    # ===== System Topology Methods =====
+
+    @cache_results(ttl=60)  # Cache for 1 minute
+    @retry_on_failure(max_retries=2)
+    def get_system_topology(self) -> SystemTopology:
+        """Get the complete system topology including GPUs and displays."""
+        try:
+            topology = SystemTopology(
+                topology_type=TopologyType.UNKNOWN,
+                gpu_nodes=[],
+                display_nodes=[],
+                connections=[]
+            )
+            
+            if self.nvapi_available:
+                topology = self._get_topology_via_nvapi()
+            elif self.is_windows:
+                topology = self._get_topology_via_wmi()
+            else:
+                topology = self._get_topology_via_system_commands()
+                
+            logger.info(f"Retrieved system topology: {topology.topology_type}")
+            return topology
+            
+        except Exception as e:
+            logger.error(f"Error getting system topology: {e}")
+            # Return basic topology with available information
+            return self._get_basic_topology()
+
+    @retry_on_failure(max_retries=2)
+    def get_gpu_topology_info(self, gpu_index: int = 0) -> GPUTopologyNode:
+        """Get detailed topology information for a specific GPU."""
+        try:
+            if self.nvapi_available:
+                return self._get_gpu_topology_via_nvapi(gpu_index)
+            else:
+                return self._get_gpu_topology_via_system(gpu_index)
+                
+        except Exception as e:
+            logger.error(f"Error getting GPU topology info: {e}")
+            # Return basic GPU info
+            return GPUTopologyNode(
+                gpu_index=gpu_index,
+                name=f"GPU {gpu_index}",
+                pcie_bus_id="Unknown",
+                pcie_generation=PCIeGeneration.UNKNOWN,
+                pcie_link_width=PCIeLinkWidth.X16,
+                memory_size_mb=0
+            )
+
+    @retry_on_failure(max_retries=2)
+    def get_display_topology_info(self, display_index: int = 0) -> DisplayTopologyNode:
+        """Get detailed topology information for a specific display."""
+        try:
+            if self.nvapi_available:
+                return self._get_display_topology_via_nvapi(display_index)
+            else:
+                return self._get_display_topology_via_system(display_index)
+                
+        except Exception as e:
+            logger.error(f"Error getting display topology info: {e}")
+            # Return basic display info
+            return DisplayTopologyNode(
+                display_index=display_index,
+                name=f"Display {display_index}",
+                resolution_width=1920,
+                resolution_height=1080,
+                refresh_rate=60,
+                connected_gpu_index=0
+            )
+
+    def _get_basic_topology(self) -> SystemTopology:
+        """Create a basic system topology with available information."""
+        gpu_nodes = []
+        for i in range(self.gpu_count):
+            gpu_nodes.append(GPUTopologyNode(
+                gpu_index=i,
+                name=f"GPU {i}",
+                pcie_bus_id=f"PCIe Bus {i}",
+                pcie_generation=PCIeGeneration.UNKNOWN,
+                pcie_link_width=PCIeLinkWidth.X16,
+                memory_size_mb=0,
+                is_primary=(i == 0)
+            ))
+            
+        return SystemTopology(
+            topology_type=TopologyType.SINGLE_GPU if self.gpu_count == 1 else TopologyType.PCIE,
+            gpu_nodes=gpu_nodes,
+            display_nodes=[],
+            connections=[]
+        )
+
+    def _get_topology_via_nvapi(self) -> SystemTopology:
+        """Get system topology using NVAPI (placeholder implementation)."""
+        # This would use actual NVAPI calls to get topology information
+        logger.info("Getting system topology via NVAPI")
+        
+        # Placeholder implementation - would be replaced with actual NVAPI calls
+        gpu_nodes = []
+        for i in range(self.gpu_count):
+            gpu_nodes.append(GPUTopologyNode(
+                gpu_index=i,
+                name=f"NVIDIA GPU {i}",
+                pcie_bus_id=f"PCIe Bus {i}",
+                pcie_generation=PCIeGeneration.PCIE_4_0,
+                pcie_link_width=PCIeLinkWidth.X16,
+                memory_size_mb=8192,  # 8GB placeholder
+                is_primary=(i == 0)
+            ))
+            
+        return SystemTopology(
+            topology_type=TopologyType.SINGLE_GPU if self.gpu_count == 1 else TopologyType.PCIE,
+            gpu_nodes=gpu_nodes,
+            display_nodes=[],
+            connections=[]
+        )
+
+    def _get_topology_via_wmi(self) -> SystemTopology:
+        """Get system topology using WMI (Windows Management Instrumentation)."""
+        try:
+            import wmi
+            c = wmi.WMI()
+            
+            gpu_nodes = []
+            display_nodes = []
+            connections = []
+            
+            # Get GPU information
+            gpu_controllers = c.Win32_VideoController()
+            for i, gpu in enumerate(gpu_controllers):
+                if "nvidia" in gpu.Name.lower() if gpu.Name else False:
+                    gpu_nodes.append(GPUTopologyNode(
+                        gpu_index=i,
+                        name=gpu.Name or f"GPU {i}",
+                        pcie_bus_id=gpu.PNPDeviceID or f"PCIe Bus {i}",
+                        pcie_generation=PCIeGeneration.UNKNOWN,
+                        pcie_link_width=PCIeLinkWidth.X16,
+                        memory_size_mb=getattr(gpu, 'AdapterRAM', 0) // (1024 * 1024) if hasattr(gpu, 'AdapterRAM') else 0,
+                        is_primary=getattr(gpu, 'CurrentHorizontalResolution', 0) > 0
+                    ))
+            
+            # Get display information
+            displays = c.Win32_DesktopMonitor()
+            for i, display in enumerate(displays):
+                display_nodes.append(DisplayTopologyNode(
+                    display_index=i,
+                    name=display.Name or f"Display {i}",
+                    resolution_width=getattr(display, 'ScreenWidth', 1920),
+                    resolution_height=getattr(display, 'ScreenHeight', 1080),
+                    refresh_rate=getattr(display, 'RefreshRate', 60),
+                    connected_gpu_index=0  # Simplified assumption
+                ))
+                
+            return SystemTopology(
+                topology_type=TopologyType.SINGLE_GPU if len(gpu_nodes) == 1 else TopologyType.PCIE,
+                gpu_nodes=gpu_nodes,
+                display_nodes=display_nodes,
+                connections=connections
+            )
+            
+        except ImportError:
+            logger.warning("WMI not available for topology detection")
+            return self._get_basic_topology()
+        except Exception as e:
+            logger.error(f"WMI topology detection failed: {e}")
+            return self._get_basic_topology()
+
+    def _get_topology_via_system_commands(self) -> SystemTopology:
+        """Get system topology using system commands (Linux/macOS)."""
+        try:
+            # For non-Windows systems, use nvidia-smi and other system commands
+            result = subprocess.run(['nvidia-smi', '--query-gpu=index,name,pci.bus_id,memory.total', '--format=csv,noheader'],
+                                  capture_output=True, text=True, timeout=10)
+            
+            gpu_nodes = []
+            if result.returncode == 0:
+                lines = result.stdout.strip().split('\n')
+                for line in lines:
+                    parts = line.split(', ')
+                    if len(parts) >= 4:
+                        try:
+                            memory_str = parts[3].replace(' MiB', '')
+                            memory_mb = int(memory_str) if memory_str.isdigit() else 0
+                            gpu_nodes.append(GPUTopologyNode(
+                                gpu_index=int(parts[0]),
+                                name=parts[1],
+                                pcie_bus_id=parts[2],
+                                pcie_generation=PCIeGeneration.UNKNOWN,
+                                pcie_link_width=PCIeLinkWidth.X16,
+                                memory_size_mb=memory_mb,
+                                is_primary=(int(parts[0]) == 0)
+                            ))
+                        except (ValueError, IndexError):
+                            continue
+            
+            return SystemTopology(
+                topology_type=TopologyType.SINGLE_GPU if len(gpu_nodes) == 1 else TopologyType.PCIE,
+                gpu_nodes=gpu_nodes,
+                display_nodes=[],
+                connections=[]
+            )
+            
+        except Exception as e:
+            logger.error(f"System command topology detection failed: {e}")
+            return self._get_basic_topology()
+
+    def _get_gpu_topology_via_nvapi(self, gpu_index: int) -> GPUTopologyNode:
+        """Get GPU topology information using NVAPI."""
+        # Placeholder implementation
+        return GPUTopologyNode(
+            gpu_index=gpu_index,
+            name=f"NVIDIA GPU {gpu_index}",
+            pcie_bus_id=f"PCIe Bus {gpu_index}",
+            pcie_generation=PCIeGeneration.PCIE_4_0,
+            pcie_link_width=PCIeLinkWidth.X16,
+            memory_size_mb=8192,
+            is_primary=(gpu_index == 0)
+        )
+
+    def _get_gpu_topology_via_system(self, gpu_index: int) -> GPUTopologyNode:
+        """Get GPU topology information using system methods."""
+        return GPUTopologyNode(
+            gpu_index=gpu_index,
+            name=f"GPU {gpu_index}",
+            pcie_bus_id=f"PCIe Bus {gpu_index}",
+            pcie_generation=PCIeGeneration.UNKNOWN,
+            pcie_link_width=PCIeLinkWidth.X16,
+            memory_size_mb=0,
+            is_primary=(gpu_index == 0)
+        )
+
+    def _get_display_topology_via_nvapi(self, display_index: int) -> DisplayTopologyNode:
+        """Get display topology information using NVAPI."""
+        # Placeholder implementation
+        return DisplayTopologyNode(
+            display_index=display_index,
+            name=f"Display {display_index}",
+            resolution_width=1920,
+            resolution_height=1080,
+            refresh_rate=60,
+            connected_gpu_index=0,
+            is_primary=(display_index == 0)
+        )
+
+    def _get_display_topology_via_system(self, display_index: int) -> DisplayTopologyNode:
+        """Get display topology information using system methods."""
+        return DisplayTopologyNode(
+            display_index=display_index,
+            name=f"Display {display_index}",
+            resolution_width=1920,
+            resolution_height=1080,
+            refresh_rate=60,
+            connected_gpu_index=0,
+            is_primary=(display_index == 0)
+        )
+
     # ===== Performance Monitoring Methods =====
 
     @cache_results(ttl=5)
+    def get_performance_counters(self, gpu_index: int = 0) -> List[PerformanceCounter]:
+        """Get performance counters for a specific GPU."""
+        try:
+            if self.nvapi_available:
+                return self._get_performance_counters_via_nvapi(gpu_index)
+            else:
+                return self._get_performance_counters_via_system(gpu_index)
+        except Exception as e:
+            logger.error(f"Error getting performance counters: {e}")
+            return []
+
+    def _get_performance_counters_via_nvapi(self, gpu_index: int) -> List[PerformanceCounter]:
+        """Get performance counters using NVAPI."""
+        # Placeholder implementation
+        return [
+            PerformanceCounter(
+                name="GPU Utilization",
+                type=PerformanceCounterType.GPU_UTILIZATION,
+                value=15.5,
+                unit="%"
+            ),
+            PerformanceCounter(
+                name="Memory Usage",
+                type=PerformanceCounterType.MEMORY_USED,
+                value=2048,
+                unit="MB"
+            )
+        ]
+
+    def _get_performance_counters_via_system(self, gpu_index: int) -> List[PerformanceCounter]:
+        """Get performance counters using system commands."""
+        try:
+            if not self.is_windows:
+                result = subprocess.run(['nvidia-smi', '--query-gpu=utilization.gpu,memory.used', '--format=csv,noheader,nounits'],
+                                      capture_output=True, text=True, timeout=10)
+                if result.returncode == 0:
+                    data = result.stdout.strip().split(', ')
+                    if len(data) >= 2:
+                        return [
+                            PerformanceCounter(
+                                name="GPU Utilization",
+                                type=PerformanceCounterType.GPU_UTILIZATION,
+                                value=float(data[0]) if data[0].replace('.', '').isdigit() else 0,
+                                unit="%"
+                            ),
+                            PerformanceCounter(
+                                name="Memory Usage",
+                                type=PerformanceCounterType.MEMORY_USED,
+                                value=int(data[1]) if data[1].isdigit() else 0,
+                                unit="MB"
+                            )
+                        ]
+        except Exception as e:
+            logger.error(f"System command performance counter failed: {e}")
+        
+        return []
 
 def get_nvidia_control_panel() -> NVIDIAControlPanel:
     """

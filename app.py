@@ -1,5 +1,6 @@
 from organizational_leadership import leadership
 from revenue_tracking import RevenueTracker
+from nvidia_integration import NvidiaIntegration
 import argparse
 
 
@@ -33,6 +34,11 @@ def main():
         default="Implement new project strategy",
         help="Decision to be made by the leader",
     )
+    parser.add_argument(
+        "--show-gpu-status",
+        action="store_true",
+        help="Show NVIDIA GPU status and settings",
+    )
 
     args = parser.parse_args()
 
@@ -45,6 +51,9 @@ def main():
     revenue_tracker = RevenueTracker()
     # Set revenue tracker in leader
     leader.set_revenue_tracker(revenue_tracker)
+
+    # Instantiate NvidiaIntegration singleton
+    nvidia_integration = NvidiaIntegration()
 
     for member_str in args.team_members:
         if ":" in member_str:
@@ -61,6 +70,12 @@ def main():
     print(leader.lead_team())
     print(team.team_status())
     print(leadership.make_decision(leader, args.decision, revenue_tracker))
+
+    if args.show_gpu_status:
+        gpu_settings = nvidia_integration.get_gpu_settings()
+        print("\nNVIDIA GPU Status and Settings:")
+        for key, value in gpu_settings.items():
+            print(f"{key}: {value}")
 
 
 if __name__ == "__main__":
