@@ -1,5 +1,6 @@
-# Requirements for revenue tracking integration
-# NVIDIA NeMo Framework and related libraries
+# Requirements for NVIDIA Control Panel Integration and Revenue Tracking
+
+# Core NVIDIA Framework and AI/ML
 nvidia-nemo-toolkit
 nvidia-pyindex
 torch>=2.0.0
@@ -13,26 +14,36 @@ onnxruntime
 cudf-cu11
 cuml-cu11
 
-# Database connector for storing revenue data
-sqlalchemy
+# Windows-specific dependencies for NVIDIA Control Panel
+pywin32>=300  # Windows API and registry access
+wmi>=1.5.1    # Windows Management Instrumentation
 
-# For data analysis and reporting
+# Performance and resilience utilities
+cachetools>=5.3.0  # For caching mechanisms
+backoff>=2.2.1     # For exponential backoff retry patterns
+circuitbreaker>=1.4.0  # For circuit breaker pattern
+
+# Database and data processing
+sqlalchemy
 pandas
 numpy
 
-# Optional: For web API if needed
+# Web API and authentication (optional)
 fastapi
 uvicorn
-
-# Optional: For authentication and security
 python-jose
 passlib[bcrypt]
 
-# Optional: For testing
+# Testing framework
 pytest
 pytest-asyncio
+pytest-benchmark  # For performance benchmarking
 
 # Development utilities
 tqdm
 requests
 websockets
+aiohttp  # For async HTTP requests
+
+# Platform detection
+platformdirs>=3.0.0

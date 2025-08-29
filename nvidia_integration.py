@@ -3,7 +3,14 @@
 This module provides integration with NVIDIA NeMo framework, NIM services, and AI/ML acceleration
 tailored for financial services use cases such as fraud detection, risk management, and data analytics.
 Includes support for multi-agent systems, tool calling, and advanced AI capabilities.
-Now includes real NVIDIA Control Panel integration for GPU settings management.
+Now includes enhanced NVIDIA Control Panel integration for comprehensive GPU settings management.
+
+Enhanced features:
+- Complete PhysX configuration support
+- Advanced performance monitoring with caching
+- Robust error handling and retry mechanisms
+- Cross-platform compatibility
+- GPU profile management
 """
 
 import logging
@@ -13,17 +20,31 @@ from typing import Any, Dict, List, Optional, Union
 from datetime import datetime
 
 # Configure logging
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Import NVIDIA Control Panel integration
+# Import Enhanced NVIDIA Control Panel integration
 try:
-    from nvidia_control_panel import NVIDIAControlPanel, get_nvidia_control_panel
+    from nvidia_control_panel_enhanced import (
+        NVIDIAControlPanel, 
+        PhysXConfiguration,
+        PhysXProcessor,
+        PerformanceCounter,
+        PerformanceCounterGroup,
+        GPUProfile
+    )
     NVIDIA_CONTROL_PANEL_AVAILABLE = True
-    logger.info("NVIDIA Control Panel integration successfully imported")
+    logger.info("Enhanced NVIDIA Control Panel integration successfully imported")
 except ImportError as e:
-    logger.warning(f"NVIDIA Control Panel integration not available: {e}")
-    NVIDIA_CONTROL_PANEL_AVAILABLE = False
+    logger.warning(f"Enhanced NVIDIA Control Panel integration not available: {e}")
+    # Fallback to basic implementation if enhanced version fails
+    try:
+        from nvidia_control_panel import NVIDIAControlPanel
+        NVIDIA_CONTROL_PANEL_AVAILABLE = True
+        logger.info("Basic NVIDIA Control Panel integration imported as fallback")
+    except ImportError:
+        logger.warning("No NVIDIA Control Panel integration available")
+        NVIDIA_CONTROL_PANEL_AVAILABLE = False
 
 # Import NVIDIA NeMo Framework and related libraries
 try:
