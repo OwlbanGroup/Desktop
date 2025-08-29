@@ -1,0 +1,71 @@
+2025-08-28 20:43:56,941 - INFO - Starting final integration test
+2025-08-28 20:43:57,057 - INFO - System: GPUs=0, Driver=Unknown, NVAPI=False
+2025-08-28 20:43:57,057 - INFO - Test 1: Basic GPU functionality
+2025-08-28 20:43:57,057 - WARNING - WMI not available
+2025-08-28 20:43:57,057 - INFO - Retrieved GPU settings: {'power_mode': 'Optimal Power', 'texture_filtering': 'Quality', 'vertical_sync': 'Off', 'gpu_clock': 0, 'memory_clock': 0, 'temperature': 0, 'utilization': 0, 'power_usage': 0, 'fan_speed': 0, 'gpu_index': 0, 'gpu_count': 0, 'driver_version': 'Unknown', 'nvapi_available': False, 'platform': 'Windows'}
+2025-08-28 20:43:57,057 - INFO - GPU Settings: {'power_mode': 'Optimal Power', 'texture_filtering': 'Quality', 'vertical_sync': 'Off', 'gpu_clock': 0, 'memory_clock': 0, 'temperature': 0, 'utilization': 0, 'power_usage': 0, 'fan_speed': 0, 'gpu_index': 0, 'gpu_count': 0, 'driver_version': 'Unknown', 'nvapi_available': False, 'platform': 'Windows'}
+2025-08-28 20:43:57,057 - INFO - Test 2: Optimization profiles
+2025-08-28 20:43:57,057 - INFO - Setting GPU settings: {'power_mode': 'Prefer Maximum Performance', 'texture_filtering': 'Performance', 'vertical_sync': 'Off'}
+2025-08-28 20:43:57,057 - INFO - GPU settings applied: {'power_mode': 'Prefer Maximum Performance', 'texture_filtering': 'Performance', 'vertical_sync': 'Off'}
+2025-08-28 20:43:57,057 - WARNING - WMI not available
+2025-08-28 20:43:57,057 - INFO - Retrieved GPU settings: {'power_mode': 'Prefer Maximum Performance', 'texture_filtering': 'Quality', 'vertical_sync': 'Off', 'gpu_clock': 0, 'memory_clock': 0, 'temperature': 0, 'utilization': 0, 'power_usage': 0, 'fan_speed': 0, 'gpu_index': 0, 'gpu_count': 0, 'driver_version': 'Unknown', 'nvapi_available': False, 'platform': 'Windows'}
+2025-08-28 20:43:57,057 - INFO - AI Optimization: GPU settings applied successfully
+2025-08-28 20:43:57,057 - INFO - Setting GPU settings: {'power_mode': 'Prefer Maximum Performance', 'texture_filtering': 'High Quality', 'vertical_sync': 'Adaptive', 'anti_aliasing': '4x MSAA', 'anisotropic_filtering': '16x'}
+2025-08-28 20:43:57,057 - INFO - GPU settings applied: {'power_mode': 'Prefer Maximum Performance', 'texture_filtering': 'High Quality', 'vertical_sync': 'Adaptive', 'anti_aliasing': '4x MSAA', 'anisotropic_filtering': '16x'}
+2025-08-28 20:43:57,057 - WARNING - WMI not available
+2025-08-28 20:43:57,057 - INFO - Retrieved GPU settings: {'power_mode': 'Prefer Maximum Performance', 'texture_filtering': 'Quality', 'vertical_sync': 'Off', 'gpu_clock': 0, 'memory_clock': 0, 'temperature': 0, 'utilization': 0, 'power_usage': 0, 'fan_speed': 0, 'gpu_index': 0, 'gpu_count': 0, 'driver_version': 'Unknown', 'nvapi_available': False, 'platform': 'Windows'}
+2025-08-28 20:43:57,057 - INFO - Gaming Optimization: GPU settings applied successfully
+2025-08-28 20:43:57,057 - INFO - Setting GPU settings: {'power_mode': 'Optimal Power', 'texture_filtering': 'Performance', 'vertical_sync': 'Off'}
+2025-08-28 20:43:57,057 - INFO - GPU settings applied: {'power_mode': 'Optimal Power', 'texture_filtering': 'Performance', 'vertical_sync': 'Off'}
+2025-08-28 20:43:57,057 - WARNING - WMI not available
+2025-08-28 20:43:57,057 - INFO - Retrieved GPU settings: {'power_mode': 'Optimal Power', 'texture_filtering': 'Quality', 'vertical_sync': 'Off', 'gpu_clock': 0, 'memory_clock': 0, 'temperature': 0, 'utilization': 0, 'power_usage': 0, 'fan_speed': 0, 'gpu_index': 0, 'gpu_count': 0, 'driver_version': 'Unknown', 'nvapi_available': False, 'platform': 'Windows'}
+2025-08-28 20:43:57,057 - INFO - Power Saving Optimization: GPU settings applied successfully
+2025-08-28 20:43:57,057 - INFO - Test 3: Resolution management
+2025-08-28 20:43:57,057 - INFO - Retrieved 4 available resolutions
+2025-08-28 20:43:57,057 - INFO - Available resolutions: 4
+2025-08-28 20:43:57,057 - INFO -   1280x720 @ 60Hz
+2025-08-28 20:43:57,057 - INFO -   1920x1080 @ 60Hz
+2025-08-28 20:43:57,057 - INFO -   2560x1440 @ 60Hz
+2025-08-28 20:43:57,057 - INFO -   3840x2160 @ 60Hz
+2025-08-28 20:43:57,057 - INFO - Adding custom resolution: CustomResolution(width=1920, height=1080, refresh_rate=120, color_depth=32, timing_standard='Automatic', scaling='No scaling', name='1080p_120Hz')
+2025-08-28 20:43:57,057 - INFO - Custom resolution added: 1080p_120Hz
+2025-08-28 20:43:57,057 - INFO - Added 1080p_120Hz: Custom resolution 1080p_120Hz added successfully
+2025-08-28 20:43:57,057 - INFO - Applying custom resolution: CustomResolution(width=1920, height=1080, refresh_rate=120, color_depth=32, timing_standard='Automatic', scaling='No scaling', name='1080p_120Hz')
+2025-08-28 20:43:57,057 - INFO - Custom resolution applied: 1080p_120Hz
+2025-08-28 20:43:57,057 - INFO - Applied 1080p_120Hz: Custom resolution 1080p_120Hz applied successfully
+2025-08-28 20:43:57,057 - INFO - Removing custom resolution: 1080p_120Hz
+2025-08-28 20:43:57,057 - INFO - Custom resolution removed: 1080p_120Hz
+2025-08-28 20:43:57,057 - INFO - Removed 1080p_120Hz: Custom resolution 1080p_120Hz removed successfully
+2025-08-28 20:43:57,057 - INFO - Adding custom resolution: CustomResolution(width=2560, height=1440, refresh_rate=144, color_depth=32, timing_standard='Automatic', scaling='No scaling', name='1440p_144Hz')
+2025-08-28 20:43:57,057 - INFO - Custom resolution added: 1440p_144Hz
+2025-08-28 20:43:57,057 - INFO - Added 1440p_144Hz: Custom resolution 1440p_144Hz added successfully
+2025-08-28 20:43:57,057 - INFO - Applying custom resolution: CustomResolution(width=2560, height=1440, refresh_rate=144, color_depth=32, timing_standard='Automatic', scaling='No scaling', name='1440p_144Hz')
+2025-08-28 20:43:57,057 - INFO - Custom resolution applied: 1440p_144Hz
+2025-08-28 20:43:57,057 - INFO - Applied 1440p_144Hz: Custom resolution 1440p_144Hz applied successfully
+2025-08-28 20:43:57,057 - INFO - Removing custom resolution: 1440p_144Hz
+2025-08-28 20:43:57,057 - INFO - Custom resolution removed: 1440p_144Hz
+2025-08-28 20:43:57,072 - INFO - Removed 1440p_144Hz: Custom resolution 1440p_144Hz removed successfully
+2025-08-28 20:43:57,072 - INFO - Adding custom resolution: CustomResolution(width=3840, height=2160, refresh_rate=60, color_depth=32, timing_standard='Automatic', scaling='No scaling', name='4K_60Hz')
+2025-08-28 20:43:57,072 - INFO - Custom resolution added: 4K_60Hz
+2025-08-28 20:43:57,072 - INFO - Added 4K_60Hz: Custom resolution 4K_60Hz added successfully
+2025-08-28 20:43:57,072 - INFO - Applying custom resolution: CustomResolution(width=3840, height=2160, refresh_rate=60, color_depth=32, timing_standard='Automatic', scaling='No scaling', name='4K_60Hz')
+2025-08-28 20:43:57,072 - INFO - Custom resolution applied: 4K_60Hz
+2025-08-28 20:43:57,072 - INFO - Applied 4K_60Hz: Custom resolution 4K_60Hz applied successfully
+2025-08-28 20:43:57,072 - INFO - Removing custom resolution: 4K_60Hz
+2025-08-28 20:43:57,072 - INFO - Custom resolution removed: 4K_60Hz
+2025-08-28 20:43:57,072 - INFO - Removed 4K_60Hz: Custom resolution 4K_60Hz removed successfully
+2025-08-28 20:43:57,072 - INFO - Test 4: Multi-display support
+2025-08-28 20:43:57,072 - INFO - Retrieved 4 available resolutions
+2025-08-28 20:43:57,072 - INFO - Display 0: 4 resolutions
+2025-08-28 20:43:57,072 - INFO - Retrieved 4 available resolutions
+2025-08-28 20:43:57,072 - INFO - Display 1: 4 resolutions
+2025-08-28 20:43:57,072 - INFO - Retrieved 4 available resolutions
+2025-08-28 20:43:57,072 - INFO - Display 2: 4 resolutions
+2025-08-28 20:43:57,072 - INFO - Test 5: Error handling
+2025-08-28 20:43:57,072 - INFO - Correctly rejected Invalid_Small: Width 100 is outside valid range (640-7680)
+2025-08-28 20:43:57,072 - INFO - Correctly rejected Invalid_Large: Width 10000 is outside valid range (640-7680)
+2025-08-28 20:43:57,072 - INFO - Test 6: Cleanup
+2025-08-28 20:43:57,072 - INFO - Cleanup completed successfully
+2025-08-28 20:43:57,072 - INFO - Test 7: Singleton pattern
+2025-08-28 20:43:57,072 - INFO - Singleton instances match: True
+2025-08-28 20:43:57,072 - INFO - Final integration test completed successfully!

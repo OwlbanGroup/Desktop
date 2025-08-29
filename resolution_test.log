@@ -1,0 +1,26 @@
+2025-08-28 20:38:11,776 - INFO - Starting comprehensive resolution management test
+2025-08-28 20:38:11,893 - INFO - NVIDIA Control Panel initialized: GPUs=0, Driver=Unknown, NVAPI=False
+2025-08-28 20:38:11,893 - INFO - Test 1: Getting current resolutions
+2025-08-28 20:38:11,893 - INFO - Retrieved 4 available resolutions
+2025-08-28 20:38:11,893 - INFO - Found 4 available resolutions
+2025-08-28 20:38:11,893 - INFO - Resolution 1: 1280x720 @ 60Hz
+2025-08-28 20:38:11,893 - INFO - Resolution 2: 1920x1080 @ 60Hz
+2025-08-28 20:38:11,893 - INFO - Resolution 3: 2560x1440 @ 60Hz
+2025-08-28 20:38:11,893 - INFO - Resolution 4: 3840x2160 @ 60Hz
+2025-08-28 20:38:11,893 - INFO - Test 2: Creating custom resolution
+2025-08-28 20:38:11,893 - INFO - Custom resolution created: Custom_2560x1440_75Hz
+2025-08-28 20:38:11,893 - INFO - Test 3: Adding custom resolution
+2025-08-28 20:38:11,893 - INFO - Adding custom resolution: CustomResolution(width=2560, height=1440, refresh_rate=75, color_depth=32, timing_standard='CVT', scaling='No scaling', name='Custom_2560x1440_75Hz')
+2025-08-28 20:38:11,893 - INFO - Custom resolution added: Custom_2560x1440_75Hz
+2025-08-28 20:38:11,893 - INFO - Add result: Custom resolution Custom_2560x1440_75Hz added successfully
+2025-08-28 20:38:11,893 - INFO - Test 4: Applying custom resolution
+2025-08-28 20:38:11,893 - INFO - Applying custom resolution: CustomResolution(width=2560, height=1440, refresh_rate=75, color_depth=32, timing_standard='CVT', scaling='No scaling', name='Custom_2560x1440_75Hz')
+2025-08-28 20:38:11,893 - INFO - Custom resolution applied: Custom_2560x1440_75Hz
+2025-08-28 20:38:11,893 - INFO - Apply result: Custom resolution Custom_2560x1440_75Hz applied successfully
+2025-08-28 20:38:11,893 - INFO - Test 5: Removing custom resolution
+2025-08-28 20:38:11,893 - INFO - Removing custom resolution: Custom_2560x1440_75Hz
+2025-08-28 20:38:11,893 - INFO - Custom resolution removed: Custom_2560x1440_75Hz
+2025-08-28 20:38:11,893 - INFO - Remove result: Custom resolution Custom_2560x1440_75Hz removed successfully
+2025-08-28 20:38:11,893 - INFO - Test 6: Testing error handling
+2025-08-28 20:38:11,893 - INFO - Correctly caught validation error: Width 100 is outside valid range (640-7680)
+2025-08-28 20:38:11,893 - INFO - All tests completed successfully!

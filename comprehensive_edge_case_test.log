@@ -1,0 +1,61 @@
+2025-08-28 20:51:14,685 - INFO - Starting comprehensive edge case testing
+2025-08-28 20:51:14,815 - INFO - System: GPUs=0, Driver=Unknown, NVAPI=False
+2025-08-28 20:51:14,815 - INFO - Test 1: Extreme resolution values
+2025-08-28 20:51:14,815 - INFO - \u2705 Valid case passed: Min_Valid
+2025-08-28 20:51:14,885 - INFO - \u2705 Valid case passed: Max_Valid
+2025-08-28 20:51:14,885 - ERROR - \u274c Wrongly rejected valid case: Below_Min - Width 639 is outside valid range (640-7680)
+2025-08-28 20:51:14,885 - ERROR - \u274c Wrongly rejected valid case: Above_Max - Width 7681 is outside valid range (640-7680)
+2025-08-28 20:51:14,885 - INFO - Test 2: Color depth validation
+2025-08-28 20:51:14,885 - INFO - \u2705 Valid color depth: 8 bits
+2025-08-28 20:51:14,885 - INFO - \u2705 Valid color depth: 16 bits
+2025-08-28 20:51:14,885 - INFO - \u2705 Valid color depth: 24 bits
+2025-08-28 20:51:14,900 - INFO - \u2705 Valid color depth: 32 bits
+2025-08-28 20:51:14,901 - INFO - \u2705 Correctly rejected invalid color depth: 64 bits - Color depth 64 must be 8, 16, 24, or 32
+2025-08-28 20:51:14,902 - INFO - \u2705 Correctly rejected invalid color depth: 10 bits - Color depth 10 must be 8, 16, 24, or 32
+2025-08-28 20:51:14,934 - INFO - Test 3: Multiple display handling
+2025-08-28 20:51:14,934 - INFO - Retrieved 4 available resolutions
+2025-08-28 20:51:14,934 - INFO - Display 0: 4 resolutions available
+2025-08-28 20:51:14,935 - INFO - Retrieved 4 available resolutions
+2025-08-28 20:51:14,936 - INFO - Display 1: 4 resolutions available
+2025-08-28 20:51:14,937 - INFO - Retrieved 4 available resolutions
+2025-08-28 20:51:14,937 - INFO - Display 2: 4 resolutions available
+2025-08-28 20:51:14,938 - INFO - Test 4: Stress test - multiple rapid operations
+2025-08-28 20:51:14,939 - INFO - Adding custom resolution: CustomResolution(width=1920, height=1080, refresh_rate=60, color_depth=32, timing_standard='Automatic', scaling='No scaling', name='Stress_1080p')
+2025-08-28 20:51:14,940 - INFO - Custom resolution added: Stress_1080p
+2025-08-28 20:51:14,940 - INFO - Stress test 1: Added Stress_1080p
+2025-08-28 20:51:14,940 - INFO - Applying custom resolution: CustomResolution(width=1920, height=1080, refresh_rate=60, color_depth=32, timing_standard='Automatic', scaling='No scaling', name='Stress_1080p')
+2025-08-28 20:51:14,940 - INFO - Custom resolution applied: Stress_1080p
+2025-08-28 20:51:14,940 - INFO - Stress test 1: Applied Stress_1080p
+2025-08-28 20:51:14,941 - INFO - Removing custom resolution: Stress_1080p
+2025-08-28 20:51:14,941 - INFO - Custom resolution removed: Stress_1080p
+2025-08-28 20:51:14,941 - INFO - Stress test 1: Removed Stress_1080p
+2025-08-28 20:51:14,942 - INFO - Adding custom resolution: CustomResolution(width=2560, height=1440, refresh_rate=75, color_depth=32, timing_standard='Automatic', scaling='No scaling', name='Stress_1440p')
+2025-08-28 20:51:14,942 - INFO - Custom resolution added: Stress_1440p
+2025-08-28 20:51:14,942 - INFO - Stress test 2: Added Stress_1440p
+2025-08-28 20:51:14,943 - INFO - Applying custom resolution: CustomResolution(width=2560, height=1440, refresh_rate=75, color_depth=32, timing_standard='Automatic', scaling='No scaling', name='Stress_1440p')
+2025-08-28 20:51:14,943 - INFO - Custom resolution applied: Stress_1440p
+2025-08-28 20:51:14,943 - INFO - Stress test 2: Applied Stress_1440p
+2025-08-28 20:51:14,943 - INFO - Removing custom resolution: Stress_1440p
+2025-08-28 20:51:14,943 - INFO - Custom resolution removed: Stress_1440p
+2025-08-28 20:51:14,944 - INFO - Stress test 2: Removed Stress_1440p
+2025-08-28 20:51:14,944 - INFO - Adding custom resolution: CustomResolution(width=3840, height=2160, refresh_rate=60, color_depth=32, timing_standard='Automatic', scaling='No scaling', name='Stress_4K')
+2025-08-28 20:51:14,945 - INFO - Custom resolution added: Stress_4K
+2025-08-28 20:51:14,945 - INFO - Stress test 3: Added Stress_4K
+2025-08-28 20:51:14,945 - INFO - Applying custom resolution: CustomResolution(width=3840, height=2160, refresh_rate=60, color_depth=32, timing_standard='Automatic', scaling='No scaling', name='Stress_4K')
+2025-08-28 20:51:14,946 - INFO - Custom resolution applied: Stress_4K
+2025-08-28 20:51:14,947 - INFO - Stress test 3: Applied Stress_4K
+2025-08-28 20:51:14,948 - INFO - Removing custom resolution: Stress_4K
+2025-08-28 20:51:14,948 - INFO - Custom resolution removed: Stress_4K
+2025-08-28 20:51:14,949 - INFO - Stress test 3: Removed Stress_4K
+2025-08-28 20:51:14,953 - INFO - Test 5: Error recovery
+2025-08-28 20:51:14,953 - INFO - \u2705 Correctly caught invalid resolution error
+2025-08-28 20:51:14,954 - WARNING - WMI not available
+2025-08-28 20:51:14,954 - INFO - Retrieved GPU settings: {'power_mode': 'Optimal Power', 'texture_filtering': 'Quality', 'vertical_sync': 'Off', 'gpu_clock': 0, 'memory_clock': 0, 'temperature': 0, 'utilization': 0, 'power_usage': 0, 'fan_speed': 0, 'gpu_index': 0, 'gpu_count': 0, 'driver_version': 'Unknown', 'nvapi_available': False, 'platform': 'Windows'}
+2025-08-28 20:51:14,954 - INFO - \u2705 System recovered after error - GPU settings retrieved
+2025-08-28 20:51:14,956 - INFO - Test 6: Cross-platform compatibility simulation
+2025-08-28 20:51:14,958 - WARNING - WMI not available
+2025-08-28 20:51:14,958 - INFO - Retrieved GPU settings: {'power_mode': 'Optimal Power', 'texture_filtering': 'Quality', 'vertical_sync': 'Off', 'gpu_clock': 0, 'memory_clock': 0, 'temperature': 0, 'utilization': 0, 'power_usage': 0, 'fan_speed': 0, 'gpu_index': 0, 'gpu_count': 0, 'driver_version': 'Unknown', 'nvapi_available': False, 'platform': 'Windows'}
+2025-08-28 20:51:14,958 - INFO - \u2705 Windows compatibility: GPU settings retrieved
+2025-08-28 20:51:14,959 - INFO - \u2705 Linux compatibility: Fallback mode available
+2025-08-28 20:51:14,959 - INFO - \u2705 macOS compatibility: Basic support available
+2025-08-28 20:51:14,965 - INFO - Comprehensive edge case testing completed successfully

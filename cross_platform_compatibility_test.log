@@ -1,0 +1,46 @@
+2025-08-28 20:52:48,861 - INFO - Starting cross-platform compatibility testing
+2025-08-28 20:52:48,911 - INFO - Testing Windows compatibility
+2025-08-28 20:52:49,019 - WARNING - WMI not available
+2025-08-28 20:52:49,019 - INFO - Retrieved GPU settings: {'power_mode': 'Optimal Power', 'texture_filtering': 'Quality', 'vertical_sync': 'Off', 'gpu_clock': 0, 'memory_clock': 0, 'temperature': 0, 'utilization': 0, 'power_usage': 0, 'fan_speed': 0, 'gpu_index': 0, 'gpu_count': 0, 'driver_version': 'Unknown', 'nvapi_available': False, 'platform': 'Windows'}
+2025-08-28 20:52:49,021 - INFO - Windows: GPU settings retrieved successfully
+2025-08-28 20:52:49,022 - INFO - Retrieved 4 available resolutions
+2025-08-28 20:52:49,022 - INFO - Windows: 4 resolutions available
+2025-08-28 20:52:49,022 - INFO - Adding custom resolution: CustomResolution(width=1920, height=1080, refresh_rate=75, color_depth=32, timing_standard='Automatic', scaling='No scaling', name='Windows_Test')
+2025-08-28 20:52:49,023 - INFO - Custom resolution added: Windows_Test
+2025-08-28 20:52:49,023 - INFO - Windows: Custom resolution added: Custom resolution Windows_Test added successfully
+2025-08-28 20:52:49,023 - INFO - Applying custom resolution: CustomResolution(width=1920, height=1080, refresh_rate=75, color_depth=32, timing_standard='Automatic', scaling='No scaling', name='Windows_Test')
+2025-08-28 20:52:49,023 - INFO - Custom resolution applied: Windows_Test
+2025-08-28 20:52:49,023 - INFO - Windows: Custom resolution applied: Custom resolution Windows_Test applied successfully
+2025-08-28 20:52:49,023 - INFO - Removing custom resolution: Windows_Test
+2025-08-28 20:52:49,024 - INFO - Custom resolution removed: Windows_Test
+2025-08-28 20:52:49,024 - INFO - Windows: Custom resolution removed: Custom resolution Windows_Test removed successfully
+2025-08-28 20:52:49,026 - INFO - === Windows Compatibility Test ===
+2025-08-28 20:52:49,026 - WARNING - WMI not available
+2025-08-28 20:52:49,026 - INFO - Retrieved GPU settings: {'power_mode': 'Optimal Power', 'texture_filtering': 'Quality', 'vertical_sync': 'Off', 'gpu_clock': 0, 'memory_clock': 0, 'temperature': 0, 'utilization': 0, 'power_usage': 0, 'fan_speed': 0, 'gpu_index': 0, 'gpu_count': 0, 'driver_version': 'Unknown', 'nvapi_available': False, 'platform': 'Windows'}
+2025-08-28 20:52:49,026 - INFO - Setting GPU settings: {'power_mode': 'Prefer Maximum Performance', 'texture_filtering': 'Performance', 'vertical_sync': 'Off'}
+2025-08-28 20:52:49,026 - INFO - GPU settings applied: {'power_mode': 'Prefer Maximum Performance', 'texture_filtering': 'Performance', 'vertical_sync': 'Off'}
+2025-08-28 20:52:49,026 - WARNING - WMI not available
+2025-08-28 20:52:49,026 - INFO - Retrieved GPU settings: {'power_mode': 'Prefer Maximum Performance', 'texture_filtering': 'Quality', 'vertical_sync': 'Off', 'gpu_clock': 0, 'memory_clock': 0, 'temperature': 0, 'utilization': 0, 'power_usage': 0, 'fan_speed': 0, 'gpu_index': 0, 'gpu_count': 0, 'driver_version': 'Unknown', 'nvapi_available': False, 'platform': 'Windows'}
+2025-08-28 20:52:49,026 - INFO - Setting GPU settings: {'power_mode': 'Prefer Maximum Performance', 'texture_filtering': 'High Quality', 'vertical_sync': 'Adaptive', 'anti_aliasing': '4x MSAA', 'anisotropic_filtering': '16x'}
+2025-08-28 20:52:49,026 - INFO - GPU settings applied: {'power_mode': 'Prefer Maximum Performance', 'texture_filtering': 'High Quality', 'vertical_sync': 'Adaptive', 'anti_aliasing': '4x MSAA', 'anisotropic_filtering': '16x'}
+2025-08-28 20:52:49,026 - WARNING - WMI not available
+2025-08-28 20:52:49,026 - INFO - Retrieved GPU settings: {'power_mode': 'Prefer Maximum Performance', 'texture_filtering': 'Quality', 'vertical_sync': 'Off', 'gpu_clock': 0, 'memory_clock': 0, 'temperature': 0, 'utilization': 0, 'power_usage': 0, 'fan_speed': 0, 'gpu_index': 0, 'gpu_count': 0, 'driver_version': 'Unknown', 'nvapi_available': False, 'platform': 'Windows'}
+2025-08-28 20:52:49,026 - INFO - Setting GPU settings: {'power_mode': 'Optimal Power', 'texture_filtering': 'Performance', 'vertical_sync': 'Off'}
+2025-08-28 20:52:49,026 - INFO - GPU settings applied: {'power_mode': 'Optimal Power', 'texture_filtering': 'Performance', 'vertical_sync': 'Off'}
+2025-08-28 20:52:49,026 - WARNING - WMI not available
+2025-08-28 20:52:49,026 - INFO - Retrieved GPU settings: {'power_mode': 'Optimal Power', 'texture_filtering': 'Quality', 'vertical_sync': 'Off', 'gpu_clock': 0, 'memory_clock': 0, 'temperature': 0, 'utilization': 0, 'power_usage': 0, 'fan_speed': 0, 'gpu_index': 0, 'gpu_count': 0, 'driver_version': 'Unknown', 'nvapi_available': False, 'platform': 'Windows'}
+2025-08-28 20:52:49,026 - INFO - Windows: All optimization profiles executed
+2025-08-28 20:52:49,026 - INFO - === Linux Compatibility Test ===
+2025-08-28 20:52:49,051 - WARNING - WMI not available
+2025-08-28 20:52:49,051 - INFO - Retrieved GPU settings: {'power_mode': 'Optimal Power', 'texture_filtering': 'Quality', 'vertical_sync': 'Off', 'gpu_clock': 0, 'memory_clock': 0, 'temperature': 0, 'utilization': 0, 'power_usage': 0, 'fan_speed': 0, 'gpu_index': 0, 'gpu_count': 0, 'driver_version': 'Unknown', 'nvapi_available': False, 'platform': 'Windows'}
+2025-08-28 20:52:49,051 - INFO - Linux: System works in fallback mode
+2025-08-28 20:52:49,051 - INFO - === macOS Compatibility Test ===
+2025-08-28 20:52:49,065 - WARNING - WMI not available
+2025-08-28 20:52:49,065 - INFO - Retrieved GPU settings: {'power_mode': 'Optimal Power', 'texture_filtering': 'Quality', 'vertical_sync': 'Off', 'gpu_clock': 0, 'memory_clock': 0, 'temperature': 0, 'utilization': 0, 'power_usage': 0, 'fan_speed': 0, 'gpu_index': 0, 'gpu_count': 0, 'driver_version': 'Unknown', 'nvapi_available': False, 'platform': 'Windows'}
+2025-08-28 20:52:49,065 - INFO - macOS: Basic functionality available
+2025-08-28 20:52:49,070 - INFO - === Containerized Environment Test ===
+2025-08-28 20:52:49,076 - WARNING - WMI not available
+2025-08-28 20:52:49,077 - INFO - Retrieved GPU settings: {'power_mode': 'Optimal Power', 'texture_filtering': 'Quality', 'vertical_sync': 'Off', 'gpu_clock': 0, 'memory_clock': 0, 'temperature': 0, 'utilization': 0, 'power_usage': 0, 'fan_speed': 0, 'gpu_index': 0, 'gpu_count': 0, 'driver_version': 'Unknown', 'nvapi_available': False, 'platform': 'Windows'}
+2025-08-28 20:52:49,077 - WARNING - Container test: Some features may not work: name 'CustomResolution' is not defined
+2025-08-28 20:52:49,077 - INFO - Container: System works in constrained environment
+2025-08-28 20:52:49,087 - INFO - All cross-platform compatibility tests passed

@@ -1,0 +1,109 @@
+2025-08-28 20:41:09,864 - INFO - Starting advanced resolution management test
+2025-08-28 20:41:09,993 - INFO - NVIDIA Control Panel initialized: GPUs=0, Driver=Unknown, NVAPI=False
+2025-08-28 20:41:09,993 - INFO - Test 1: Testing multi-display support
+2025-08-28 20:41:09,994 - INFO - Retrieved 4 available resolutions
+2025-08-28 20:41:09,994 - INFO - Display 0: 4 resolutions found
+2025-08-28 20:41:09,994 - INFO - Retrieved 4 available resolutions
+2025-08-28 20:41:09,994 - INFO - Display 1: 4 resolutions found
+2025-08-28 20:41:09,994 - INFO - Retrieved 4 available resolutions
+2025-08-28 20:41:09,995 - INFO - Display 2: 4 resolutions found
+2025-08-28 20:41:09,995 - INFO - Test 2: Testing edge case resolutions
+2025-08-28 20:41:09,995 - INFO - Created edge case: Min_640x480_24Hz
+2025-08-28 20:41:09,995 - INFO - Adding custom resolution: CustomResolution(width=640, height=480, refresh_rate=24, color_depth=32, timing_standard='Automatic', scaling='No scaling', name='Min_640x480_24Hz')
+2025-08-28 20:41:09,996 - INFO - Custom resolution added: Min_640x480_24Hz
+2025-08-28 20:41:09,996 - INFO - Added Min_640x480_24Hz: Custom resolution Min_640x480_24Hz added successfully
+2025-08-28 20:41:09,996 - INFO - Applying custom resolution: CustomResolution(width=640, height=480, refresh_rate=24, color_depth=32, timing_standard='Automatic', scaling='No scaling', name='Min_640x480_24Hz')
+2025-08-28 20:41:09,997 - INFO - Custom resolution applied: Min_640x480_24Hz
+2025-08-28 20:41:09,997 - INFO - Applied Min_640x480_24Hz: Custom resolution Min_640x480_24Hz applied successfully
+2025-08-28 20:41:09,997 - INFO - Removing custom resolution: Min_640x480_24Hz
+2025-08-28 20:41:09,997 - INFO - Custom resolution removed: Min_640x480_24Hz
+2025-08-28 20:41:09,998 - INFO - Removed Min_640x480_24Hz: Custom resolution Min_640x480_24Hz removed successfully
+2025-08-28 20:41:09,998 - INFO - Created edge case: Max_8K_240Hz
+2025-08-28 20:41:09,998 - INFO - Adding custom resolution: CustomResolution(width=7680, height=4320, refresh_rate=240, color_depth=32, timing_standard='Automatic', scaling='No scaling', name='Max_8K_240Hz')
+2025-08-28 20:41:09,998 - INFO - Custom resolution added: Max_8K_240Hz
+2025-08-28 20:41:09,999 - INFO - Added Max_8K_240Hz: Custom resolution Max_8K_240Hz added successfully
+2025-08-28 20:41:09,999 - INFO - Applying custom resolution: CustomResolution(width=7680, height=4320, refresh_rate=240, color_depth=32, timing_standard='Automatic', scaling='No scaling', name='Max_8K_240Hz')
+2025-08-28 20:41:09,999 - INFO - Custom resolution applied: Max_8K_240Hz
+2025-08-28 20:41:09,999 - INFO - Applied Max_8K_240Hz: Custom resolution Max_8K_240Hz applied successfully
+2025-08-28 20:41:09,999 - INFO - Removing custom resolution: Max_8K_240Hz
+2025-08-28 20:41:09,999 - INFO - Custom resolution removed: Max_8K_240Hz
+2025-08-28 20:41:10,000 - INFO - Removed Max_8K_240Hz: Custom resolution Max_8K_240Hz removed successfully
+2025-08-28 20:41:10,000 - INFO - Created edge case: 1080p_144Hz
+2025-08-28 20:41:10,000 - INFO - Adding custom resolution: CustomResolution(width=1920, height=1080, refresh_rate=144, color_depth=32, timing_standard='Automatic', scaling='No scaling', name='1080p_144Hz')
+2025-08-28 20:41:10,000 - INFO - Custom resolution added: 1080p_144Hz
+2025-08-28 20:41:10,000 - INFO - Added 1080p_144Hz: Custom resolution 1080p_144Hz added successfully
+2025-08-28 20:41:10,000 - INFO - Applying custom resolution: CustomResolution(width=1920, height=1080, refresh_rate=144, color_depth=32, timing_standard='Automatic', scaling='No scaling', name='1080p_144Hz')
+2025-08-28 20:41:10,001 - INFO - Custom resolution applied: 1080p_144Hz
+2025-08-28 20:41:10,001 - INFO - Applied 1080p_144Hz: Custom resolution 1080p_144Hz applied successfully
+2025-08-28 20:41:10,001 - INFO - Removing custom resolution: 1080p_144Hz
+2025-08-28 20:41:10,001 - INFO - Custom resolution removed: 1080p_144Hz
+2025-08-28 20:41:10,001 - INFO - Removed 1080p_144Hz: Custom resolution 1080p_144Hz removed successfully
+2025-08-28 20:41:10,001 - INFO - Created edge case: 1440p_165Hz
+2025-08-28 20:41:10,002 - INFO - Adding custom resolution: CustomResolution(width=2560, height=1440, refresh_rate=165, color_depth=32, timing_standard='Automatic', scaling='No scaling', name='1440p_165Hz')
+2025-08-28 20:41:10,002 - INFO - Custom resolution added: 1440p_165Hz
+2025-08-28 20:41:10,002 - INFO - Added 1440p_165Hz: Custom resolution 1440p_165Hz added successfully
+2025-08-28 20:41:10,002 - INFO - Applying custom resolution: CustomResolution(width=2560, height=1440, refresh_rate=165, color_depth=32, timing_standard='Automatic', scaling='No scaling', name='1440p_165Hz')
+2025-08-28 20:41:10,003 - INFO - Custom resolution applied: 1440p_165Hz
+2025-08-28 20:41:10,003 - INFO - Applied 1440p_165Hz: Custom resolution 1440p_165Hz applied successfully
+2025-08-28 20:41:10,003 - INFO - Removing custom resolution: 1440p_165Hz
+2025-08-28 20:41:10,004 - INFO - Custom resolution removed: 1440p_165Hz
+2025-08-28 20:41:10,004 - INFO - Removed 1440p_165Hz: Custom resolution 1440p_165Hz removed successfully
+2025-08-28 20:41:10,004 - INFO - Test 3: Testing color depths and timing standards
+2025-08-28 20:41:10,004 - INFO - Created variation: 8bit_CVT
+2025-08-28 20:41:10,005 - INFO - Adding custom resolution: CustomResolution(width=1920, height=1080, refresh_rate=60, color_depth=8, timing_standard='CVT', scaling='No scaling', name='8bit_CVT')
+2025-08-28 20:41:10,044 - INFO - Custom resolution added: 8bit_CVT
+2025-08-28 20:41:10,044 - INFO - Added variation 8bit_CVT: Custom resolution 8bit_CVT added successfully
+2025-08-28 20:41:10,044 - INFO - Removing custom resolution: 8bit_CVT
+2025-08-28 20:41:10,044 - INFO - Custom resolution removed: 8bit_CVT
+2025-08-28 20:41:10,044 - INFO - Removed variation 8bit_CVT: Custom resolution 8bit_CVT removed successfully
+2025-08-28 20:41:10,045 - INFO - Created variation: 16bit_CVT-RB
+2025-08-28 20:41:10,045 - INFO - Adding custom resolution: CustomResolution(width=1920, height=1080, refresh_rate=60, color_depth=16, timing_standard='CVT-RB', scaling='No scaling', name='16bit_CVT-RB')
+2025-08-28 20:41:10,046 - INFO - Custom resolution added: 16bit_CVT-RB
+2025-08-28 20:41:10,046 - INFO - Added variation 16bit_CVT-RB: Custom resolution 16bit_CVT-RB added successfully
+2025-08-28 20:41:10,046 - INFO - Removing custom resolution: 16bit_CVT-RB
+2025-08-28 20:41:10,046 - INFO - Custom resolution removed: 16bit_CVT-RB
+2025-08-28 20:41:10,046 - INFO - Removed variation 16bit_CVT-RB: Custom resolution 16bit_CVT-RB removed successfully
+2025-08-28 20:41:10,046 - INFO - Created variation: 24bit_GTF
+2025-08-28 20:41:10,046 - INFO - Adding custom resolution: CustomResolution(width=1920, height=1080, refresh_rate=60, color_depth=24, timing_standard='GTF', scaling='No scaling', name='24bit_GTF')
+2025-08-28 20:41:10,046 - INFO - Custom resolution added: 24bit_GTF
+2025-08-28 20:41:10,046 - INFO - Added variation 24bit_GTF: Custom resolution 24bit_GTF added successfully
+2025-08-28 20:41:10,046 - INFO - Removing custom resolution: 24bit_GTF
+2025-08-28 20:41:10,046 - INFO - Custom resolution removed: 24bit_GTF
+2025-08-28 20:41:10,046 - INFO - Removed variation 24bit_GTF: Custom resolution 24bit_GTF removed successfully
+2025-08-28 20:41:10,046 - INFO - Created variation: 32bit_Manual
+2025-08-28 20:41:10,046 - INFO - Adding custom resolution: CustomResolution(width=1920, height=1080, refresh_rate=60, color_depth=32, timing_standard='Manual', scaling='No scaling', name='32bit_Manual')
+2025-08-28 20:41:10,046 - INFO - Custom resolution added: 32bit_Manual
+2025-08-28 20:41:10,046 - INFO - Added variation 32bit_Manual: Custom resolution 32bit_Manual added successfully
+2025-08-28 20:41:10,046 - INFO - Removing custom resolution: 32bit_Manual
+2025-08-28 20:41:10,046 - INFO - Custom resolution removed: 32bit_Manual
+2025-08-28 20:41:10,046 - INFO - Removed variation 32bit_Manual: Custom resolution 32bit_Manual removed successfully
+2025-08-28 20:41:10,046 - INFO - Test 4: Testing extreme value error handling
+2025-08-28 20:41:10,046 - INFO - Correctly rejected Too_Narrow: Width 639 is outside valid range (640-7680)
+2025-08-28 20:41:10,046 - INFO - Correctly rejected Too_Short: Height 479 is outside valid range (480-4320)
+2025-08-28 20:41:10,046 - INFO - Correctly rejected Too_Wide: Width 7681 is outside valid range (640-7680)
+2025-08-28 20:41:10,046 - INFO - Correctly rejected Too_Tall: Height 4321 is outside valid range (480-4320)
+2025-08-28 20:41:10,046 - INFO - Correctly rejected Refresh_Too_Low: Refresh rate 23 is outside valid range (24-240Hz)
+2025-08-28 20:41:10,046 - INFO - Correctly rejected Refresh_Too_High: Refresh rate 241 is outside valid range (24-240Hz)
+2025-08-28 20:41:10,046 - INFO - Correctly rejected Invalid_Color_Depth: Color depth 7 must be 8, 16, 24, or 32
+2025-08-28 20:41:10,046 - INFO - Test 5: Testing bulk operations
+2025-08-28 20:41:10,046 - INFO - Adding custom resolution: CustomResolution(width=1280, height=720, refresh_rate=75, color_depth=32, timing_standard='Automatic', scaling='No scaling', name='Bulk_720p_75Hz')
+2025-08-28 20:41:10,046 - INFO - Custom resolution added: Bulk_720p_75Hz
+2025-08-28 20:41:10,046 - INFO - Bulk added Bulk_720p_75Hz: Custom resolution Bulk_720p_75Hz added successfully
+2025-08-28 20:41:10,046 - INFO - Adding custom resolution: CustomResolution(width=1366, height=768, refresh_rate=60, color_depth=32, timing_standard='Automatic', scaling='No scaling', name='Bulk_768p_60Hz')
+2025-08-28 20:41:10,079 - INFO - Custom resolution added: Bulk_768p_60Hz
+2025-08-28 20:41:10,079 - INFO - Bulk added Bulk_768p_60Hz: Custom resolution Bulk_768p_60Hz added successfully
+2025-08-28 20:41:10,079 - INFO - Adding custom resolution: CustomResolution(width=1600, height=900, refresh_rate=90, color_depth=32, timing_standard='Automatic', scaling='No scaling', name='Bulk_900p_90Hz')
+2025-08-28 20:41:10,096 - INFO - Custom resolution added: Bulk_900p_90Hz
+2025-08-28 20:41:10,096 - INFO - Bulk added Bulk_900p_90Hz: Custom resolution Bulk_900p_90Hz added successfully
+2025-08-28 20:41:10,096 - INFO - Removing custom resolution: Bulk_720p_75Hz
+2025-08-28 20:41:10,096 - INFO - Custom resolution removed: Bulk_720p_75Hz
+2025-08-28 20:41:10,096 - INFO - Bulk removed Bulk_720p_75Hz: Custom resolution Bulk_720p_75Hz removed successfully
+2025-08-28 20:41:10,096 - INFO - Removing custom resolution: Bulk_768p_60Hz
+2025-08-28 20:41:10,096 - INFO - Custom resolution removed: Bulk_768p_60Hz
+2025-08-28 20:41:10,096 - INFO - Bulk removed Bulk_768p_60Hz: Custom resolution Bulk_768p_60Hz removed successfully
+2025-08-28 20:41:10,096 - INFO - Removing custom resolution: Bulk_900p_90Hz
+2025-08-28 20:41:10,096 - INFO - Custom resolution removed: Bulk_900p_90Hz
+2025-08-28 20:41:10,096 - INFO - Bulk removed Bulk_900p_90Hz: Custom resolution Bulk_900p_90Hz removed successfully
+2025-08-28 20:41:10,096 - INFO - Test 6: Testing cleanup functionality
+2025-08-28 20:41:10,096 - INFO - Cleanup completed successfully
+2025-08-28 20:41:10,096 - INFO - All advanced tests completed successfully!
