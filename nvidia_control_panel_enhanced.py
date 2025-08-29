@@ -409,6 +409,20 @@ def nvapi_context():
         logger.error(f"NVAPI operation failed: {e}")
         raise NVIDIAControlPanelError(f"NVAPI operation failed: {e}")
 
+# ===== Quadro Plex Configuration =====
+
+@dataclass
+class QuadroPlexConfig:
+    enabled: bool = False
+    num_plexes: int = 0
+    displays_per_plex: int = 0
+    total_displays: int = 0
+    overlap_pixels: int = 0
+    edge_blending_enabled: bool = False
+    edge_overlap_pixels: int = 0
+    mosaic_enabled: bool = False
+    # Add other relevant fields as needed
+
 # ===== Main NVIDIA Control Panel Class =====
 
 class NVIDIAControlPanel:
