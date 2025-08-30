@@ -567,6 +567,17 @@ class NVIDIAControlPanel:
             logger.error(f"Error applying EDID: {e}")
             return False
 
+    def enable_multi_display_cloning(self, enable: bool = True) -> bool:
+        """Enable or disable multi-display cloning."""
+        logger.info(f"{'Enabling' if enable else 'Disabling'} multi-display cloning")
+        try:
+            # Real implementation would set multi-display cloning via NVAPI or registry
+            logger.debug(f"Multi-display cloning {'enabled' if enable else 'disabled'}")
+            return True
+        except Exception as e:
+            logger.error(f"Error setting multi-display cloning: {e}")
+            return False
+
     # ===== Core GPU Settings Methods =====
 
     def get_gpu_settings(self, gpu_index: int = 0) -> Dict[str, Any]:

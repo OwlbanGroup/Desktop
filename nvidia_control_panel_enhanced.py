@@ -787,6 +787,58 @@ class NVIDIAControlPanel:
         logger.debug(f"Retrieved GPU settings: {settings}")
         return settings
 
+    def _get_settings_via_registry(self, gpu_index: int) -> Dict[str, Any]:
+        """Get settings from Windows Registry."""
+        settings = {}
+        
+        try:
+            # Power management settings
+            try:
+                with winreg.OpenKey(winreg.HKEY_CURRENT_USER, 
+                                   r"Software\NVIDIA Corporation\Global\NVTweak") as key:
+                    power_mode, _ = winreg.QueryValueEx(key, "PowerMizerMode")
+                    settings["power_mode"] = self._map_power_mode(power_mode)
+            except FileNotFoundError:
+                pass
+                
+            # 3D settings
+            try:
+                with winreg.OpenKey(winreg.HKEY_CURRENT_USER,
+                                   r"Software\NVIDIA Corporation\Global\NvCplApi\Policies") as key:
+                    # Various 3D settings can be read here
+                    pass
+            except FileNotFoundError:
+                pass
+                
+        except Exception as e:
+            logger.warning(f"Registry access failed: {e}")
+            
+        return settings
+    
+    def _get_default_settings(self) -> Dict[str, Any]:
+        """Get default settings for fallback."""
+        return {
+            "power_mode": PowerMode.OPTIMAL_POWER.value,
+            "texture_filtering": TextureFiltering.QUALITY.value,
+            "vertical_sync": VerticalSync.OFF.value,
+            "gpu_clock": 0,
+            "memory_clock": 0,
+            "temperature": 0,
+            "utilization": 0,
+            "power_usage": 0,
+            "fan_speed": 0,
+        }
+    
+    def _map_power_mode(self, registry_value: int) -> str:
+        """Map registry power mode value to human-readable string."""
+        power_modes = {
+            0: PowerMode.OPTIMAL_POWER.value,
+            1: PowerMode.ADAPTIVE.value,
+            2: PowerMode.PREFER_MAX_PERFORMANCE.value,
+            3: PowerMode.PREFER_CONSISTENT_PERFORMANCE.value,
+        }
+        return power_modes.get(registry_value, PowerMode.OPTIMAL_POWER.value)
+
     @retry_on_failure(max_retries=3)
     def set_gpu_settings(self, settings: Dict[str, Any], gpu_index: int = 0) -> str:
         """Set GPU settings in NVIDIA Control Panel."""
