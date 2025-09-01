@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  # Python Flask Backend
+  flask-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: python-builder
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_APP=backend/app_server.py
+      - FLASK_ENV=development
+      - OSCAR_BROOME_URL=http://node-backend:4000
+    volumes:
+      - ./backend:/app/backend
+      - ./organizational_leadership:/app/organizational_leadership
+      - ./frontend:/app/frontend
+    depends_on:
+      - node-backend
+    networks:
+      - owlban-network
+
+  # Node.js Backend
+  node-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: node-builder
+    ports:
+      - "4000:4000"
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ./OSCAR-BROOME-REVENUE:/app/OSCAR-BROOME-REVENUE
+    networks:
+      - owlban-network
+
+  # Full Application (Production-like)
+  full-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:5000"
+    environment:
+      - FLASK_ENV=production
+      - NODE_ENV=production
+    depends_on:
+      - flask-backend
+      - node-backend
+    networks:
+      - owlban-network
+
+networks:
+  owlban-network:
+    driver: bridge
+
+volumes:
+  node_modules:
+  pip_cache:

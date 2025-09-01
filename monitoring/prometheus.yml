@@ -1,0 +1,86 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+rule_files:
+  # - "first_rules.yml"
+  # - "second_rules.yml"
+
+scrape_configs:
+  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # Flask Backend Application
+  - job_name: 'owlban-flask'
+    static_configs:
+      - targets: ['host.docker.internal:5000']
+    scrape_interval: 5s
+    metrics_path: '/metrics'
+    params:
+      format: ['prometheus']
+
+  # Node.js Earnings Dashboard
+  - job_name: 'owlban-node'
+    static_configs:
+      - targets: ['host.docker.internal:4000']
+    scrape_interval: 5s
+    metrics_path: '/metrics'
+
+  # System metrics
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+
+  # Container metrics
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['cadvisor:8080']
+    scrape_interval: 30s
+
+  # Docker containers
+  - job_name: 'docker'
+    static_configs:
+      - targets: ['host.docker.internal:9323']
+    metrics_path: '/metrics'
+
+  # Nginx (if used as reverse proxy)
+  - job_name: 'nginx'
+    static_configs:
+      - targets: ['host.docker.internal:80']
+    scrape_interval: 10s
+
+  # PostgreSQL (if database is added)
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['host.docker.internal:5432']
+    scrape_interval: 30s
+
+  # Redis (if caching is added)
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['host.docker.internal:6379']
+    scrape_interval: 30s
+
+# Alerting configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: ['alertmanager:9093']
+
+# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+rule_files:
+  - "alert_rules.yml"
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
+scrape_configs:
+  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+  - job_name: 'prometheus'
+
+    # metrics_path defaults to '/metrics'
+    # scheme defaults to 'http'.
+
+    static_configs:
+      - targets: ['localhost:9090']

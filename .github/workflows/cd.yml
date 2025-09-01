@@ -5,10 +5,16 @@ on:
     branches:
       - main
       - master
+  workflow_run:
+    workflows: ["CI"]
+    types:
+      - completed
 
 jobs:
-  build-and-deploy:
+  build-and-deploy-staging:
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    environment: staging
 
     steps:
       - name: Checkout repository
@@ -23,19 +29,92 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and push Docker image
+      - name: Build and push staging Docker image
         uses: docker/build-push-action@v4
         with:
-          context: ./OSCAR-BROOME-REVENUE
-          file: ./OSCAR-BROOME-REVENUE/Dockerfile
+          context: .
+          file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/owlban-earnings-dashboard:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/owlban-full-app:staging-${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
-      - name: Deploy to server
+      - name: Deploy to staging server
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.STAGING_DEPLOY_USER }}@${{ secrets.STAGING_DEPLOY_HOST }} << 'EOF'
+          cd /opt/owlban-app
+          docker pull ${{ secrets.DOCKER_USERNAME }}/owlban-full-app:staging-${{ github.sha }}
+          docker stop owlban-staging || true
+          docker rm owlban-staging || true
+          docker run -d --name owlban-staging -p 8080:5000 ${{ secrets.DOCKER_USERNAME }}/owlban-full-app:staging-${{ github.sha }}
+          docker system prune -f
+          EOF
+        env:
+          STAGING_DEPLOY_USER: ${{ secrets.STAGING_DEPLOY_USER }}
+          STAGING_DEPLOY_HOST: ${{ secrets.STAGING_DEPLOY_HOST }}
+
+      - name: Health check staging
+        run: |
+          sleep 30
+          curl -f http://staging.yourdomain.com/health || exit 1
+
+  build-and-deploy-production:
+    runs-on: ubuntu-latest
+    needs: build-and-deploy-staging
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    environment: production
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push production Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/owlban-full-app:latest
+            ${{ secrets.DOCKER_USERNAME }}/owlban-full-app:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Deploy to production server
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF'
-          cd /path/to/deployment/directory
-          ./deploy.sh
+          cd /opt/owlban-app
+          # Create backup of current running container
+          docker tag $(docker ps -q --filter name=owlban-prod) ${{ secrets.DOCKER_USERNAME }}/owlban-full-app:backup-$(date +%Y%m%d_%H%M%S) || true
+
+          # Deploy new version
+          docker pull ${{ secrets.DOCKER_USERNAME }}/owlban-full-app:latest
+          docker stop owlban-prod || true
+          docker rm owlban-prod || true
+          docker run -d --name owlban-prod -p 80:5000 ${{ secrets.DOCKER_USERNAME }}/owlban-full-app:latest
+
+          # Wait for health check
+          sleep 30
+          if curl -f http://localhost/health; then
+            echo "Deployment successful"
+            # Clean up old images
+            docker system prune -f
+          else
+            echo "Health check failed, rolling back"
+            docker stop owlban-prod
+            docker rm owlban-prod
+            # Rollback logic here
+            exit 1
+          fi
           EOF
         env:
           DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
