@@ -43,6 +43,14 @@ def test_benefits_resources():
         if not any("Business Travel Accident Insurance" in b for b in result.get('benefits', [])):
             raise AssertionError("Business Travel Accident Insurance benefit not found in results.")
 
+        # Check for personal loans presence
+        if not any("Personal Loans" in b for b in result.get('benefits', [])):
+            raise AssertionError("Personal Loans benefit not found in results.")
+
+        # Check for personal loans URL presence
+        if "https://www.nvidia.com/en-us/benefits/money/personal-loans/" not in result.get('links', []):
+            raise AssertionError("Personal Loans URL not found in results.")
+
         return True
 
     except Exception as e:
