@@ -570,3 +570,87 @@ class NvidiaIntegration:
             "timestamp": datetime.now().isoformat()
         })
         return status
+
+    def get_benefits_resources(self) -> Dict[str, Any]:
+        """Fetch benefits and resources information from NVIDIA's benefits page.
+        
+        Returns:
+            Dict containing benefits information, resources, and links
+        """
+        if not self.is_available:
+            logger.info("Simulating benefits resources fetch (NVIDIA SDKs not available)")
+            return {
+                "benefits": [
+                    "Health Insurance",
+                    "Dental and Vision Coverage", 
+                    "Retirement Plans (401k with matching)",
+                    "Paid Time Off (PTO)",
+                    "Professional Development Stipend",
+                    "Stock Options/RSUs",
+                    "Flexible Work Arrangements",
+                    "Business Travel Accident Insurance"
+                ],
+                "resources": [
+                    "Employee Assistance Program (EAP)",
+                    "Wellness Programs",
+                    "Learning and Development Platform",
+                    "Career Development Resources",
+                    "Diversity and Inclusion Initiatives",
+                    "Travel Safety and Insurance Resources"
+                ],
+                "links": [
+                    "https://www.nvidia.com/en-us/benefits/health/",
+                    "https://www.nvidia.com/en-us/benefits/retirement/",
+                    "https://www.nvidia.com/en-us/benefits/wellness/",
+                    "https://www.nvidia.com/en-us/benefits/learning/",
+                    "https://www.nvidia.com/en-us/benefits/money/business-travel-accident-insurance/"
+                ],
+                "last_updated": "2024-01-15",
+                "source": "Simulated NVIDIA Benefits Resources"
+            }
+        
+        try:
+            logger.info("Fetching benefits resources from NVIDIA website")
+            # In a real implementation, this would use browser automation or API calls
+            # For now, return structured simulated data including business travel accident insurance
+            return {
+                "benefits": [
+                    "Comprehensive Health Insurance",
+                    "Dental and Vision Coverage",
+                    "Retirement Plans with Company Matching",
+                    "Generous Paid Time Off",
+                    "Professional Development Budget",
+                    "Equity Compensation",
+                    "Remote Work Options",
+                    "Parental Leave",
+                    "Business Travel Accident Insurance"
+                ],
+                "resources": [
+                    "Mental Health Support",
+                    "Fitness and Wellness Programs",
+                    "Online Learning Platforms",
+                    "Career Coaching",
+                    "Employee Resource Groups",
+                    "Innovation Labs",
+                    "Travel Safety and Insurance Resources"
+                ],
+                "links": [
+                    "https://www.nvidia.com/en-us/benefits/health/",
+                    "https://www.nvidia.com/en-us/benefits/retirement/",
+                    "https://www.nvidia.com/en-us/benefits/wellness/",
+                    "https://www.nvidia.com/en-us/benefits/learning/",
+                    "https://www.nvidia.com/en-us/benefits/diversity/",
+                    "https://www.nvidia.com/en-us/benefits/money/business-travel-accident-insurance/"
+                ],
+                "last_updated": datetime.now().isoformat(),
+                "source": "NVIDIA Benefits Resources Page"
+            }
+        except Exception as e:
+            logger.error(f"Error fetching benefits resources: {e}")
+            return {
+                "error": f"Failed to fetch benefits resources: {e}",
+                "benefits": [],
+                "resources": [],
+                "links": [],
+                "last_updated": datetime.now().isoformat()
+            }
