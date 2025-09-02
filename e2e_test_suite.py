@@ -33,7 +33,7 @@ class E2ETestSuite:
             "timestamp": datetime.now().isoformat()
         }
         self.test_results.append(result)
-        print(f"[{status.upper()}] {test_name}: {message}")
+            print(f"[{status.upper()}] {test_name}: {message}")
 
     def start_server(self):
         """Start the backend server"""
@@ -46,7 +46,7 @@ class E2ETestSuite:
                 cwd=os.getcwd()
             )
             # Wait for server to start
-            time.sleep(3)
+            time.sleep(5)  # Increased wait time to allow server to fully start
             return True
         except Exception as e:
             self.log_test_result("Server Startup", "FAILED", f"Failed to start server: {str(e)}")
@@ -59,16 +59,16 @@ class E2ETestSuite:
                 # Try graceful shutdown first
                 if self.server_process.poll() is None:
                     self.server_process.terminate()
-                    time.sleep(2)
+                    time.sleep(5)  # Increased wait time for graceful shutdown
                     if self.server_process.poll() is None:
                         self.server_process.kill()
-            except Exception as e:
-                print(f"Error stopping server: {e}")
+        except Exception as e:
+            print(f"Error stopping server: {e}")
 
     def test_server_health(self):
         """Test basic server health"""
         try:
-            response = requests.get(f"{self.base_url}/health", timeout=5)
+            response = requests.get(f"{self.base_url}/health", timeout=10)  # Increased timeout
             if response.status_code == 200:
                 self.log_test_result("Server Health", "PASSED", "Server is responding")
                 return True
@@ -271,7 +271,7 @@ class E2ETestSuite:
     def test_frontend_accessibility(self):
         """Test frontend accessibility"""
         try:
-            response = requests.get(f"{self.base_url}/", timeout=10)
+            response = requests.get(f"{self.base_url}/", timeout=15)  # Increased timeout
 
             if response.status_code == 200:
                 if "Owlban Group" in response.text:
@@ -355,11 +355,11 @@ DETAILED RESULTS:
 
         for result in self.test_results:
             status_icon = {
-                "PASSED": "✅",
-                "FAILED": "❌",
-                "SKIPPED": "⏭️",
-                "WARNING": "⚠️"
-            }.get(result["status"], "❓")
+                "PASSED": "[PASS]",
+                "FAILED": "[FAIL]",
+                "SKIPPED": "[SKIP]",
+                "WARNING": "[WARN]"
+            }.get(result["status"], "[UNK]")
 
             report += f"{status_icon} {result['test_name']}: {result['message']}\n"
             if result.get("details"):
@@ -377,12 +377,15 @@ DETAILED RESULTS:
     def run_all_tests(self):
         """Run the complete E2E test suite"""
         self.start_time = time.time()
-        print("🚀 Starting Owlban Group E2E Test Suite...")
+        try:
+            print("Starting Owlban Group E2E Test Suite...")
+        except UnicodeEncodeError:
+            print("Starting Owlban Group E2E Test Suite...")
         print("="*80)
 
         # Start server
         if not self.start_server():
-            print("❌ Cannot proceed without server. Aborting tests.")
+            print("Cannot proceed without server. Aborting tests.")
             return False
 
         try:
@@ -391,7 +394,7 @@ DETAILED RESULTS:
             self.test_frontend_accessibility()
 
             # Login Override System Tests
-            print("\n🔐 Testing Login Override System...")
+            print("\nTesting Login Override System...")
             self.test_login_override_emergency()
             self.test_login_override_admin()
             self.test_login_override_technical()
@@ -399,17 +402,17 @@ DETAILED RESULTS:
             self.test_active_overrides()
 
             # Core Platform Tests
-            print("\n👥 Testing Leadership Simulation...")
+            print("\nTesting Leadership Simulation...")
             self.test_leadership_simulation()
 
-            print("\n🎮 Testing NVIDIA GPU Integration...")
+            print("\nTesting NVIDIA GPU Integration...")
             self.test_gpu_status()
 
-            print("\n💰 Testing Earnings Dashboard...")
+            print("\nTesting Earnings Dashboard...")
             self.test_earnings_dashboard()
 
             # Error Handling Tests
-            print("\n🛡️ Testing Error Handling...")
+            print("\nTesting Error Handling...")
             self.test_error_handling()
 
         finally:
@@ -436,18 +439,21 @@ def main():
         success = suite.run_all_tests()
 
         if success:
-            print("🎉 E2E Test Suite completed successfully!")
+            print("E2E Test Suite completed successfully!")
             sys.exit(0)
         else:
-            print("❌ E2E Test Suite completed with critical failures!")
+            print("E2E Test Suite completed with critical failures!")
             sys.exit(1)
 
     except KeyboardInterrupt:
-        print("\n⚠️ Test suite interrupted by user")
+        print("\nTest suite interrupted by user")
         suite.stop_server()
         sys.exit(130)
     except Exception as e:
-        print(f"\n💥 Unexpected error during test execution: {e}")
+        try:
+            print(f"\nUnexpected error during test execution: {e}")
+        except UnicodeEncodeError:
+            print(f"\nUnexpected error during test execution: {e}")
         suite.stop_server()
         sys.exit(1)
 
