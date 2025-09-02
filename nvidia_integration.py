@@ -408,7 +408,252 @@ class NvidiaIntegration:
                 "last_updated": datetime.now().isoformat(),
                 "source": url
             }
-        d e f   g e t _ d r i v e r _ u p d a t e s ( s e l f )   - >   D i c t [ s t r ,   A n y ] : 
+
+    def apply_for_auto_loan(self, vehicle_info: Dict[str, Any], applicant_info: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Apply for a personal loan through NVIDIA benefits for automobile purchase.
+
+        Args:
+            vehicle_info: Dict containing vehicle details (model, price, vin, etc.)
+            applicant_info: Dict containing applicant details (name, income, credit_score, etc.)
+
+        Returns:
+            Dict containing loan application results and terms
+        """
+        try:
+            logger.info("Processing auto loan application through NVIDIA benefits")
+
+            # Validate required information
+            required_vehicle = ['model', 'price', 'dealership']
+            required_applicant = ['name', 'annual_income', 'employment_status']
+
+            for field in required_vehicle:
+                if field not in vehicle_info:
+                    raise ValueError(f"Missing required vehicle information: {field}")
+
+            for field in required_applicant:
+                if field not in applicant_info:
+                    raise ValueError(f"Missing required applicant information: {field}")
+
+            # Calculate loan terms
+            loan_terms = self._calculate_loan_terms(vehicle_info['price'], applicant_info)
+
+            # Check if personal loans are available in benefits
+            benefits_data = self.get_benefits_resources()
+            personal_loans_available = any("Personal Loans" in benefit for benefit in benefits_data.get('benefits', []))
+
+            if not personal_loans_available:
+                return {
+                    "success": False,
+                    "error": "Personal loans not currently available through NVIDIA benefits",
+                    "available_benefits": benefits_data.get('benefits', []),
+                    "last_updated": datetime.now().isoformat()
+                }
+
+            # Simulate loan application process
+            application_id = f"NVIDIA-LOAN-{datetime.now().strftime('%Y%m%d-%H%M%S')}"
+
+            loan_application = {
+                "application_id": application_id,
+                "status": "approved",  # Assuming approval for demo purposes
+                "vehicle_info": vehicle_info,
+                "applicant_info": applicant_info,
+                "loan_terms": loan_terms,
+                "application_date": datetime.now().isoformat(),
+                "approved_amount": loan_terms['loan_amount'],
+                "interest_rate": loan_terms['interest_rate'],
+                "term_months": loan_terms['term_months'],
+                "monthly_payment": loan_terms['monthly_payment'],
+                "total_cost": loan_terms['total_cost'],
+                "benefits_source": "NVIDIA Employee Benefits",
+                "personal_loans_url": "https://www.nvidia.com/en-us/benefits/money/personal-loans/"
+            }
+
+            logger.info(f"Auto loan application processed successfully: {application_id}")
+            return {
+                "success": True,
+                "loan_application": loan_application,
+                "message": "Loan application processed successfully through NVIDIA benefits"
+            }
+
+        except Exception as e:
+            logger.error(f"Error processing auto loan application: {e}")
+            return {
+                "success": False,
+                "error": f"Failed to process loan application: {e}",
+                "last_updated": datetime.now().isoformat()
+            }
+
+    def _calculate_loan_terms(self, vehicle_price: float, applicant_info: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Calculate loan terms based on vehicle price and applicant information.
+
+        Args:
+            vehicle_price: Price of the vehicle
+            applicant_info: Applicant financial information
+
+        Returns:
+            Dict containing calculated loan terms
+        """
+        # Base calculations for NVIDIA employee benefits loans
+        base_interest_rate = 4.5  # Competitive rate for employees
+        max_loan_to_value = 0.9  # 90% financing
+        min_down_payment = 0.1  # 10% minimum down payment
+
+        # Adjust based on credit score if provided
+        credit_score = applicant_info.get('credit_score', 700)
+        if credit_score >= 750:
+            interest_rate = base_interest_rate - 0.5
+        elif credit_score >= 650:
+            interest_rate = base_interest_rate
+        else:
+            interest_rate = base_interest_rate + 1.0
+
+        # Calculate loan amount
+        down_payment = max(vehicle_price * min_down_payment, applicant_info.get('down_payment', 0))
+        loan_amount = min(vehicle_price - down_payment, vehicle_price * max_loan_to_value)
+
+        # Determine term based on loan amount and income
+        annual_income = applicant_info.get('annual_income', 100000)
+        max_monthly_payment = annual_income * 0.15  # 15% of annual income
+
+        # Calculate monthly payment for different terms
+        terms = [36, 48, 60, 72]  # Available terms in months
+        best_term = 60  # Default
+
+        for term in terms:
+            monthly_rate = interest_rate / 100 / 12
+            monthly_payment = loan_amount * (monthly_rate * (1 + monthly_rate)**term) / ((1 + monthly_rate)**term - 1)
+
+            if monthly_payment <= max_monthly_payment:
+                best_term = term
+                break
+
+        # Calculate final terms
+        monthly_rate = interest_rate / 100 / 12
+        monthly_payment = loan_amount * (monthly_rate * (1 + monthly_rate)**best_term) / ((1 + monthly_rate)**best_term - 1)
+        total_cost = monthly_payment * best_term
+        total_interest = total_cost - loan_amount
+
+        return {
+            "loan_amount": round(loan_amount, 2),
+            "down_payment": round(down_payment, 2),
+            "interest_rate": round(interest_rate, 2),
+            "term_months": best_term,
+            "monthly_payment": round(monthly_payment, 2),
+            "total_cost": round(total_cost, 2),
+            "total_interest": round(total_interest, 2),
+            "loan_to_value_ratio": round(loan_amount / vehicle_price * 100, 2),
+            "debt_to_income_ratio": round(monthly_payment / (annual_income / 12) * 100, 2)
+        }
+
+    def get_loan_status(self, application_id: str) -> Dict[str, Any]:
+        """
+        Check the status of a loan application.
+
+        Args:
+            application_id: The loan application ID
+
+        Returns:
+            Dict containing loan status information
+        """
+        try:
+            logger.info(f"Checking loan status for application: {application_id}")
+
+            # In a real implementation, this would query NVIDIA's loan system
+            # For demo purposes, we'll simulate status checking
+
+            if not application_id.startswith("NVIDIA-LOAN-"):
+                return {
+                    "success": False,
+                    "error": "Invalid application ID format",
+                    "application_id": application_id
+                }
+
+            # Simulate different statuses based on application ID
+            if "2024" in application_id:
+                status = "approved"
+                next_steps = ["Complete documentation", "Vehicle purchase", "Loan funding"]
+            elif "2025" in application_id:
+                status = "processing"
+                next_steps = ["Credit check in progress", "Documentation review"]
+            else:
+                status = "pending"
+                next_steps = ["Application under review"]
+
+            return {
+                "success": True,
+                "application_id": application_id,
+                "status": status,
+                "last_updated": datetime.now().isoformat(),
+                "next_steps": next_steps,
+                "benefits_source": "NVIDIA Employee Benefits"
+            }
+
+        except Exception as e:
+            logger.error(f"Error checking loan status: {e}")
+            return {
+                "success": False,
+                "error": f"Failed to check loan status: {e}",
+                "application_id": application_id
+            }
+
+    def integrate_auto_purchase_with_loan(self, vehicle_info: Dict[str, Any], applicant_info: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Complete integration of automobile purchase with NVIDIA personal loan financing.
+
+        Args:
+            vehicle_info: Vehicle purchase details
+            applicant_info: Applicant information
+
+        Returns:
+            Dict containing complete purchase and financing information
+        """
+        try:
+            logger.info("Integrating auto purchase with NVIDIA loan financing")
+
+            # Apply for the loan
+            loan_result = self.apply_for_auto_loan(vehicle_info, applicant_info)
+
+            if not loan_result.get('success', False):
+                return loan_result
+
+            # Create purchase record with financing details
+            purchase_record = {
+                "purchase_id": f"PURCHASE-{datetime.now().strftime('%Y%m%d-%H%M%S')}",
+                "vehicle_info": vehicle_info,
+                "financing": {
+                    "type": "NVIDIA Personal Loan",
+                    "application_id": loan_result['loan_application']['application_id'],
+                    "loan_terms": loan_result['loan_application']['loan_terms'],
+                    "status": loan_result['loan_application']['status']
+                },
+                "total_cost": vehicle_info['price'],
+                "financed_amount": loan_result['loan_application']['loan_terms']['loan_amount'],
+                "down_payment": loan_result['loan_application']['loan_terms']['down_payment'],
+                "monthly_payment": loan_result['loan_application']['loan_terms']['monthly_payment'],
+                "purchase_date": datetime.now().isoformat(),
+                "benefits_used": ["Personal Loans"],
+                "integration_status": "completed"
+            }
+
+            logger.info(f"Auto purchase with loan integration completed: {purchase_record['purchase_id']}")
+            return {
+                "success": True,
+                "purchase_record": purchase_record,
+                "loan_application": loan_result['loan_application'],
+                "message": "Automobile purchase successfully integrated with NVIDIA personal loan financing"
+            }
+
+        except Exception as e:
+            logger.error(f"Error integrating auto purchase with loan: {e}")
+            return {
+                "success": False,
+                "error": f"Failed to integrate purchase with loan: {e}",
+                "vehicle_info": vehicle_info
+            }
+
+    def get_driver_updates(self) -> Dict[str, Any]:
                  " " " 
                  F e t c h   d r i v e r   u p d a t e s   a n d   i n f o r m a t i o n   f r o m   N V I D I A 
  
