@@ -24,6 +24,13 @@ except Exception as e:
     print(f"Error importing chase_mortgage: {e}")
 
 try:
+    from OSCAR_BROOME_REVENUE.earnings_dashboard import chase_auto_finance
+    print("chase_auto_finance imported successfully")
+    print(f"router: {chase_auto_finance.router}")
+except Exception as e:
+    print(f"Error importing chase_auto_finance: {e}")
+
+try:
     from app_with_chase_integration import app
     print("app_with_chase_integration imported successfully")
     print(f"app: {app}")

@@ -18,6 +18,13 @@ spec.loader.exec_module(chase_mortgage)
 app = Flask(__name__)
 app.register_blueprint(chase_mortgage.router, url_prefix='/chase-mortgage')
 
+# Import chase_auto_finance using importlib
+spec_auto = importlib.util.spec_from_file_location("chase_auto_finance", os.path.join(os.getcwd(), 'OSCAR-BROOME-REVENUE', 'earnings_dashboard', 'chase_auto_finance.py'))
+chase_auto_finance = importlib.util.module_from_spec(spec_auto)
+spec_auto.loader.exec_module(chase_auto_finance)
+
+app.register_blueprint(chase_auto_finance.router, url_prefix='/chase-auto-finance')
+
 def main():
     parser = argparse.ArgumentParser(
         description="Organizational Leadership CLI",

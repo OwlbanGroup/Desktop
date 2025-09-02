@@ -162,6 +162,99 @@ def proxy_health():
     except requests.RequestException as e:
         return jsonify({'error': str(e)}), 500
 
+# Login Override Proxy Routes
+@app.route('/api/override/emergency', methods=['POST'])
+def proxy_emergency_override():
+    try:
+        response = requests.post(
+            f"{OSCAR_BROOME_URL}/api/override/emergency",
+            json=request.json,
+            headers={'Content-Type': 'application/json'}
+        )
+        return jsonify(response.json()), response.status_code
+    except requests.RequestException as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/override/admin', methods=['POST'])
+def proxy_admin_override():
+    try:
+        response = requests.post(
+            f"{OSCAR_BROOME_URL}/api/override/admin",
+            json=request.json,
+            headers={'Content-Type': 'application/json'}
+        )
+        return jsonify(response.json()), response.status_code
+    except requests.RequestException as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/override/technical', methods=['POST'])
+def proxy_technical_override():
+    try:
+        response = requests.post(
+            f"{OSCAR_BROOME_URL}/api/override/technical",
+            json=request.json,
+            headers={'Content-Type': 'application/json'}
+        )
+        return jsonify(response.json()), response.status_code
+    except requests.RequestException as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/override/validate/<override_id>', methods=['POST'])
+def proxy_validate_override(override_id):
+    try:
+        response = requests.post(
+            f"{OSCAR_BROOME_URL}/api/override/validate/{override_id}",
+            json=request.json,
+            headers={'Content-Type': 'application/json'}
+        )
+        return jsonify(response.json()), response.status_code
+    except requests.RequestException as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/override/revoke/<override_id>', methods=['POST'])
+def proxy_revoke_override(override_id):
+    try:
+        response = requests.post(
+            f"{OSCAR_BROOME_URL}/api/override/revoke/{override_id}",
+            json=request.json,
+            headers={'Content-Type': 'application/json'}
+        )
+        return jsonify(response.json()), response.status_code
+    except requests.RequestException as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/override/active/<user_id>', methods=['GET'])
+def proxy_active_overrides(user_id):
+    try:
+        response = requests.get(f"{OSCAR_BROOME_URL}/api/override/active/{user_id}")
+        return jsonify(response.json()), response.status_code
+    except requests.RequestException as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/override/stats', methods=['GET'])
+def proxy_override_stats():
+    try:
+        response = requests.get(f"{OSCAR_BROOME_URL}/api/override/stats")
+        return jsonify(response.json()), response.status_code
+    except requests.RequestException as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/override/config', methods=['GET'])
+def proxy_override_config():
+    try:
+        response = requests.get(f"{OSCAR_BROOME_URL}/api/override/config")
+        return jsonify(response.json()), response.status_code
+    except requests.RequestException as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/override/health', methods=['GET'])
+def proxy_override_health():
+    try:
+        response = requests.get(f"{OSCAR_BROOME_URL}/api/override/health")
+        return jsonify(response.json()), response.status_code
+    except requests.RequestException as e:
+        return jsonify({'error': str(e)}), 500
+
 @app.route('/health', methods=['GET'])
 def health_check():
     return jsonify({

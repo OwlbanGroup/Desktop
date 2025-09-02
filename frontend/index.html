@@ -90,6 +90,63 @@
                 <button>Open Earnings Dashboard</button>
             </a>
         </section>
+
+        <section class="section">
+            <h2>Login Override System</h2>
+            <p>Emergency access and administrative override capabilities:</p>
+            <div class="login-override-controls">
+                <div class="override-section">
+                    <h3>Emergency Override</h3>
+                    <input type="text" id="emergencyUserId" placeholder="User ID" value="oscar.broome@oscarsystem.com">
+                    <select id="emergencyReason">
+                        <option value="emergency_access">Emergency Access</option>
+                        <option value="system_maintenance">System Maintenance</option>
+                        <option value="technical_issue">Technical Issue</option>
+                    </select>
+                    <input type="password" id="emergencyCode" placeholder="Emergency Code" value="OSCAR_BROOME_EMERGENCY_2024">
+                    <button onclick="emergencyOverride()">Emergency Override</button>
+                </div>
+
+                <div class="override-section">
+                    <h3>Admin Override</h3>
+                    <input type="text" id="adminUserId" placeholder="Admin User ID" value="admin@oscarsystem.com">
+                    <input type="text" id="targetUserId" placeholder="Target User ID" value="user@oscarsystem.com">
+                    <select id="adminReason">
+                        <option value="account_locked">Account Locked</option>
+                        <option value="password_reset">Password Reset</option>
+                        <option value="mfa_failure">MFA Failure</option>
+                    </select>
+                    <input type="text" id="justification" placeholder="Justification" value="Administrative override for system access">
+                    <button onclick="adminOverride()">Admin Override</button>
+                </div>
+
+                <div class="override-section">
+                    <h3>Technical Override</h3>
+                    <input type="text" id="supportUserId" placeholder="Support User ID" value="support@oscarsystem.com">
+                    <input type="text" id="techTargetUserId" placeholder="Target User ID" value="user@oscarsystem.com">
+                    <select id="techReason">
+                        <option value="technical_issue">Technical Issue</option>
+                        <option value="system_maintenance">System Maintenance</option>
+                    </select>
+                    <input type="text" id="ticketNumber" placeholder="Ticket Number" value="TECH-1234">
+                    <button onclick="technicalOverride()">Technical Override</button>
+                </div>
+
+                <div class="override-section">
+                    <h3>Validate Override</h3>
+                    <input type="text" id="validateOverrideId" placeholder="Override ID">
+                    <input type="text" id="validateUserId" placeholder="User ID">
+                    <button onclick="validateOverride()">Validate Override</button>
+                </div>
+
+                <div class="override-section">
+                    <h3>Active Overrides</h3>
+                    <input type="text" id="activeUserId" placeholder="User ID" value="oscar.broome@oscarsystem.com">
+                    <button onclick="getActiveOverrides()">Get Active Overrides</button>
+                </div>
+            </div>
+            <div id="overrideResults" class="results" style="display: none;"></div>
+        </section>
     </div>
 
     <script>
