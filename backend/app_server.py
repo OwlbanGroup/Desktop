@@ -275,4 +275,11 @@ def serve_frontend(path):
         return send_from_directory(app.static_folder, 'index.html')
 
 if __name__ == '__main__':
+    import sys
+    import os
+
+    # Change working directory to backend to ensure relative imports and paths work correctly
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
+    # Run the Flask app
     app.run(debug=True, port=5000)
