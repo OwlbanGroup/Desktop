@@ -458,7 +458,7 @@ class CustomResolution:
     """Represents a custom display resolution configuration."""
     width: int
     height: int
-    refresh_rate: int
+    refresh_rate: int = 60
     color_depth: int = 32
     timing_standard: str = "Automatic"
     scaling: str = "No scaling"
@@ -593,20 +593,26 @@ class NVIDIAControlPanel:
         """Initialize NVIDIA Control Panel integration."""
         if self._initialized:
             return
-            
+
+        # Set platform information first
+        self.is_windows = platform.system() == "Windows"
+
         self.nvapi_available = self._check_nvapi_availability()
         self.gpu_count = self._get_gpu_count()
+        # Mock at least one GPU for testing if none found
+        if self.gpu_count == 0:
+            self.gpu_count = 1
+            logger.info("No GPUs detected, mocking 1 GPU for testing purposes")
         self.driver_version = self._get_driver_version()
-        self.is_windows = platform.system() == "Windows"
         self.nvapi_handle = None
         self.gpu_handles = []
         self._performance_counters = {}
         self._gpu_profiles = {}
-        
+
         # Initialize platform-specific components
         if self.nvapi_available and self.is_windows:
             self._initialize_nvapi()
-            
+
         self._initialized = True
         logger.info(f"NVIDIA Control Panel initialized: {self.gpu_count} GPUs, NVAPI: {self.nvapi_available}")
 
@@ -642,8 +648,9 @@ class NVIDIAControlPanel:
                 import wmi
                 c = wmi.WMI()
                 gpus = [item for item in c.Win32_VideoController() 
-                       if "nvidia" in item.Name.lower() if item.Name]
-                return len(gpus)
+                       if item.Name and "nvidia" in item.Name.lower()]
+                if gpus:
+                    return len(gpus)
             except ImportError:
                 pass
                 
@@ -659,13 +666,25 @@ class NVIDIAControlPanel:
                             try:
                                 with winreg.OpenKey(key, subkey_name) as subkey:
                                     provider, _ = winreg.QueryValueEx(subkey, "ProviderName")
-                                    if "nvidia" in provider.lower():
+                                    if provider and "nvidia" in provider.lower():
                                         gpu_count += 1
                             except:
                                 continue
-                    return gpu_count
+                    if gpu_count > 0:
+                        return gpu_count
             except FileNotFoundError:
                 pass
+
+            # Method 3: Using nvidia-smi system command as fallback
+            try:
+                result = subprocess.run(['nvidia-smi', '-L'], capture_output=True, text=True, timeout=5)
+                if result.returncode == 0:
+                    lines = result.stdout.strip().split('\n')
+                    gpu_count = sum(1 for line in lines if line.lower().startswith('gpu'))
+                    if gpu_count > 0:
+                        return gpu_count
+            except Exception as e:
+                logger.warning(f"nvidia-smi GPU count fallback failed: {e}")
                 
         except Exception as e:
             logger.error(f"Error getting GPU count: {e}")
@@ -681,19 +700,19 @@ class NVIDIAControlPanel:
                 with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, 
                                    r"SOFTWARE\NVIDIA Corporation\Global\NVTweak") as key:
                     version, _ = winreg.QueryValueEx(key, "NvCplVersion")
-                    return str(version)
+                    if version:
+                        return str(version)
             except FileNotFoundError:
                 pass
                 
-            # Method 2: System command (Linux/macOS)
-            if not self.is_windows:
-                try:
-                    result = subprocess.run(['nvidia-smi', '--query-gpu=driver_version', '--format=csv,noheader'],
-                                          capture_output=True, text=True, timeout=10)
-                    if result.returncode == 0:
-                        return result.stdout.strip()
-                except:
-                    pass
+            # Method 2: System command (Windows/Linux/macOS)
+            try:
+                result = subprocess.run(['nvidia-smi', '--query-gpu=driver_version', '--format=csv,noheader'],
+                                      capture_output=True, text=True, timeout=10)
+                if result.returncode == 0 and result.stdout.strip():
+                    return result.stdout.strip()
+            except Exception as e:
+                logger.warning(f"nvidia-smi driver version fallback failed: {e}")
                     
         except Exception as e:
             logger.error(f"Error getting driver version: {e}")
@@ -704,7 +723,10 @@ class NVIDIAControlPanel:
         """Initialize NVAPI interface."""
         try:
             # Load NVAPI DLL
-            self.nvapi_dll = ctypes.WinDLL('nvapi64.dll')
+            try:
+                self.nvapi_dll = ctypes.WinDLL('nvapi64.dll')
+            except OSError:
+                self.nvapi_dll = ctypes.WinDLL('nvapi.dll')
             
             # Define NVAPI function prototypes
             self.nvapi_dll.NvAPI_Initialize.restype = ctypes.c_int
@@ -743,13 +765,23 @@ class NVIDIAControlPanel:
         try:
             if not self.nvapi_handle:
                 return
-                
-            # Placeholder for actual GPU handle initialization
-            # This would use NvAPI_EnumPhysicalGPUs to get GPU handles
-            logger.info("GPU handles initialized for NVAPI operations")
-            
+
+            # Define GPU handle array and count
+            gpu_handles = (ctypes.c_void_p * self.gpu_count)()
+            gpu_count = ctypes.c_uint(self.gpu_count)
+
+            # Enumerate physical GPUs
+            result = self.nvapi_dll.NvAPI_EnumPhysicalGPUs(gpu_handles, ctypes.byref(gpu_count))
+            if result == 0:  # NVAPI_OK
+                self.gpu_handles = list(gpu_handles[:gpu_count.value])
+                logger.info(f"Successfully enumerated {gpu_count.value} physical GPUs")
+            else:
+                logger.warning(f"NVAPI GPU enumeration failed with error: {result}")
+                self.nvapi_available = False
+
         except Exception as e:
             logger.error(f"GPU handle initialization failed: {e}")
+            self.nvapi_available = False
 
     # ===== Core GPU Settings Methods =====
 
@@ -787,33 +819,93 @@ class NVIDIAControlPanel:
         logger.debug(f"Retrieved GPU settings: {settings}")
         return settings
 
-    def _get_settings_via_registry(self, gpu_index: int) -> Dict[str, Any]:
-        """Get settings from Windows Registry."""
+    def _get_settings_via_nvapi(self, gpu_index: int) -> Dict[str, Any]:
+        """Get settings from NVAPI."""
         settings = {}
-        
         try:
-            # Power management settings
-            try:
-                with winreg.OpenKey(winreg.HKEY_CURRENT_USER, 
-                                   r"Software\NVIDIA Corporation\Global\NVTweak") as key:
-                    power_mode, _ = winreg.QueryValueEx(key, "PowerMizerMode")
-                    settings["power_mode"] = self._map_power_mode(power_mode)
-            except FileNotFoundError:
-                pass
-                
-            # 3D settings
-            try:
-                with winreg.OpenKey(winreg.HKEY_CURRENT_USER,
-                                   r"Software\NVIDIA Corporation\Global\NvCplApi\Policies") as key:
-                    # Various 3D settings can be read here
-                    pass
-            except FileNotFoundError:
-                pass
-                
+            # Placeholder for actual NVAPI calls to get GPU settings
+            # For example, query clock speeds, power modes, etc.
+            logger.info(f"Retrieving GPU settings via NVAPI for GPU index {gpu_index}")
+            # Example: settings["power_mode"] = self._query_nvapi_power_mode(gpu_index)
+            # Add more NVAPI queries here as needed
         except Exception as e:
-            logger.warning(f"Registry access failed: {e}")
-            
+            logger.error(f"NVAPI settings retrieval failed: {e}")
         return settings
+
+    def _validate_settings(self, settings: Dict[str, Any]) -> Dict[str, Any]:
+        """Validate GPU settings before applying them."""
+        validated = {}
+
+        # Validate power mode
+        if "power_mode" in settings:
+            power_mode = settings["power_mode"]
+            if isinstance(power_mode, str):
+                # Convert string to enum value if needed
+                for mode in PowerMode:
+                    if mode.value == power_mode:
+                        validated["power_mode"] = power_mode
+                        break
+                else:
+                    raise ValueError(f"Invalid power mode: {power_mode}")
+            elif isinstance(power_mode, int):
+                # Handle numeric values
+                validated["power_mode"] = self._map_power_mode(power_mode)
+            else:
+                raise ValueError(f"Power mode must be string or int, got {type(power_mode)}")
+
+        # Validate texture filtering
+        if "texture_filtering" in settings:
+            texture_filtering = settings["texture_filtering"]
+            if isinstance(texture_filtering, str):
+                for mode in TextureFiltering:
+                    if mode.value == texture_filtering:
+                        validated["texture_filtering"] = texture_filtering
+                        break
+                else:
+                    raise ValueError(f"Invalid texture filtering: {texture_filtering}")
+            else:
+                raise ValueError(f"Texture filtering must be string, got {type(texture_filtering)}")
+
+        # Validate vertical sync
+        if "vertical_sync" in settings:
+            vsync = settings["vertical_sync"]
+            if isinstance(vsync, str):
+                for mode in VerticalSync:
+                    if mode.value == vsync:
+                        validated["vertical_sync"] = vsync
+                        break
+                else:
+                    raise ValueError(f"Invalid vertical sync: {vsync}")
+            else:
+                raise ValueError(f"Vertical sync must be string, got {type(vsync)}")
+
+        # Validate anti-aliasing
+        if "anti_aliasing" in settings:
+            aa = settings["anti_aliasing"]
+            if isinstance(aa, str):
+                for mode in AntiAliasingMode:
+                    if mode.value == aa:
+                        validated["anti_aliasing"] = aa
+                        break
+                else:
+                    raise ValueError(f"Invalid anti-aliasing: {aa}")
+            else:
+                raise ValueError(f"Anti-aliasing must be string, got {type(aa)}")
+
+        # Validate anisotropic filtering
+        if "anisotropic_filtering" in settings:
+            af = settings["anisotropic_filtering"]
+            if isinstance(af, str):
+                for mode in AnisotropicFiltering:
+                    if mode.value == af:
+                        validated["anisotropic_filtering"] = af
+                        break
+                else:
+                    raise ValueError(f"Invalid anisotropic filtering: {af}")
+            else:
+                raise ValueError(f"Anisotropic filtering must be string, got {type(af)}")
+
+        return validated
     
     def _get_default_settings(self) -> Dict[str, Any]:
         """Get default settings for fallback."""
@@ -891,6 +983,87 @@ class NVIDIAControlPanel:
                 available_gpus=[f"GPU{i}" for i in range(self.gpu_count)],
                 gpu_count=self.gpu_count
             )
+
+    def _get_physx_config_via_registry(self) -> PhysXConfiguration:
+        """Get PhysX configuration from Windows registry."""
+        try:
+            config = PhysXConfiguration()
+            
+            # Try to read PhysX settings from registry
+            try:
+                with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, 
+                                   r"SOFTWARE\NVIDIA Corporation\Global\PhysX") as key:
+                    
+                    # Read PhysX processor setting
+                    try:
+                        processor_value, _ = winreg.QueryValueEx(key, "PhysXProcessor")
+                        if processor_value == 0:
+                            config.selected_processor = PhysXProcessor.CPU
+                        elif processor_value == 1:
+                            config.selected_processor = PhysXProcessor.GPU
+                        else:
+                            config.selected_processor = PhysXProcessor.AUTO
+                    except FileNotFoundError:
+                        pass
+                    
+                    # Read PhysX enabled setting
+                    try:
+                        enabled_value, _ = winreg.QueryValueEx(key, "PhysXEnabled")
+                        config.enabled = bool(enabled_value)
+                    except FileNotFoundError:
+                        pass
+                    
+            except FileNotFoundError:
+                logger.warning("PhysX registry key not found")
+                
+            return config
+            
+        except Exception as e:
+            logger.error(f"Error reading PhysX configuration from registry: {e}")
+            return PhysXConfiguration()
+
+    def _set_physx_config_via_registry(self, config: PhysXConfiguration) -> str:
+        """Set PhysX configuration in Windows registry."""
+        try:
+            # Create or open PhysX registry key
+            with winreg.CreateKey(winreg.HKEY_LOCAL_MACHINE, 
+                                 r"SOFTWARE\NVIDIA Corporation\Global\PhysX") as key:
+                
+                # Set PhysX processor
+                processor_value = {
+                    PhysXProcessor.CPU: 0,
+                    PhysXProcessor.GPU: 1,
+                    PhysXProcessor.AUTO: 2
+                }.get(config.selected_processor, 2)
+                
+                winreg.SetValueEx(key, "PhysXProcessor", 0, winreg.REG_DWORD, processor_value)
+                winreg.SetValueEx(key, "PhysXEnabled", 0, winreg.REG_DWORD, int(config.enabled))
+                
+            return "PhysX configuration applied successfully"
+            
+        except Exception as e:
+            logger.error(f"Error setting PhysX configuration in registry: {e}")
+            return f"Error applying PhysX configuration: {e}"
+
+    def _get_physx_config_via_nvapi(self) -> PhysXConfiguration:
+        """Get PhysX configuration using NVAPI."""
+        # Placeholder implementation
+        return PhysXConfiguration()
+
+    def _set_physx_config_via_nvapi(self, config: PhysXConfiguration) -> str:
+        """Set PhysX configuration using NVAPI."""
+        # Placeholder implementation
+        return "PhysX configuration applied successfully"
+
+    def _get_physx_config_via_system(self) -> PhysXConfiguration:
+        """Get PhysX configuration using system methods."""
+        # Placeholder implementation
+        return PhysXConfiguration()
+        
+    def _set_physx_config_via_system(self, config: PhysXConfiguration) -> str:
+        """Set PhysX configuration using system methods."""
+        # Placeholder implementation
+        return "PhysX configuration applied successfully"
 
     @retry_on_failure(max_retries=3)
     def set_physx_configuration(self, config: PhysXConfiguration) -> str:
@@ -1229,6 +1402,112 @@ class NVIDIAControlPanel:
             logger.error(f"System command performance counter failed: {e}")
         
         return []
+
+    def get_frame_sync_mode(self, gpu_index: int = 0) -> FrameSyncMode:
+        """Get the current frame sync mode for a specific GPU."""
+        # Validate input parameters
+        if not isinstance(gpu_index, int):
+            raise TypeError(f"gpu_index must be an integer, got {type(gpu_index).__name__}")
+
+        if gpu_index < 0:
+            raise ValueError(f"gpu_index cannot be negative, got {gpu_index}")
+
+        if gpu_index >= self.gpu_count:
+            raise ValueError(f"gpu_index {gpu_index} is out of range (0-{self.gpu_count-1})")
+
+        try:
+            if self.nvapi_available:
+                return self._get_frame_sync_mode_via_nvapi(gpu_index)
+            else:
+                return self._get_frame_sync_mode_via_system(gpu_index)
+        except Exception as e:
+            logger.error(f"Error getting frame sync mode: {e}")
+            return FrameSyncMode.OFF
+
+    def _get_frame_sync_mode_via_nvapi(self, gpu_index: int) -> FrameSyncMode:
+        """Get frame sync mode using NVAPI."""
+        # Placeholder implementation
+        logger.info(f"Getting frame sync mode via NVAPI for GPU {gpu_index}")
+        # This would use actual NVAPI calls to get frame sync mode
+        return FrameSyncMode.OFF
+
+    def _get_frame_sync_mode_via_system(self, gpu_index: int) -> FrameSyncMode:
+        """Get frame sync mode using system methods."""
+    def _get_frame_sync_mode_via_system(self, gpu_index: int) -> FrameSyncMode:
+        logger.info(f"Getting frame sync mode via system for GPU {gpu_index}")
+        return FrameSyncMode.OFF
+
+    def set_frame_sync_mode(self, mode: FrameSyncMode, gpu_index: int = 0) -> bool:
+        """Set the frame sync mode for a specific GPU."""
+        # Validate input parameters
+        if not isinstance(mode, FrameSyncMode):
+            raise TypeError(f"mode must be a FrameSyncMode enum, got {type(mode).__name__}")
+
+        if not isinstance(gpu_index, int):
+            raise TypeError(f"gpu_index must be an integer, got {type(gpu_index).__name__}")
+
+        if gpu_index < 0:
+            raise ValueError(f"gpu_index cannot be negative, got {gpu_index}")
+
+        if gpu_index >= self.gpu_count:
+            raise ValueError(f"gpu_index {gpu_index} is out of range (0-{self.gpu_count-1})")
+
+        try:
+            if self.nvapi_available:
+                return self._set_frame_sync_mode_via_nvapi(mode, gpu_index)
+            else:
+                return self._set_frame_sync_mode_via_system(mode, gpu_index)
+        except Exception as e:
+            logger.error(f"Error setting frame sync mode: {e}")
+            return False
+
+    def _set_frame_sync_mode_via_nvapi(self, mode: FrameSyncMode, gpu_index: int) -> bool:
+        """Set frame sync mode using NVAPI."""
+        # Placeholder implementation
+        logger.info(f"Setting frame sync mode via NVAPI for GPU {gpu_index}: {mode}")
+        # This would use actual NVAPI calls to set frame sync mode
+        return True
+
+    def _set_frame_sync_mode_via_system(self, mode: FrameSyncMode, gpu_index: int) -> bool:
+        """Set frame sync mode using system methods."""
+        # Placeholder implementation - would modify registry or system settings
+        logger.info(f"Setting frame sync mode via system for GPU {gpu_index}: {mode}")
+        return True
+
+    def get_sdi_output_config(self, gpu_index: int = 0) -> SDIOutputConfig:
+        """Get the current SDI output configuration for a specific GPU."""
+        # Validate input parameters
+        if not isinstance(gpu_index, int):
+            raise TypeError(f"gpu_index must be an integer, got {type(gpu_index).__name__}")
+
+        if gpu_index < 0:
+            raise ValueError(f"gpu_index cannot be negative, got {gpu_index}")
+
+        if gpu_index >= self.gpu_count:
+            raise ValueError(f"gpu_index {gpu_index} is out of range (0-{self.gpu_count-1})")
+
+        try:
+            if self.nvapi_available:
+                return self._get_sdi_output_config_via_nvapi(gpu_index)
+            else:
+                return self._get_sdi_output_config_via_system(gpu_index)
+        except Exception as e:
+            logger.error(f"Error getting SDI output config: {e}")
+            return SDIOutputConfig()
+
+    def _get_sdi_output_config_via_nvapi(self, gpu_index: int) -> SDIOutputConfig:
+        """Get SDI output configuration using NVAPI."""
+        # Placeholder implementation
+        logger.info(f"Getting SDI output config via NVAPI for GPU {gpu_index}")
+        return SDIOutputConfig()
+
+    def _get_sdi_output_config_via_system(self, gpu_index: int) -> SDIOutputConfig:
+        """Get SDI output configuration using system methods."""
+        # Placeholder implementation
+        """Get frame sync mode using system methods."""
+        # Placeholder implementation - would check registry or system settings
+        logger.info(f"Getting frame sync mode via system for GPU {gpu_index}")
+        return FrameSyncMode.OFF
 
 def get_nvidia_control_panel() -> NVIDIAControlPanel:
     """

@@ -3,7 +3,7 @@
 import sys
 import os
 import logging
-from nvidia_control_panel_complete import (
+from nvidia_control_panel_enhanced import (
     NVIDIAControlPanel,
     PowerMode,
     TextureFiltering,
@@ -42,17 +42,46 @@ def test_initialization():
     print("=" * 60)
     print("TESTING INITIALIZATION")
     print("=" * 60)
-    
+
     try:
         nvidia = NVIDIAControlPanel()
-        print(f"✓ NVAPI Available: {nvidia.nvapi_available}")
-        print(f"✓ GPU Count: {nvidia.gpu_count}")
-        print(f"✓ Driver Version: {nvidia.driver_version}")
-        print(f"✓ Windows Platform: {nvidia.is_windows}")
-        print(f"✓ NVAPI Handle: {nvidia.nvapi_handle is not None}")
+        print(f"[PASS] NVAPI Available: {nvidia.nvapi_available}")
+        print(f"[INFO] GPU Count: {nvidia.gpu_count} (0 is acceptable if no NVIDIA hardware)")
+        print(f"[INFO] Driver Version: {nvidia.driver_version} ('Unknown' is acceptable)")
+        print(f"[PASS] Windows Platform: {nvidia.is_windows}")
+        print(f"[INFO] NVAPI Handle: {nvidia.nvapi_handle is not None}")
+
+        # Test improved GPU detection fallback mechanisms
+        if nvidia.gpu_count == 0:
+            print("[INFO] Testing fallback GPU detection mechanisms...")
+            # Test WMI fallback
+            try:
+                import wmi
+                c = wmi.WMI()
+                gpus = [item for item in c.Win32_VideoController()
+                       if item.Name and "nvidia" in item.Name.lower()]
+                print(f"[INFO] WMI detected {len(gpus)} NVIDIA GPUs")
+            except ImportError:
+                print("[INFO] WMI not available for GPU detection")
+            except Exception as e:
+                print(f"[INFO] WMI GPU detection failed: {e}")
+
+            # Test nvidia-smi fallback
+            try:
+                import subprocess
+                result = subprocess.run(['nvidia-smi', '-L'], capture_output=True, text=True, timeout=5)
+                if result.returncode == 0:
+                    lines = result.stdout.strip().split('\n')
+                    gpu_count = sum(1 for line in lines if line.lower().startswith('gpu'))
+                    print(f"[INFO] nvidia-smi detected {gpu_count} GPUs")
+                else:
+                    print("[INFO] nvidia-smi not available or no GPUs detected")
+            except Exception as e:
+                print(f"[INFO] nvidia-smi fallback failed: {e}")
+
         return True
     except Exception as e:
-        print(f"✗ Initialization failed: {e}")
+        print(f"[FAIL] Initialization failed: {e}")
         return False
 
 def test_enum_values():
@@ -82,10 +111,10 @@ def test_enum_values():
         for mode in SDIOutputFormat:
             print(f"  {mode.name}: {mode.value}")
         
-        print("✓ All enum values validated")
+        print("[PASS] All enum values validated")
         return True
     except Exception as e:
-        print(f"✗ Enum test failed: {e}")
+        print(f"[FAIL] Enum test failed: {e}")
         return False
 
 def test_dataclass_creation():
@@ -97,15 +126,15 @@ def test_dataclass_creation():
     try:
         # Test SDIOutputConfig
         sdi_config = SDIOutputConfig(enabled=True, format=SDIOutputFormat.SDI_10BIT, stream_count=2)
-        print(f"✓ SDIOutputConfig: {sdi_config}")
+        print(f"[PASS] SDIOutputConfig: {sdi_config}")
         
         # Test EdgeOverlapConfig
         edge_config = EdgeOverlapConfig(enabled=True, overlap_pixels=5, display_index=1)
-        print(f"✓ EdgeOverlapConfig: {edge_config}")
+        print(f"[PASS] EdgeOverlapConfig: {edge_config}")
         
         # Test SDICaptureConfig
         capture_config = SDICaptureConfig(enabled=True, stream_count=1, buffer_size_mb=512)
-        print(f"✓ SDICaptureConfig: {capture_config}")
+        print(f"[PASS] SDICaptureConfig: {capture_config}")
         
         # Test VideoSettings with validation
         video_settings = VideoSettings(
@@ -125,7 +154,7 @@ def test_dataclass_creation():
             scaling_mode=ScalingMode.ASPECT_RATIO,
             gpu_scaling=True
         )
-        print(f"✓ VideoSettings: {video_settings}")
+        print(f"[PASS] VideoSettings: {video_settings}")
         
         # Test CustomResolution with validation
         custom_res = CustomResolution(
@@ -137,7 +166,7 @@ def test_dataclass_creation():
             scaling="Aspect ratio",
             name="Custom 1080p@144Hz"
         )
-        print(f"✓ CustomResolution: {custom_res}")
+        print(f"[PASS] CustomResolution: {custom_res}")
         
         # Test PhysXConfiguration
         physx_config = PhysXConfiguration(
@@ -145,7 +174,7 @@ def test_dataclass_creation():
             selected_processor=PhysXProcessor.GPU,
             available_gpus=["GPU0", "GPU1"]
         )
-        print(f"✓ PhysXConfiguration: {physx_config}")
+        print(f"[PASS] PhysXConfiguration: {physx_config}")
         
         # Test PerformanceCounter
         perf_counter = PerformanceCounter(
@@ -155,12 +184,12 @@ def test_dataclass_creation():
             unit="%",
             description="Current GPU utilization percentage"
         )
-        print(f"✓ PerformanceCounter: {perf_counter}")
+        print(f"[PASS] PerformanceCounter: {perf_counter}")
         
-        print("✓ All dataclasses created successfully")
+        print("[PASS] All dataclasses created successfully")
         return True
     except Exception as e:
-        print(f"✗ Dataclass test failed: {e}")
+        print(f"[FAIL] Dataclass test failed: {e}")
         return False
 
 def test_gpu_settings_retrieval():
@@ -178,10 +207,10 @@ def test_gpu_settings_retrieval():
         for key, value in settings.items():
             print(f"  {key}: {value}")
         
-        print("✓ GPU settings retrieval successful")
+        print("[PASS] GPU settings retrieval successful")
         return True
     except Exception as e:
-        print(f"✗ GPU settings retrieval failed: {e}")
+        print(f"[FAIL] GPU settings retrieval failed: {e}")
         return False
 
 def test_settings_validation():
@@ -203,7 +232,7 @@ def test_settings_validation():
         }
         
         validated = nvidia._validate_settings(valid_settings)
-        print(f"✓ Valid settings validated: {validated}")
+        print(f"[PASS] Valid settings validated: {validated}")
         
         # Test invalid settings
         invalid_settings = {
@@ -213,15 +242,15 @@ def test_settings_validation():
         
         try:
             nvidia._validate_settings(invalid_settings)
-            print("✗ Invalid settings should have raised an error")
+            print("[FAIL] Invalid settings should have raised an error")
             return False
         except ValueError as e:
-            print(f"✓ Invalid settings correctly rejected: {e}")
+            print(f"[PASS] Invalid settings correctly rejected: {e}")
         
-        print("✓ Settings validation working correctly")
+        print("[PASS] Settings validation working correctly")
         return True
     except Exception as e:
-        print(f"✗ Settings validation failed: {e}")
+        print(f"[FAIL] Settings validation failed: {e}")
         return False
 
 def test_workstation_features():
@@ -235,28 +264,28 @@ def test_workstation_features():
         
         # Test frame sync mode
         frame_sync = nvidia.get_frame_sync_mode(gpu_index=0)
-        print(f"✓ Frame sync mode: {frame_sync}")
+        print(f"[PASS] Frame sync mode: {frame_sync}")
         
         # Test SDI output config
         sdi_config = nvidia.get_sdi_output_config(gpu_index=0)
-        print(f"✓ SDI output config: {sdi_config}")
+        print(f"[PASS] SDI output config: {sdi_config}")
         
         # Test edge overlap config
         edge_config = nvidia.get_edge_overlap_config(display_index=0)
-        print(f"✓ Edge overlap config: {edge_config}")
+        print(f"[PASS] Edge overlap config: {edge_config}")
         
         # Test SDI capture config
         capture_config = nvidia.get_sdi_capture_config(gpu_index=0)
-        print(f"✓ SDI capture config: {capture_config}")
+        print(f"[PASS] SDI capture config: {capture_config}")
         
         # Test Mosaic enable/disable
         mosaic_result = nvidia.enable_mosaic(enable=True)
-        print(f"✓ Mosaic enable result: {mosaic_result}")
+        print(f"[PASS] Mosaic enable result: {mosaic_result}")
         
-        print("✓ Workstation features tested successfully")
+        print("[PASS] Workstation features tested successfully")
         return True
     except Exception as e:
-        print(f"✗ Workstation features test failed: {e}")
+        print(f"[FAIL] Workstation features test failed: {e}")
         return False
 
 def test_video_settings():
@@ -276,24 +305,24 @@ def test_video_settings():
                 saturation=70,
                 gamma=1.2
             )
-            print(f"✓ Valid video settings: {valid_video}")
+            print(f"[PASS] Valid video settings: {valid_video}")
         except Exception as e:
-            print(f"✗ Valid video settings failed: {e}")
+            print(f"[FAIL] Valid video settings failed: {e}")
             return False
         
         # Test invalid VideoSettings
         try:
             # This should fail
             invalid_video = VideoSettings(brightness=150)  # Out of range
-            print("✗ Invalid video settings should have raised an error")
+            print("[FAIL] Invalid video settings should have raised an error")
             return False
         except ValueError as e:
-            print(f"✓ Invalid video settings correctly rejected: {e}")
+            print(f"[PASS] Invalid video settings correctly rejected: {e}")
         
-        print("✓ Video settings validation working correctly")
+        print("[PASS] Video settings validation working correctly")
         return True
     except Exception as e:
-        print(f"✗ Video settings test failed: {e}")
+        print(f"[FAIL] Video settings test failed: {e}")
         return False
 
 def test_custom_resolution():
@@ -313,9 +342,9 @@ def test_custom_resolution():
                 timing_standard="CVT-RB",
                 scaling="Aspect ratio"
             )
-            print(f"✓ Valid custom resolution: {valid_res}")
+            print(f"[PASS] Valid custom resolution: {valid_res}")
         except Exception as e:
-            print(f"✗ Valid custom resolution failed: {e}")
+            print(f"[FAIL] Valid custom resolution failed: {e}")
             return False
         
         # Test invalid custom resolution
@@ -325,15 +354,15 @@ def test_custom_resolution():
                 height=100,  # Too small
                 refresh_rate=500  # Too high
             )
-            print("✗ Invalid custom resolution should have raised an error")
+            print("[FAIL] Invalid custom resolution should have raised an error")
             return False
         except ValueError as e:
-            print(f"✓ Invalid custom resolution correctly rejected: {e}")
+            print(f"[PASS] Invalid custom resolution correctly rejected: {e}")
         
-        print("✓ Custom resolution validation working correctly")
+        print("[PASS] Custom resolution validation working correctly")
         return True
     except Exception as e:
-        print(f"✗ Custom resolution test failed: {e}")
+        print(f"[FAIL] Custom resolution test failed: {e}")
         return False
 
 def test_performance_counters():
@@ -341,7 +370,7 @@ def test_performance_counters():
     print("\n" + "=" * 60)
     print("TESTING PERFORMANCE COUNTERS")
     print("=" * 60)
-    
+
     try:
         # Test PerformanceCounter creation
         counter = PerformanceCounter(
@@ -351,8 +380,8 @@ def test_performance_counters():
             unit="°C",
             description="Current GPU temperature"
         )
-        print(f"✓ Performance counter: {counter}")
-        
+        print(f"[PASS] Performance counter: {counter}")
+
         # Test PerformanceCounterGroup
         group = PerformanceCounterGroup(
             group_name="GPU Metrics",
@@ -371,12 +400,62 @@ def test_performance_counters():
                 )
             ]
         )
-        print(f"✓ Performance counter group: {group.group_name} with {len(group.counters)} counters")
-        
-        print("✓ Performance counters tested successfully")
+        print(f"[PASS] Performance counter group: {group.group_name} with {len(group.counters)} counters")
+
+        print("[PASS] Performance counters tested successfully")
         return True
     except Exception as e:
-        print(f"✗ Performance counters test failed: {e}")
+        print(f"[FAIL] Performance counters test failed: {e}")
+        return False
+
+def test_optional_dependencies():
+    """Test optional dependencies and fallback behavior"""
+    print("\n" + "=" * 60)
+    print("TESTING OPTIONAL DEPENDENCIES")
+    print("=" * 60)
+
+    try:
+        # Test backoff import
+        try:
+            import backoff
+            print(f"[PASS] backoff available: {backoff.__version__}")
+        except ImportError:
+            print("[INFO] backoff not available - using basic retry logic")
+
+        # Test cachetools import
+        try:
+            import cachetools
+            print(f"[PASS] cachetools available: {cachetools.__version__}")
+        except ImportError:
+            print("[INFO] cachetools not available - caching disabled")
+
+        # Test circuitbreaker import
+        try:
+            import circuitbreaker
+            print(f"[PASS] circuitbreaker available: {circuitbreaker.__version__}")
+        except ImportError:
+            print("[INFO] circuitbreaker not available - circuit breaker disabled")
+
+        # Test WMI import
+        try:
+            import wmi
+            print(f"[PASS] WMI available: {wmi.__version__}")
+        except ImportError:
+            print("[INFO] WMI not available - WMI fallback disabled")
+
+        # Test NVIDIA Control Panel with optional dependencies
+        nvidia = NVIDIAControlPanel()
+
+        # Test that the class can handle missing optional dependencies gracefully
+        print(f"[PASS] NVIDIA Control Panel initialized with optional dependencies handled")
+
+        # Test GPU detection with fallbacks
+        gpu_count = nvidia.gpu_count
+        print(f"[INFO] GPU count with fallbacks: {gpu_count}")
+
+        return True
+    except Exception as e:
+        print(f"[FAIL] Optional dependencies test failed: {e}")
         return False
 
 def run_comprehensive_test():
@@ -396,6 +475,7 @@ def run_comprehensive_test():
     test_results.append(("Video Settings", test_video_settings()))
     test_results.append(("Custom Resolution", test_custom_resolution()))
     test_results.append(("Performance Counters", test_performance_counters()))
+    test_results.append(("Optional Dependencies", test_optional_dependencies()))
     
     # Print summary
     print("\n" + "=" * 80)
@@ -420,10 +500,10 @@ def run_comprehensive_test():
     print(f"Success Rate: {(passed/len(test_results))*100:.1f}%")
     
     if failed == 0:
-        print("\n🎉 ALL TESTS PASSED! NVIDIA Control Panel implementation is working correctly.")
+        print("\n[SUCCESS] ALL TESTS PASSED! NVIDIA Control Panel implementation is working correctly.")
         return True
     else:
-        print(f"\n⚠️  {failed} test(s) failed. Review the implementation for issues.")
+        print(f"\n[WARNING]  {failed} test(s) failed. Review the implementation for issues.")
         return False
 
 if __name__ == "__main__":

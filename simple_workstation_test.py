@@ -5,7 +5,7 @@ import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from nvidia_control_panel import (
+from nvidia_control_panel_enhanced import (
     NVIDIAControlPanel,
     FrameSyncMode,
     SDIOutputConfig,
