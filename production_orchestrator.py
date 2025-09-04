@@ -193,9 +193,10 @@ chmod 600 ssl/ssl.key
 
         try:
             # Generate nginx configuration
+            upstream_servers = "\n".join([f"    server {server};" for server in self.config['load_balancer']['upstream_servers']])
             nginx_config = f"""
 upstream owlban_backend {{
-    {"".join([f"    server {server};\\n" for server in self.config['load_balancer']['upstream_servers']])}
+{upstream_servers}
 }}
 
 server {{

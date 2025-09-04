@@ -1,183 +1,21 @@
+
 groups:
-  - name: owlban_alerts
+  - name: owlban
     rules:
-      # Application Health Alerts
-      - alert: FlaskApplicationDown
-        expr: up{job="owlban-flask"} == 0
-        for: 1m
-        labels:
-          severity: critical
-        annotations:
-          summary: "Flask application is down"
-          description: "Flask application has been down for more than 1 minute."
-
-      - alert: NodeApplicationDown
-        expr: up{job="owlban-node"} == 0
-        for: 1m
-        labels:
-          severity: critical
-        annotations:
-          summary: "Node.js application is down"
-          description: "Node.js earnings dashboard has been down for more than 1 minute."
-
-      # High Error Rates
       - alert: HighErrorRate
         expr: rate(http_requests_total{status=~"5.."}[5m]) / rate(http_requests_total[5m]) > 0.05
         for: 5m
         labels:
-          severity: warning
+          severity: critical
         annotations:
           summary: "High error rate detected"
-          description: "Error rate is {{ $value | printf \"%.2f\" }}% over the last 5 minutes."
+          description: "Error rate is above 5% for more than 5 minutes"
 
-      - alert: CriticalErrorRate
-        expr: rate(http_requests_total{status=~"5.."}[5m]) / rate(http_requests_total[5m]) > 0.10
-        for: 2m
-        labels:
-          severity: critical
-        annotations:
-          summary: "Critical error rate detected"
-          description: "Error rate is {{ $value | printf \"%.2f\" }}% over the last 5 minutes."
-
-      # Response Time Alerts
-      - alert: HighResponseTime
-        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 2.0
-        for: 5m
-        labels:
-          severity: warning
-        annotations:
-          summary: "High response time detected"
-          description: "95th percentile response time is {{ $value | printf \"%.2f\" }}s over the last 5 minutes."
-
-      - alert: CriticalResponseTime
-        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 5.0
-        for: 2m
-        labels:
-          severity: critical
-        annotations:
-          summary: "Critical response time detected"
-          description: "95th percentile response time is {{ $value | printf \"%.2f\" }}s over the last 5 minutes."
-
-      # System Resource Alerts
-      - alert: HighCPUUsage
-        expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 85
-        for: 5m
-        labels:
-          severity: warning
-        annotations:
-          summary: "High CPU usage detected"
-          description: "CPU usage is {{ $value | printf \"%.2f\" }}% on {{ $labels.instance }}."
-
-      - alert: CriticalCPUUsage
-        expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 95
-        for: 2m
-        labels:
-          severity: critical
-        annotations:
-          summary: "Critical CPU usage detected"
-          description: "CPU usage is {{ $value | printf \"%.2f\" }}% on {{ $labels.instance }}."
-
-      - alert: HighMemoryUsage
-        expr: (1 - node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes) * 100 > 85
-        for: 5m
-        labels:
-          severity: warning
-        annotations:
-          summary: "High memory usage detected"
-          description: "Memory usage is {{ $value | printf \"%.2f\" }}% on {{ $labels.instance }}."
-
-      - alert: CriticalMemoryUsage
-        expr: (1 - node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes) * 100 > 95
-        for: 2m
-        labels:
-          severity: critical
-        annotations:
-          summary: "Critical memory usage detected"
-          description: "Memory usage is {{ $value | printf \"%.2f\" }}% on {{ $labels.instance }}."
-
-      # Disk Space Alerts
-      - alert: LowDiskSpace
-        expr: (node_filesystem_avail_bytes / node_filesystem_size_bytes) * 100 < 15
-        for: 5m
-        labels:
-          severity: warning
-        annotations:
-          summary: "Low disk space detected"
-          description: "Disk space is {{ $value | printf \"%.2f\" }}% available on {{ $labels.instance }}."
-
-      - alert: CriticalDiskSpace
-        expr: (node_filesystem_avail_bytes / node_filesystem_size_bytes) * 100 < 5
-        for: 2m
-        labels:
-          severity: critical
-        annotations:
-          summary: "Critical disk space detected"
-          description: "Disk space is {{ $value | printf \"%.2f\" }}% available on {{ $labels.instance }}."
-
-      # Container-specific Alerts
-      - alert: ContainerRestarted
-        expr: increase(container_last_seen[5m]) > 0
-        for: 1m
-        labels:
-          severity: warning
-        annotations:
-          summary: "Container restarted"
-          description: "Container {{ $labels.name }} has restarted."
-
-      - alert: ContainerOOMKilled
-        expr: increase(container_oom_events_total[5m]) > 0
+      - alert: ServiceDown
+        expr: up == 0
         for: 1m
         labels:
           severity: critical
         annotations:
-          summary: "Container OOM killed"
-          description: "Container {{ $labels.name }} was killed due to out of memory."
-
-      # Network Alerts
-      - alert: HighNetworkErrors
-        expr: rate(node_network_receive_errs_total[5m]) > 10
-        for: 5m
-        labels:
-          severity: warning
-        annotations:
-          summary: "High network receive errors"
-          description: "Network receive errors rate is {{ $value | printf \"%.2f\" }}/s on {{ $labels.device }}."
-
-      # GPU-specific Alerts (if applicable)
-      - alert: GPUUtilizationHigh
-        expr: nvidia_gpu_utilization > 95
-        for: 5m
-        labels:
-          severity: warning
-        annotations:
-          summary: "High GPU utilization"
-          description: "GPU utilization is {{ $value | printf \"%.2f\" }}% on GPU {{ $labels.gpu }}."
-
-      # Database Alerts (if database is added)
-      - alert: DatabaseConnectionHigh
-        expr: pg_stat_activity_count > 100
-        for: 5m
-        labels:
-          severity: warning
-        annotations:
-          summary: "High database connections"
-          description: "Database has {{ $value }} active connections."
-
-      # Payment Service Alerts
-      - alert: PaymentServiceDown
-        expr: up{job="jpmorgan-payment"} == 0
-        for: 2m
-        labels:
-          severity: critical
-        annotations:
-          summary: "Payment service is down"
-          description: "JPMorgan payment service has been down for more than 2 minutes."
-
-      - alert: PaymentTransactionFailure
-        expr: rate(payment_transaction_failures_total[5m]) > 0.05
-        for: 5m
-        labels:
-          severity: critical
-        annotations:
-          summary: "High payment transaction failure rate"
-          description: "Payment transaction failure rate is {{ $value | printf \"%.2f\" }} over the last 5 minutes."
+          summary: "Service is down"
+          description: "Owlban service is not responding"

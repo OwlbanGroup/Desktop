@@ -1,0 +1,21 @@
+2025-09-03 23:28:12,270 - INFO - Executing: python database/migrations.py test
+2025-09-03 23:28:13,543 - ERROR - STDOUT: 
+2025-09-03 23:28:13,543 - ERROR - STDERR: Traceback (most recent call last):
+  File "C:\Users\tiffa\OneDrive\Desktop\database\migrations.py", line 15, in <module>
+    from alembic import command
+ModuleNotFoundError: No module named 'alembic'
+
+2025-09-03 23:29:07,152 - INFO - Executing: python database/migrations.py test
+2025-09-03 23:29:08,880 - ERROR - STDOUT: 
+2025-09-03 23:29:08,881 - ERROR - STDERR: Traceback (most recent call last):
+  File "C:\Users\tiffa\OneDrive\Desktop\database\migrations.py", line 15, in <module>
+    from alembic import command
+ModuleNotFoundError: No module named 'alembic'
+
+2025-09-03 23:29:38,244 - INFO - Executing: python database/migrations.py test
+2025-09-03 23:29:39,525 - ERROR - STDOUT: 
+2025-09-03 23:29:39,525 - ERROR - STDERR: Traceback (most recent call last):
+  File "C:\Users\tiffa\OneDrive\Desktop\database\migrations.py", line 15, in <module>
+    from alembic import command
+ModuleNotFoundError: No module named 'alembic'
+

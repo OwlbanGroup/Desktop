@@ -33,7 +33,7 @@ class E2ETestSuite:
             "timestamp": datetime.now().isoformat()
         }
         self.test_results.append(result)
-            print(f"[{status.upper()}] {test_name}: {message}")
+        print(f"[{status.upper()}] {test_name}: {message}")
 
     def start_server(self):
         """Start the backend server"""
@@ -62,8 +62,8 @@ class E2ETestSuite:
                     time.sleep(5)  # Increased wait time for graceful shutdown
                     if self.server_process.poll() is None:
                         self.server_process.kill()
-        except Exception as e:
-            print(f"Error stopping server: {e}")
+            except Exception as e:
+                print(f"Error stopping server: {e}")
 
     def test_server_health(self):
         """Test basic server health"""

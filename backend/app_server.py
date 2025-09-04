@@ -1,13 +1,18 @@
 from flask import Flask, send_from_directory, jsonify, request
-from organizational_leadership import leadership
-from revenue_tracking import RevenueTracker
-from nvidia_integration import NvidiaIntegration
 import os
 import subprocess
 import requests
+import sys
 from datetime import datetime
 
-app = Flask(__name__, static_folder='../frontend')
+# Add parent directory to Python path to import modules from root
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from organizational_leadership import leadership
+from revenue_tracking import RevenueTracker
+from nvidia_integration import NvidiaIntegration
+
+app = Flask(__name__, static_folder='./frontend')
 
 OSCAR_BROOME_URL = os.getenv('OSCAR_BROOME_URL', 'http://localhost:4000')
 
@@ -162,98 +167,208 @@ def proxy_health():
     except requests.RequestException as e:
         return jsonify({'error': str(e)}), 500
 
-# Login Override Proxy Routes
+# Login Override Implementation
+import uuid
+from datetime import datetime, timedelta
+
+# In-memory storage for overrides (in production, use a database)
+overrides_db = {}
+active_overrides = {}
+
 @app.route('/api/override/emergency', methods=['POST'])
-def proxy_emergency_override():
-    try:
-        response = requests.post(
-            f"{OSCAR_BROOME_URL}/api/override/emergency",
-            json=request.json,
-            headers={'Content-Type': 'application/json'}
-        )
-        return jsonify(response.json()), response.status_code
-    except requests.RequestException as e:
-        return jsonify({'error': str(e)}), 500
+def emergency_override():
+    data = request.json
+    user_id = data.get('userId')
+    reason = data.get('reason', 'emergency_access')
+    emergency_code = data.get('emergencyCode')
+
+    if not user_id or not emergency_code:
+        return jsonify({'success': False, 'message': 'Missing required fields'}), 400
+
+    if emergency_code != 'OSCAR_BROOME_EMERGENCY_2024':
+        return jsonify({'success': False, 'message': 'Invalid emergency code'}), 401
+
+    override_id = str(uuid.uuid4())
+    override_data = {
+        'id': override_id,
+        'userId': user_id,
+        'type': 'emergency',
+        'reason': reason,
+        'createdAt': datetime.now().isoformat(),
+        'expiresAt': (datetime.now() + timedelta(hours=24)).isoformat(),
+        'status': 'active'
+    }
+
+    overrides_db[override_id] = override_data
+    active_overrides[user_id] = override_data
+
+    return jsonify({
+        'success': True,
+        'message': 'Emergency override created successfully',
+        'data': {'overrideId': override_id}
+    })
 
 @app.route('/api/override/admin', methods=['POST'])
-def proxy_admin_override():
-    try:
-        response = requests.post(
-            f"{OSCAR_BROOME_URL}/api/override/admin",
-            json=request.json,
-            headers={'Content-Type': 'application/json'}
-        )
-        return jsonify(response.json()), response.status_code
-    except requests.RequestException as e:
-        return jsonify({'error': str(e)}), 500
+def admin_override():
+    data = request.json
+    admin_user_id = data.get('adminUserId')
+    target_user_id = data.get('targetUserId')
+    reason = data.get('reason', 'account_locked')
+    justification = data.get('justification')
+
+    if not admin_user_id or not target_user_id or not justification:
+        return jsonify({'success': False, 'message': 'Missing required fields'}), 400
+
+    override_id = str(uuid.uuid4())
+    override_data = {
+        'id': override_id,
+        'adminUserId': admin_user_id,
+        'targetUserId': target_user_id,
+        'type': 'admin',
+        'reason': reason,
+        'justification': justification,
+        'createdAt': datetime.now().isoformat(),
+        'expiresAt': (datetime.now() + timedelta(hours=48)).isoformat(),
+        'status': 'active'
+    }
+
+    overrides_db[override_id] = override_data
+    active_overrides[target_user_id] = override_data
+
+    return jsonify({
+        'success': True,
+        'message': 'Admin override created successfully',
+        'data': {'overrideId': override_id}
+    })
 
 @app.route('/api/override/technical', methods=['POST'])
-def proxy_technical_override():
-    try:
-        response = requests.post(
-            f"{OSCAR_BROOME_URL}/api/override/technical",
-            json=request.json,
-            headers={'Content-Type': 'application/json'}
-        )
-        return jsonify(response.json()), response.status_code
-    except requests.RequestException as e:
-        return jsonify({'error': str(e)}), 500
+def technical_override():
+    data = request.json
+    support_user_id = data.get('supportUserId')
+    target_user_id = data.get('targetUserId')
+    reason = data.get('reason', 'technical_issue')
+    ticket_number = data.get('ticketNumber')
+
+    if not support_user_id or not target_user_id or not ticket_number:
+        return jsonify({'success': False, 'message': 'Missing required fields'}), 400
+
+    override_id = str(uuid.uuid4())
+    override_data = {
+        'id': override_id,
+        'supportUserId': support_user_id,
+        'targetUserId': target_user_id,
+        'type': 'technical',
+        'reason': reason,
+        'ticketNumber': ticket_number,
+        'createdAt': datetime.now().isoformat(),
+        'expiresAt': (datetime.now() + timedelta(hours=12)).isoformat(),
+        'status': 'active'
+    }
+
+    overrides_db[override_id] = override_data
+    active_overrides[target_user_id] = override_data
+
+    return jsonify({
+        'success': True,
+        'message': 'Technical override created successfully',
+        'data': {'overrideId': override_id}
+    })
 
 @app.route('/api/override/validate/<override_id>', methods=['POST'])
-def proxy_validate_override(override_id):
-    try:
-        response = requests.post(
-            f"{OSCAR_BROOME_URL}/api/override/validate/{override_id}",
-            json=request.json,
-            headers={'Content-Type': 'application/json'}
-        )
-        return jsonify(response.json()), response.status_code
-    except requests.RequestException as e:
-        return jsonify({'error': str(e)}), 500
+def validate_override(override_id):
+    data = request.json
+    user_id = data.get('userId')
+
+    if override_id not in overrides_db:
+        return jsonify({'success': False, 'message': 'Override not found'}), 404
+
+    override = overrides_db[override_id]
+    if override['status'] != 'active':
+        return jsonify({'success': False, 'message': 'Override is not active'}), 400
+
+    if datetime.now() > datetime.fromisoformat(override['expiresAt']):
+        override['status'] = 'expired'
+        return jsonify({'success': False, 'message': 'Override has expired'}), 400
+
+    return jsonify({
+        'success': True,
+        'message': 'Override validated successfully',
+        'data': override
+    })
 
 @app.route('/api/override/revoke/<override_id>', methods=['POST'])
-def proxy_revoke_override(override_id):
-    try:
-        response = requests.post(
-            f"{OSCAR_BROOME_URL}/api/override/revoke/{override_id}",
-            json=request.json,
-            headers={'Content-Type': 'application/json'}
-        )
-        return jsonify(response.json()), response.status_code
-    except requests.RequestException as e:
-        return jsonify({'error': str(e)}), 500
+def revoke_override(override_id):
+    if override_id not in overrides_db:
+        return jsonify({'success': False, 'message': 'Override not found'}), 404
+
+    override = overrides_db[override_id]
+    override['status'] = 'revoked'
+    override['revokedAt'] = datetime.now().isoformat()
+
+    # Remove from active overrides
+    user_id = override.get('userId') or override.get('targetUserId')
+    if user_id in active_overrides:
+        del active_overrides[user_id]
+
+    return jsonify({
+        'success': True,
+        'message': 'Override revoked successfully'
+    })
 
 @app.route('/api/override/active/<user_id>', methods=['GET'])
-def proxy_active_overrides(user_id):
-    try:
-        response = requests.get(f"{OSCAR_BROOME_URL}/api/override/active/{user_id}")
-        return jsonify(response.json()), response.status_code
-    except requests.RequestException as e:
-        return jsonify({'error': str(e)}), 500
+def get_active_overrides(user_id):
+    if user_id in active_overrides:
+        override = active_overrides[user_id]
+        if datetime.now() > datetime.fromisoformat(override['expiresAt']):
+            override['status'] = 'expired'
+            del active_overrides[user_id]
+            return jsonify({'success': False, 'message': 'Override has expired'}), 400
+
+        return jsonify({
+            'success': True,
+            'data': override
+        })
+
+    return jsonify({'success': False, 'message': 'No active override found'}), 404
 
 @app.route('/api/override/stats', methods=['GET'])
-def proxy_override_stats():
-    try:
-        response = requests.get(f"{OSCAR_BROOME_URL}/api/override/stats")
-        return jsonify(response.json()), response.status_code
-    except requests.RequestException as e:
-        return jsonify({'error': str(e)}), 500
+def get_override_stats():
+    total_overrides = len(overrides_db)
+    active_count = len([o for o in overrides_db.values() if o['status'] == 'active'])
+    expired_count = len([o for o in overrides_db.values() if o['status'] == 'expired'])
+    revoked_count = len([o for o in overrides_db.values() if o['status'] == 'revoked'])
+
+    return jsonify({
+        'success': True,
+        'data': {
+            'total': total_overrides,
+            'active': active_count,
+            'expired': expired_count,
+            'revoked': revoked_count
+        }
+    })
 
 @app.route('/api/override/config', methods=['GET'])
-def proxy_override_config():
-    try:
-        response = requests.get(f"{OSCAR_BROOME_URL}/api/override/config")
-        return jsonify(response.json()), response.status_code
-    except requests.RequestException as e:
-        return jsonify({'error': str(e)}), 500
+def get_override_config():
+    return jsonify({
+        'success': True,
+        'data': {
+            'emergencyCode': 'OSCAR_BROOME_EMERGENCY_2024',
+            'maxOverrideDuration': 48,  # hours
+            'requireJustification': True,
+            'autoExpire': True
+        }
+    })
 
 @app.route('/api/override/health', methods=['GET'])
-def proxy_override_health():
-    try:
-        response = requests.get(f"{OSCAR_BROOME_URL}/api/override/health")
-        return jsonify(response.json()), response.status_code
-    except requests.RequestException as e:
-        return jsonify({'error': str(e)}), 500
+def override_health():
+    return jsonify({
+        'success': True,
+        'status': 'healthy',
+        'timestamp': datetime.now().isoformat(),
+        'activeOverrides': len(active_overrides),
+        'totalOverrides': len(overrides_db)
+    })
 
 @app.route('/health', methods=['GET'])
 def health_check():

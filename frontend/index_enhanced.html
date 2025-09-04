@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Owlban Group - Integrated Leadership & Revenue Platform</title>
+    <link rel="stylesheet" href="OSCAR-BROOME-REVENUE/executive-portal/styles.css">
+    <style>
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .section {
+            margin-bottom: 40px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .leadership-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .leadership-controls input, .leadership-controls select, .leadership-controls button {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .leadership-controls button {
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        .leadership-controls button:hover {
+            background-color: #0056b3;
+        }
+        .results {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+        }
+        .gpu-status {
+            margin-top: 20px;
+        }
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        .error {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        .success {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .override-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: 4px;
+        }
+        .override-section h3 {
+            margin-top: 0;
+            color: #495057;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Owlban Group</h1>
+            <p>Integrated Leadership & Revenue Platform with NVIDIA AI</p>
+        </header>
+
+        <section class="section">
+            <h2>Leadership Simulation</h2>
+            <div class="leadership-controls">
+                <input type="text" id="leaderName" placeholder="Leader Name" value="Alice">
+                <select id="leadershipStyle">
+                    <option value="DEMOCRATIC">Democratic</option>
+                    <option value="AUTOCRATIC">Autocratic</option>
+                    <option value="TRANSFORMATIONAL">Transformational</option>
+                    <option value="LAISSEZ_FAIRE">Laissez-Faire</option>
+                    <option value="SERVANT">Servant</option>
+                </select>
+                <input type="text" id="teamMembers" placeholder="Team Members (comma-separated)" value="Bob:Developer,Charlie:Designer">
+                <input type="text" id="decision" placeholder="Decision" value="Implement new project strategy">
+                <button onclick="leadTeam()">Lead Team</button>
+                <button onclick="makeDecision()">Make Decision</button>
+            </div>
+            <div id="leadershipResults" class="results" style="display: none;"></div>
+        </section>
+
+        <section class="section">
+            <h2>NVIDIA GPU Status</h2>
+            <button onclick="getGpuStatus()">Check GPU Status</button>
+            <div id="gpuStatus" class="gpu-status results" style="display: none;"></div>
+        </section>
+
+        <section class="section">
+            <h2>Earnings Dashboard</h2>
+            <p>Access the comprehensive earnings dashboard:</p>
+            <a href="OSCAR-BROOME-REVENUE/executive-portal/dashboard.html" target="_blank">
+                <button>Open Earnings Dashboard</button>
+            </a>
+        </section>
+
+        <section class="section">
+            <h2>Login Override System</h2>
+            <p>Emergency access and administrative override capabilities:</p>
+            <div class="login-override-controls">
+                <div class="override-section">
+                    <h3>Emergency Override</h3>
+                    <input type="text" id="emergencyUserId" placeholder="User ID" value="oscar.broome@oscarsystem.com">
+                    <select id="emergencyReason">
+                        <option value="emergency_access">Emergency Access</option>
+                        <option value="system_maintenance">System Maintenance</option>
+                        <option value="technical_issue">Technical Issue</option>
+                    </select>
+                    <input type="password" id="emergencyCode" placeholder="Emergency Code" value="OSCAR_BROOME_EMERGENCY_2024">
+                    <button onclick="emergencyOverride()">Emergency Override</button>
+                </div>
+
+                <div class="override-section">
+                    <h3>Admin Override</h3>
+                    <input type="text" id="adminUserId" placeholder="Admin User ID" value="admin@oscarsystem.com">
+                    <input type="text" id="targetUserId" placeholder="Target User ID" value="user@oscarsystem.com">
+                    <select id="adminReason">
+                        <option value="account_locked">Account Locked</option>
+                        <option value="password_reset">Password Reset</option>
+                        <option value="mfa_failure">MFA Failure</option>
+                    </select>
+                    <input type="text" id="justification" placeholder="Justification" value="Administrative override for system access">
+                    <button onclick="adminOverride()">Admin Override</button>
+                </div>
+
+                <div class="override-section">
+                    <h3>Technical Override</h3>
+                    <input type="text" id="supportUserId" placeholder="Support User ID" value="support@oscarsystem.com">
+                    <input type="text" id="techTargetUserId" placeholder="Target User ID" value="user@oscarsystem.com">
+                    <select id="techReason">
+                        <option value="technical_issue">Technical Issue</option>
+                        <option value="system_maintenance">System Maintenance</option>
+                    </select>
+                    <input type="text" id="ticketNumber" placeholder="Ticket Number" value="TECH-1234">
+                    <button onclick="technicalOverride()">Technical Override</button>
+                </div>
+
+                <div class="override-section">
+                    <h3>Validate Override</h3>
+                    <input type="text" id="validateOverrideId" placeholder="Override ID">
+                    <input type="text" id="validateUserId" placeholder="User ID">
+                    <button onclick="validateOverride()">Validate Override</button>
+                </div>
+
+                <div class="override-section">
+                    <h3>Active Overrides</h3>
+                    <input type="text" id="activeUserId" placeholder="User ID" value="oscar.broome@oscarsystem.com">
+                    <button onclick="getActiveOverrides()">Get Active Overrides</button>
+                </div>
+            </div>
+            <div id="overrideResults" class="results" style="display: none;"></div>
+        </section>
+    </div>
+
+    <script>
+        async function leadTeam() {
+            const leaderName = document.getElementById('leaderName').value;
+            const leadershipStyle = document.getElementById('leadershipStyle').value;
+            const teamMembers = document.getElementById('teamMembers').value.split(',').map(m => m.trim());
+
+            try {
+                const response = await fetch('/api/leadership/lead_team', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        leader_name: leaderName,
+                        leadership_style: leadershipStyle,
+                        team_members: teamMembers
+                    })
+                });
+
+                const data = await response.json();
+                document.getElementById('leadershipResults').innerHTML = `
+                    <h3>Leadership Results:</h3>
+                    <p><strong>Lead Result:</strong> ${data.lead_result}</p>
+                    <p><strong>Team Status:</strong> ${data.team_status}</p>
+                `;
+                document.getElementById('leadershipResults').style.display = 'block';
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('leadershipResults').innerHTML = '<p class="error">Error occurred while leading team.</p>';
+                document.getElementById('leadershipResults').style.display = 'block';
+            }
+        }
+
+        async function makeDecision() {
+            const leaderName = document.getElementById('leaderName').value;
+            const leadershipStyle = document.getElementById('leadershipStyle').value;
+            const decision = document.getElementById('decision').value;
+
+            try {
+                const response = await fetch('/api/leadership/make_decision', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        leader_name: leaderName,
+                        leadership_style: leadershipStyle,
+                        decision: decision
+                    })
+                });
+
+                const data = await response.json();
+                document.getElementById('leadershipResults').innerHTML = `
+                    <h3>Decision Results:</h3>
+                    <p><strong>Decision Result:</strong> ${data.decision_result}</p>
+                `;
+                document.getElementById('leadershipResults').style.display = 'block';
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('leadershipResults').innerHTML = '<p class="error">Error occurred while making decision.</p>';
+                document.getElementById('leadershipResults').style.display = 'block';
+            }
+        }
+
+        async function getGpuStatus() {
+            try {
+                const response = await fetch('/api/gpu/status');
+                const data = await response.json();
+
+                let statusHtml = '<h3>GPU Status:</h3><ul>';
+                for (const [key, value] of Object.entries(data)) {
+                    statusHtml += `<li><strong>${key}:</strong> ${value}</li>`;
+                }
+                statusHtml += '</ul>';
+
+                document.getElementById('gpuStatus').innerHTML = statusHtml;
+                document.getElementById('gpuStatus').style.display = 'block';
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('gpuStatus').innerHTML = '<p class="error">Error occurred while fetching GPU status.</p>';
+                document.getElementById('gpuStatus').style.display = 'block';
+            }
+        }
+    </script>
+    <script src="login_override.js"></script>
+    <script>
+        // Additional frontend enhancements
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add loading states to buttons
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const originalText = this.textContent;
+                    this.textContent = 'Processing...';
+                    this.disabled = true;
+                    this.classList.add('loading');
+
+                    // Re-enable after 3 seconds (or when response comes back)
+                    setTimeout(() => {
+                        this.textContent = originalText;
+                        this.disabled = false;
+                        this.classList.remove('loading');
+                    }, 3000);
+                });
+            });
+
+            // Add keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && e.key === 'Enter') {
+                    const activeElement = document.activeElement;
+                    if (activeElement.tagName === 'BUTTON') {
+                        activeElement.click();
+                    }
+                }
+            });
+
+            // Add form validation
+            const inputs = document.querySelectorAll('input[required]');
+            inputs.forEach(input => {
+                input.addEventListener('blur', function() {
+                    if (!this.value.trim()) {
+                        this.style.borderColor = 'red';
+                    } else {
+                        this.style.borderColor = '#ccc';
+                    }
+                });
+            });
+        });
+
+        // Error handling improvements
+        window.addEventListener('unhandledrejection', function(event) {
+            console.error('Unhandled promise rejection:', event.reason);
+            // Could show user-friendly error message here
+        });
+
+        // Performance monitoring
+        let pageLoadTime = performance.now();
+        window.addEventListener('load', function() {
+            console.log('Page loaded in', performance.now() - pageLoadTime, 'milliseconds');
+        });
+    </script>
+</body>
+</html>

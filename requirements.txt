@@ -39,10 +39,10 @@ psutil==5.9.5
 PyYAML==6.0.1
 watchdog==3.0.0
 
-# Optional: Database support (uncomment if needed)
-# SQLAlchemy==2.0.23
-# Flask-SQLAlchemy==3.1.1
-# alembic==1.12.1
+# Database support
+SQLAlchemy==2.0.23
+Flask-SQLAlchemy==3.1.1
+alembic==1.12.1
 
 # Optional: Testing (uncomment for development)
 # pytest==7.4.3

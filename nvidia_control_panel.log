@@ -1,0 +1,19 @@
+2025-09-03 23:42:00,605 - nvidia_control_panel_enhanced - WARNING - nvidia-smi GPU count fallback failed: [WinError 2] The system cannot find the file specified
+2025-09-03 23:42:00,622 - nvidia_control_panel_enhanced - INFO - No GPUs detected, mocking 1 GPU for testing purposes
+2025-09-03 23:42:00,622 - nvidia_control_panel_enhanced - WARNING - nvidia-smi driver version fallback failed: [WinError 2] The system cannot find the file specified
+2025-09-03 23:42:00,638 - nvidia_control_panel_enhanced - INFO - NVIDIA Control Panel initialized: 1 GPUs, NVAPI: False
+2025-09-03 23:42:00,644 - nvidia_control_panel_enhanced - ERROR - Error retrieving GPU settings: 'NVIDIAControlPanel' object has no attribute '_get_settings_via_registry'
+2025-09-03 23:42:00,649 - nvidia_control_panel_enhanced - INFO - Getting frame sync mode via system for GPU 0
+2025-09-03 23:42:00,652 - nvidia_control_panel_enhanced - WARNING - PhysX registry key not found
+2025-09-03 23:42:00,662 - nvidia_control_panel_enhanced - ERROR - Error setting PhysX configuration in registry: [WinError 5] Access is denied
+2025-09-03 23:42:00,663 - nvidia_control_panel_enhanced - INFO - PhysX configuration applied: PhysXConfiguration(enabled=True, selected_processor=<PhysXProcessor.GPU: 'GPU'>, available_gpus=[], gpu_count=1, version='Unknown')
+2025-09-03 23:42:01,172 - nvidia_control_panel_enhanced - INFO - Retrieved system topology: TopologyType.PCIE
+2025-09-03 23:42:01,212 - nvidia_control_panel_enhanced - ERROR - Error retrieving GPU settings: 'NVIDIAControlPanel' object has no attribute '_get_settings_via_registry'
+2025-09-03 23:42:01,214 - nvidia_control_panel_enhanced - ERROR - Error getting GPU topology info: GPU index cannot be negative
+2025-09-03 23:42:01,214 - nvidia_control_panel_enhanced - WARNING - Attempt 1 failed: GPU index cannot be negative. Retrying in 1s...
+2025-09-03 23:42:02,223 - nvidia_control_panel_enhanced - ERROR - Error getting GPU topology info: GPU index cannot be negative
+2025-09-03 23:42:02,223 - nvidia_control_panel_enhanced - ERROR - All 2 attempts failed
+2025-09-03 23:42:02,223 - nvidia_control_panel_enhanced - ERROR - Error getting display topology info: Display index cannot be negative
+2025-09-03 23:42:02,223 - nvidia_control_panel_enhanced - WARNING - Attempt 1 failed: Display index cannot be negative. Retrying in 1s...
+2025-09-03 23:42:03,224 - nvidia_control_panel_enhanced - ERROR - Error getting display topology info: Display index cannot be negative
+2025-09-03 23:42:03,224 - nvidia_control_panel_enhanced - ERROR - All 2 attempts failed
