@@ -10,7 +10,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from organizational_leadership import leadership
 from revenue_tracking import RevenueTracker
-from nvidia_integration import NvidiaIntegration
+from nvidia_integration_fixed import NvidiaIntegration
 
 app = Flask(__name__, static_folder='./frontend')
 

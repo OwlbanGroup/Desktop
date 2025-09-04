@@ -1,6 +1,6 @@
 from organizational_leadership import leadership
 from revenue_tracking import RevenueTracker
-from nvidia_integration import NvidiaIntegration
+from nvidia_integration_fixed import NvidiaIntegration
 import argparse
 from flask import Flask
 import importlib.util
