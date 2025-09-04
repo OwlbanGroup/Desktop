@@ -1,0 +1,9 @@
+{
+  "timestamp": "2025-09-03T19:21:59.237934",
+  "tests_run": 7,
+  "tests_passed": 6,
+  "endpoints_found": 9,
+  "endpoints_expected": 9,
+  "flask_app_startable": true,
+  "nvidia_integration_present": true
+}

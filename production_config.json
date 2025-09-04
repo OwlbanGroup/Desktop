@@ -1,0 +1,40 @@
+{
+  "app": {
+    "name": "nvidia-control-panel-api",
+    "version": "1.0.0",
+    "host": "0.0.0.0",
+    "port": 8000,
+    "debug": false,
+    "workers": 4,
+    "timeout": 30
+  },
+  "security": {
+    "secret_key": "your-production-secret-key-change-this",
+    "cors_origins": ["http://localhost:3000", "https://yourdomain.com"],
+    "rate_limits": {
+      "default": "200 per day, 50 per hour",
+      "strict": "10 per minute"
+    }
+  },
+  "database": {
+    "redis_url": "redis://localhost:6379/0",
+    "cache_ttl": 300
+  },
+  "logging": {
+    "level": "INFO",
+    "file": "logs/app.log",
+    "max_size": "10MB",
+    "backup_count": 5
+  },
+  "monitoring": {
+    "health_check_interval": 30,
+    "metrics_enabled": true,
+    "prometheus_port": 9090
+  },
+  "deployment": {
+    "environment": "production",
+    "auto_restart": true,
+    "log_rotation": true,
+    "backup_enabled": true
+  }
+}

@@ -1504,10 +1504,118 @@ class NVIDIAControlPanel:
     def _get_sdi_output_config_via_system(self, gpu_index: int) -> SDIOutputConfig:
         """Get SDI output configuration using system methods."""
         # Placeholder implementation
-        """Get frame sync mode using system methods."""
-        # Placeholder implementation - would check registry or system settings
-        logger.info(f"Getting frame sync mode via system for GPU {gpu_index}")
-        return FrameSyncMode.OFF
+        logger.info(f"Getting SDI output config via system for GPU {gpu_index}")
+        return SDIOutputConfig()
+
+    def set_sdi_output_config(self, config: SDIOutputConfig, gpu_index: int = 0) -> bool:
+        """Set the SDI output configuration for a specific GPU."""
+        # Validate input parameters
+        if not isinstance(config, SDIOutputConfig):
+            raise TypeError(f"config must be an SDIOutputConfig, got {type(config).__name__}")
+
+        if not isinstance(gpu_index, int):
+            raise TypeError(f"gpu_index must be an integer, got {type(gpu_index).__name__}")
+
+        if gpu_index < 0:
+            raise ValueError(f"gpu_index cannot be negative, got {gpu_index}")
+
+        if gpu_index >= self.gpu_count:
+            raise ValueError(f"gpu_index {gpu_index} is out of range (0-{self.gpu_count-1})")
+
+        try:
+            if self.nvapi_available:
+                return self._set_sdi_output_config_via_nvapi(config, gpu_index)
+            else:
+                return self._set_sdi_output_config_via_system(config, gpu_index)
+        except Exception as e:
+            logger.error(f"Error setting SDI output config: {e}")
+            return False
+
+    def _set_sdi_output_config_via_nvapi(self, config: SDIOutputConfig, gpu_index: int) -> bool:
+        """Set SDI output configuration using NVAPI."""
+        # Placeholder implementation
+        logger.info(f"Setting SDI output config via NVAPI for GPU {gpu_index}: {config}")
+        return True
+
+    def _set_sdi_output_config_via_system(self, config: SDIOutputConfig, gpu_index: int) -> bool:
+        """Set SDI output configuration using system methods."""
+        # Placeholder implementation
+        logger.info(f"Setting SDI output config via system for GPU {gpu_index}: {config}")
+        return True
+
+    # ===== Workstation Feature Methods =====
+
+    def apply_edid_data(self, edid_data: bytes, display_index: int = 0) -> bool:
+        """Apply EDID data to a specific display."""
+        # Validate input parameters
+        if not isinstance(edid_data, bytes):
+            raise TypeError(f"edid_data must be bytes, got {type(edid_data).__name__}")
+
+        if not isinstance(display_index, int):
+            raise TypeError(f"display_index must be an integer, got {type(display_index).__name__}")
+
+        if display_index < 0:
+            raise ValueError(f"display_index cannot be negative, got {display_index}")
+
+        if len(edid_data) != 128:
+            raise ValueError(f"EDID data must be exactly 128 bytes, got {len(edid_data)}")
+
+        try:
+            if self.nvapi_available:
+                return self._apply_edid_via_nvapi(edid_data, display_index)
+            else:
+                return self._apply_edid_via_system(edid_data, display_index)
+        except Exception as e:
+            logger.error(f"Error applying EDID data: {e}")
+            return False
+
+    def _apply_edid_via_nvapi(self, edid_data: bytes, display_index: int) -> bool:
+        """Apply EDID data using NVAPI."""
+        # Placeholder implementation
+        logger.info(f"Applying EDID via NVAPI for display {display_index}")
+        return True
+
+    def _apply_edid_via_system(self, edid_data: bytes, display_index: int) -> bool:
+        """Apply EDID data using system methods."""
+        # Placeholder implementation
+        logger.info(f"Applying EDID via system for display {display_index}")
+        return True
+
+    def enable_multi_display_cloning(self, enabled: bool, gpu_index: int = 0) -> bool:
+        """Enable or disable multi-display cloning for a specific GPU."""
+        # Validate input parameters
+        if not isinstance(enabled, bool):
+            raise TypeError(f"enabled must be a boolean, got {type(enabled).__name__}")
+
+        if not isinstance(gpu_index, int):
+            raise TypeError(f"gpu_index must be an integer, got {type(gpu_index).__name__}")
+
+        if gpu_index < 0:
+            raise ValueError(f"gpu_index cannot be negative, got {gpu_index}")
+
+        if gpu_index >= self.gpu_count:
+            raise ValueError(f"gpu_index {gpu_index} is out of range (0-{self.gpu_count-1})")
+
+        try:
+            if self.nvapi_available:
+                return self._enable_multi_display_cloning_via_nvapi(enabled, gpu_index)
+            else:
+                return self._enable_multi_display_cloning_via_system(enabled, gpu_index)
+        except Exception as e:
+            logger.error(f"Error enabling/disabling multi-display cloning: {e}")
+            return False
+
+    def _enable_multi_display_cloning_via_nvapi(self, enabled: bool, gpu_index: int) -> bool:
+        """Enable/disable multi-display cloning using NVAPI."""
+        # Placeholder implementation
+        logger.info(f"Enabling multi-display cloning via NVAPI for GPU {gpu_index}: {enabled}")
+        return True
+
+    def _enable_multi_display_cloning_via_system(self, enabled: bool, gpu_index: int) -> bool:
+        """Enable/disable multi-display cloning using system methods."""
+        # Placeholder implementation
+        logger.info(f"Enabling multi-display cloning via system for GPU {gpu_index}: {enabled}")
+        return True
 
 def get_nvidia_control_panel() -> NVIDIAControlPanel:
     """
