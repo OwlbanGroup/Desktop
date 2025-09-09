@@ -11,6 +11,8 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from organizational_leadership import leadership
 from revenue_tracking import RevenueTracker
 from nvidia_integration_fixed import NvidiaIntegration
+from financial_analytics_engine import AdvancedRevenueTracker, RevenueCategory
+from financial_dashboard import FinancialDashboard, FinancialExcellenceManager
 
 app = Flask(__name__, static_folder='./frontend')
 
@@ -20,61 +22,278 @@ OSCAR_BROOME_URL = os.getenv('OSCAR_BROOME_URL', 'http://localhost:4000')
 revenue_tracker = RevenueTracker()
 nvidia_integration = NvidiaIntegration()
 
-@app.route('/api/leadership/lead_team', methods=['POST'])
-def lead_team():
-    data = request.json
-    leader_name = data.get('leader_name', 'Alice')
-    leadership_style = data.get('leadership_style', 'DEMOCRATIC').upper()
-    team_members = data.get('team_members', ['Bob:Developer', 'Charlie:Designer'])
+# Initialize advanced financial components
+advanced_tracker = AdvancedRevenueTracker()
+financial_dashboard = FinancialDashboard(advanced_tracker)
+excellence_manager = FinancialExcellenceManager(advanced_tracker)
 
-    style = leadership.LeadershipStyle[leadership_style]
-    leader = leadership.Leader(leader_name, style)
-    leader.set_revenue_tracker(revenue_tracker)
-    team = leadership.Team(leader)
+# ===== FINANCIAL EXCELLENCE API ENDPOINTS =====
 
-    for member_str in team_members:
-        if ':' in member_str:
-            name, role = member_str.split(':', 1)
+@app.route('/api/financial/executive-summary', methods=['GET'])
+def get_executive_summary():
+    """Get executive summary with key financial metrics"""
+    try:
+        period_days = int(request.args.get('period_days', 30))
+        summary = financial_dashboard.get_executive_summary(period_days)
+        return jsonify({
+            'success': True,
+            'data': summary
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/api/financial/dashboard', methods=['GET'])
+def get_financial_dashboard():
+    """Get comprehensive financial dashboard data"""
+    try:
+        period_days = int(request.args.get('period_days', 30))
+        dashboard_data = financial_dashboard.generate_financial_report('comprehensive', period_days)
+        return jsonify({
+            'success': True,
+            'data': dashboard_data
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/api/financial/performance-trends', methods=['GET'])
+def get_performance_trends():
+    """Get performance trends analysis"""
+    try:
+        months = int(request.args.get('months', 6))
+        trends = financial_dashboard.get_performance_trends(months)
+        return jsonify({
+            'success': True,
+            'data': trends
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/api/financial/category-analysis', methods=['GET'])
+def get_category_analysis():
+    """Get detailed category performance analysis"""
+    try:
+        period_days = int(request.args.get('period_days', 30))
+        analysis = financial_dashboard.get_category_analysis(period_days)
+        return jsonify({
+            'success': True,
+            'data': analysis
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/api/financial/forecast', methods=['GET'])
+def get_financial_forecast():
+    """Get revenue forecasting data"""
+    try:
+        months_ahead = int(request.args.get('months_ahead', 6))
+        method = request.args.get('method', 'linear')
+        forecast = advanced_tracker.advanced_forecasting(months_ahead, method)
+        return jsonify({
+            'success': True,
+            'data': forecast
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/api/financial/alerts', methods=['GET'])
+def get_financial_alerts():
+    """Get financial alerts and recommendations"""
+    try:
+        alerts = advanced_tracker.generate_financial_alerts()
+        recommendations = advanced_tracker.generate_recommendations(alerts)
+        return jsonify({
+            'success': True,
+            'data': {
+                'alerts': alerts,
+                'recommendations': recommendations
+            }
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/api/financial/excellence-scorecard', methods=['GET'])
+def get_excellence_scorecard():
+    """Get financial excellence scorecard"""
+    try:
+        scorecard = excellence_manager.get_excellence_scorecard()
+        return jsonify({
+            'success': True,
+            'data': scorecard
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/api/financial/add-record', methods=['POST'])
+def add_financial_record():
+    """Add a new financial record"""
+    try:
+        data = request.json
+        description = data.get('description')
+        amount = data.get('amount')
+        category = data.get('category', 'Other')
+        source = data.get('source', 'Unknown')
+        tags = data.get('tags', [])
+
+        if not description or amount is None:
+            return jsonify({
+                'success': False,
+                'error': 'Description and amount are required'
+            }), 400
+
+        category_enum = RevenueCategory(category)
+        record = advanced_tracker.add_record(
+            description=description,
+            amount=float(amount),
+            category=category_enum,
+            source=source,
+            tags=tags
+        )
+
+        return jsonify({
+            'success': True,
+            'data': record.to_dict(),
+            'message': 'Financial record added successfully'
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/api/financial/records', methods=['GET'])
+def get_financial_records():
+    """Get financial records with optional filtering"""
+    try:
+        category = request.args.get('category')
+        start_date = request.args.get('start_date')
+        end_date = request.args.get('end_date')
+        limit = int(request.args.get('limit', 100))
+
+        category_filter = RevenueCategory(category) if category else None
+
+        if start_date:
+            start_date = datetime.fromisoformat(start_date.replace('Z', '+00:00'))
+        if end_date:
+            end_date = datetime.fromisoformat(end_date.replace('Z', '+00:00'))
+
+        records = advanced_tracker.get_all_records(
+            category=category_filter,
+            start_date=start_date,
+            end_date=end_date
+        )
+
+        # Limit results
+        records = records[:limit]
+
+        return jsonify({
+            'success': True,
+            'data': [record.to_dict() for record in records],
+            'count': len(records)
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/api/financial/kpis', methods=['GET'])
+def get_financial_kpis():
+    """Get comprehensive financial KPIs"""
+    try:
+        current_period_days = int(request.args.get('current_period_days', 30))
+        previous_period_days = int(request.args.get('previous_period_days', 30))
+
+        kpis = advanced_tracker.calculate_comprehensive_kpis(
+            current_period_days=current_period_days,
+            previous_period_days=previous_period_days
+        )
+
+        return jsonify({
+            'success': True,
+            'data': kpis
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/api/financial/export', methods=['POST'])
+def export_financial_data():
+    """Export financial data to file"""
+    try:
+        data = request.json
+        filename = data.get('filename', 'financial_export.json')
+        format_type = data.get('format', 'json')
+        start_date = data.get('start_date')
+        end_date = data.get('end_date')
+
+        if start_date:
+            start_date = datetime.fromisoformat(start_date.replace('Z', '+00:00'))
+        if end_date:
+            end_date = datetime.fromisoformat(end_date.replace('Z', '+00:00'))
+
+        if format_type == 'json':
+            result = advanced_tracker.export_comprehensive_report(
+                filename=filename,
+                start_date=start_date,
+                end_date=end_date
+            )
         else:
-            name, role = member_str, None
-        member = leadership.TeamMember(name, role)
-        team.add_member(member)
+            result = financial_dashboard.export_dashboard_data(
+                filename=filename,
+                format=format_type
+            )
 
-    lead_result = leader.lead_team()
-    team_status = team.team_status()
+        return jsonify({
+            'success': True,
+            'message': result
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
 
-    return jsonify({
-        'lead_result': lead_result,
-        'team_status': team_status
-    })
+@app.route('/api/financial/excellence-report', methods=['POST'])
+def generate_excellence_report():
+    """Generate comprehensive financial excellence report"""
+    try:
+        data = request.json
+        filename = data.get('filename', 'excellence_report.json')
 
-@app.route('/api/leadership/make_decision', methods=['POST'])
-def make_decision():
-    data = request.json
-    leader_name = data.get('leader_name', 'Alice')
-    leadership_style = data.get('leadership_style', 'DEMOCRATIC').upper()
-    decision = data.get('decision', 'Implement new project strategy')
+        result = excellence_manager.generate_excellence_report(filename)
 
-    style = leadership.LeadershipStyle[leadership_style]
-    leader = leadership.Leader(leader_name, style)
-    leader.set_revenue_tracker(revenue_tracker)
-
-    decision_result = leadership.make_decision(leader, decision, revenue_tracker)
-
-    return jsonify({
-        'decision_result': decision_result
-    })
-
-@app.route('/api/gpu/status', methods=['GET'])
-def gpu_status():
-    gpu_settings = nvidia_integration.get_gpu_settings()
-    return jsonify(gpu_settings)
-
-@app.route('/api/earnings', methods=['GET'])
-def earnings_data():
-    # Proxy or integrate with OSCAR-BROOME-REVENUE API here
-    # For now, serve static files or implement backend logic
-    return jsonify({"message": "Earnings data API placeholder"})
+        return jsonify({
+            'success': True,
+            'message': result
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
 
 # JPMorgan Payment Proxy Routes
 @app.route('/api/jpmorgan-payment/create-payment', methods=['POST'])
