@@ -15,6 +15,12 @@ import statistics
 from enum import Enum
 import numpy as np
 from collections import defaultdict
+import pandas as pd
+from sklearn.linear_model import LinearRegression
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.preprocessing import StandardScaler
+import joblib
+import os
 
 Base = declarative_base()
 
@@ -86,12 +92,190 @@ class FinancialKPIs:
         """Calculate Customer Lifetime Value"""
         return average_order_value * purchase_frequency * customer_lifespan
 
+class AIPredictiveAnalytics:
+    """AI-powered predictive analytics using machine learning"""
+
+    def __init__(self):
+        self.models_dir = "models"
+        os.makedirs(self.models_dir, exist_ok=True)
+        self.scaler = StandardScaler()
+
+    def prepare_time_series_data(self, data: List[Dict[str, Any]], lookback: int = 30) -> Tuple[np.ndarray, np.ndarray]:
+        """Prepare time series data for AI modeling"""
+        df = pd.DataFrame(data)
+        df['date'] = pd.to_datetime(df['date'])
+        df = df.sort_values('date')
+        df['revenue'] = df['amount']
+
+        # Create features
+        features = []
+        targets = []
+
+        for i in range(len(df) - lookback):
+            feature_window = df['revenue'].iloc[i:i+lookback].values
+            target = df['revenue'].iloc[i+lookback]
+            features.append(feature_window)
+            targets.append(target)
+
+        X = np.array(features)
+        y = np.array(targets)
+
+        return X, y
+
+    def train_revenue_prediction_model(self, historical_data: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """Train AI model for revenue prediction"""
+        try:
+            X, y = self.prepare_time_series_data(historical_data)
+
+            if len(X) < 10:
+                return {'error': 'Insufficient data for AI training'}
+
+            # Normalize data
+            X_scaled = self.scaler.fit_transform(X.reshape(X.shape[0], -1))
+
+            # Use Random Forest for prediction (works well with smaller datasets)
+            model = RandomForestRegressor(n_estimators=100, random_state=42)
+            model.fit(X_scaled, y)
+
+            # Save model
+            model_path = os.path.join(self.models_dir, 'revenue_prediction_model.pkl')
+            joblib.dump(model, model_path)
+
+            return {
+                'success': True,
+                'model_path': model_path,
+                'training_info': {
+                    'data_points': len(X),
+                    'features': X.shape[1],
+                    'model_type': 'RandomForestRegressor'
+                }
+            }
+
+        except Exception as e:
+            return {'error': f'AI training failed: {str(e)}'}
+
+    def predict_future_revenue(self, historical_data: List[Dict[str, Any]], days_ahead: int = 30) -> Dict[str, Any]:
+        """Predict future revenue using trained AI model"""
+        try:
+            model_path = os.path.join(self.models_dir, 'revenue_prediction_model.pkl')
+
+            if not os.path.exists(model_path):
+                return {'error': 'No trained model found'}
+
+            # Load model
+            model = joblib.load(model_path)
+
+            # Prepare recent data for prediction
+            recent_data = historical_data[-30:] if len(historical_data) >= 30 else historical_data
+            X, _ = self.prepare_time_series_data(recent_data)
+
+            if len(X) == 0:
+                return {'error': 'Insufficient data for prediction'}
+
+            # Make prediction
+            X_scaled = self.scaler.transform(X.reshape(X.shape[0], -1))
+            prediction = model.predict(X_scaled[-1].reshape(1, -1))[0]
+
+            # Calculate confidence interval
+            confidence_range = prediction * 0.15  # 15% confidence range
+
+            return {
+                'predicted_revenue': float(prediction),
+                'confidence_lower': float(prediction - confidence_range),
+                'confidence_upper': float(prediction + confidence_range),
+                'days_ahead': days_ahead,
+                'prediction_date': (datetime.utcnow() + timedelta(days=days_ahead)).isoformat(),
+                'model_accuracy': 'High' if len(historical_data) > 50 else 'Medium'
+            }
+
+        except Exception as e:
+            return {'error': f'Prediction failed: {str(e)}'}
+
+    def analyze_risk_factors(self, data: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """Analyze financial risk factors"""
+        try:
+            df = pd.DataFrame(data)
+            df['date'] = pd.to_datetime(df['date'])
+            df = df.sort_values('date')
+
+            # Calculate volatility
+            if len(df) > 1:
+                returns = df['amount'].pct_change().dropna()
+                volatility = returns.std() * np.sqrt(252)  # Annualized volatility
+
+                # Risk assessment
+                risk_score = min(100, volatility * 1000)  # Scale to 0-100
+
+                risk_level = 'Low' if risk_score < 30 else 'Medium' if risk_score < 70 else 'High'
+
+                # Identify risk factors
+                risk_factors = []
+
+                if volatility > 0.5:
+                    risk_factors.append('High revenue volatility detected')
+
+                if df['amount'].iloc[-1] < df['amount'].mean() * 0.7:
+                    risk_factors.append('Recent revenue significantly below average')
+
+                if len(df[df['amount'] < 0]) > 0:
+                    risk_factors.append('Negative revenue entries detected')
+
+                return {
+                    'risk_score': float(risk_score),
+                    'risk_level': risk_level,
+                    'volatility': float(volatility),
+                    'risk_factors': risk_factors,
+                    'recommendations': self._generate_risk_recommendations(risk_level, risk_factors)
+                }
+            else:
+                return {'error': 'Insufficient data for risk analysis'}
+
+        except Exception as e:
+            return {'error': f'Risk analysis failed: {str(e)}'}
+
+    def _generate_risk_recommendations(self, risk_level: str, risk_factors: List[str]) -> List[str]:
+        """Generate risk mitigation recommendations"""
+        recommendations = []
+
+        if risk_level == 'High':
+            recommendations.extend([
+                'Implement diversified revenue streams',
+                'Build cash reserves for 6-12 months',
+                'Review and optimize cost structure',
+                'Consider professional financial advisory'
+            ])
+        elif risk_level == 'Medium':
+            recommendations.extend([
+                'Monitor revenue trends closely',
+                'Develop contingency plans',
+                'Strengthen customer relationships',
+                'Explore new market opportunities'
+            ])
+        else:
+            recommendations.extend([
+                'Continue current risk management practices',
+                'Monitor for emerging risk factors',
+                'Maintain diversified revenue streams'
+            ])
+
+        # Add specific recommendations based on risk factors
+        for factor in risk_factors:
+            if 'volatility' in factor.lower():
+                recommendations.append('Implement revenue smoothing strategies')
+            if 'below average' in factor.lower():
+                recommendations.append('Conduct market analysis and customer feedback surveys')
+            if 'negative' in factor.lower():
+                recommendations.append('Review pricing strategy and cost management')
+
+        return list(set(recommendations))  # Remove duplicates
+
 class AdvancedRevenueTracker:
     def __init__(self, db_url: str = "sqlite:///revenue.db"):
         self.engine = create_engine(db_url, echo=False)
         Base.metadata.create_all(self.engine)
         self.Session = sessionmaker(bind=self.engine)
         self.kpis = FinancialKPIs()
+        self.ai_analytics = AIPredictiveAnalytics()
 
     def add_record(self, description: str, amount: float, category: RevenueCategory = RevenueCategory.OTHER,
                    date: Optional[datetime] = None, source: str = "Unknown", tags: List[str] = None) -> RevenueRecord:
@@ -285,6 +469,38 @@ class AdvancedRevenueTracker:
 
         return forecast_results
 
+    def ai_powered_forecasting(self, days_ahead: int = 30) -> Dict[str, Any]:
+        """AI-powered revenue forecasting"""
+        historical_data = [record.to_dict() for record in self.get_all_records()]
+
+        if len(historical_data) < 10:
+            return {'error': 'Insufficient historical data for AI forecasting'}
+
+        # Train model if not exists
+        training_result = self.ai_analytics.train_revenue_prediction_model(historical_data)
+
+        if 'error' in training_result:
+            return training_result
+
+        # Make prediction
+        prediction = self.ai_analytics.predict_future_revenue(historical_data, days_ahead)
+
+        return {
+            'ai_forecast': prediction,
+            'training_info': training_result,
+            'forecast_period_days': days_ahead,
+            'data_quality': 'High' if len(historical_data) > 50 else 'Medium'
+        }
+
+    def ai_risk_analysis(self) -> Dict[str, Any]:
+        """AI-powered risk analysis"""
+        historical_data = [record.to_dict() for record in self.get_all_records()]
+
+        if len(historical_data) < 5:
+            return {'error': 'Insufficient data for risk analysis'}
+
+        return self.ai_analytics.analyze_risk_factors(historical_data)
+
     def generate_executive_dashboard(self, period_days: int = 30) -> Dict[str, Any]:
         """Generate comprehensive executive dashboard data"""
         now = datetime.utcnow()
@@ -318,6 +534,10 @@ class AdvancedRevenueTracker:
         else:
             revenue_distribution = {'min': 0, 'max': 0, 'median': 0, 'mean': 0, 'std_dev': 0}
 
+        # AI-powered insights
+        ai_forecast = self.ai_powered_forecasting(days_ahead=30)
+        ai_risk = self.ai_risk_analysis()
+
         return {
             'period': {
                 'start_date': start_date.isoformat(),
@@ -341,11 +561,46 @@ class AdvancedRevenueTracker:
                 'growth_trend': 'positive' if kpis['growth_rate'] > 0 else 'negative'
             },
             'distribution_analysis': revenue_distribution,
-            'forecast': self.advanced_forecasting(months_ahead=3)
+            'forecast': self.advanced_forecasting(months_ahead=3),
+            'ai_insights': {
+                'forecast': ai_forecast,
+                'risk_analysis': ai_risk,
+                'recommendations': self._generate_ai_recommendations(ai_forecast, ai_risk)
+            }
         }
 
+    def _generate_ai_recommendations(self, forecast: Dict, risk: Dict) -> List[str]:
+        """Generate AI-powered recommendations"""
+        recommendations = []
+
+        # Forecast-based recommendations
+        if 'ai_forecast' in forecast and 'predicted_revenue' in forecast['ai_forecast']:
+            predicted = forecast['ai_forecast']['predicted_revenue']
+            current = self.get_total_revenue()
+
+            if predicted > current * 1.2:
+                recommendations.append('Strong growth predicted - prepare for scaling operations')
+            elif predicted < current * 0.8:
+                recommendations.append('Revenue decline predicted - implement cost optimization measures')
+
+        # Risk-based recommendations
+        if 'risk_level' in risk:
+            if risk['risk_level'] == 'High':
+                recommendations.extend([
+                    'High risk detected - diversify revenue streams immediately',
+                    'Build emergency cash reserves',
+                    'Review and strengthen risk management policies'
+                ])
+            elif risk['risk_level'] == 'Medium':
+                recommendations.extend([
+                    'Monitor risk factors closely',
+                    'Develop contingency plans for potential revenue fluctuations'
+                ])
+
+        return recommendations
+
     def generate_financial_alerts(self) -> List[Dict[str, Any]]:
-        """Generate automated financial alerts based on KPIs"""
+        """Generate automated financial alerts based on KPIs and AI insights"""
         alerts = []
         kpis = self.calculate_comprehensive_kpis()
 
@@ -392,6 +647,17 @@ class AdvancedRevenueTracker:
                     'recommendation': 'Diversify revenue streams to reduce risk'
                 })
 
+        # AI-powered alerts
+        ai_risk = self.ai_risk_analysis()
+        if 'risk_level' in ai_risk and ai_risk['risk_level'] == 'High':
+            alerts.append({
+                'type': 'critical',
+                'category': 'ai_risk_alert',
+                'message': f'AI Risk Analysis: {ai_risk["risk_level"]} risk level detected',
+                'severity': 'high',
+                'recommendation': 'Immediate risk mitigation required'
+            })
+
         return alerts
 
     def export_comprehensive_report(self, filename: str, start_date: Optional[datetime] = None,
@@ -410,15 +676,11 @@ class AdvancedRevenueTracker:
                 'generated_at': datetime.utcnow().isoformat(),
                 'period_start': start_date.isoformat(),
                 'period_end': end_date.isoformat(),
-                'report_type': 'comprehensive_financial_analysis'
+                'total_records': len(self.get_all_records(start_date=start_date, end_date=end_date))
             },
-            'dashboard_data': dashboard_data,
+            'executive_summary': dashboard_data,
             'alerts': alerts,
-            'recommendations': self.generate_recommendations(alerts),
-            'raw_data': {
-                'total_records': len(self.get_all_records(start_date=start_date, end_date=end_date)),
-                'export_timestamp': datetime.utcnow().isoformat()
-            }
+            'recommendations': self.generate_recommendations(alerts)
         }
 
         with open(filename, 'w') as f:

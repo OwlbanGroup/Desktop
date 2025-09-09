@@ -8,5 +8,8 @@
   },
   "dependencies": {
     "bcrypt": "^6.0.0"
+  },
+  "scripts": {
+    "frontend:start": "python -m http.server 5173 --directory frontend"
   }
 }
