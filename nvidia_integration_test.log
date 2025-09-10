@@ -175,3 +175,179 @@
 2025-09-04 16:02:34,975 - __main__ - INFO - Running integration tests...
 2025-09-04 16:02:34,975 - nvidia_integration - INFO - Fetching benefits resources from NVIDIA money benefits page
 2025-09-04 16:02:36,205 - nvidia_integration - INFO - Fetching ESPP details from NVIDIA ESPP page
+2025-09-09 22:30:20,793 - nvidia_integration - INFO - Enhanced NVIDIA Control Panel integration successfully imported
+2025-09-09 22:34:39,092 - nvidia_integration - WARNING - NVIDIA NeMo framework not available: No module named 'nemo'
+2025-09-09 22:34:39,187 - nvidia_integration - WARNING - NVIDIA NIM SDK not available, using simulation mode
+2025-09-09 22:34:39,187 - __main__ - INFO - Test setup completed successfully
+2025-09-09 22:34:39,187 - __main__ - INFO - Testing auto loan application...
+2025-09-09 22:34:39,187 - nvidia_integration - INFO - Processing auto loan application through NVIDIA benefits
+2025-09-09 22:34:39,187 - nvidia_integration - INFO - Fetching benefits resources from NVIDIA money benefits page
+2025-09-09 22:35:12,872 - nvidia_integration - ERROR - Error fetching benefits resources: HTTPSConnectionPool(host='www.nvidia.com', port=443): Max retries exceeded with url: /en-us/benefits/money/ (Caused by SSLError(SSLEOFError(8, 'EOF occurred in violation of protocol (_ssl.c:1122)')))
+2025-09-09 22:35:42,028 - __main__ - INFO - Test completed in 62.84 seconds
+2025-09-09 22:35:42,030 - __main__ - INFO - Test setup completed successfully
+2025-09-09 22:35:42,031 - __main__ - INFO - Testing benefits resources fetching...
+2025-09-09 22:35:42,032 - nvidia_integration - INFO - Fetching benefits resources from NVIDIA money benefits page
+2025-09-09 22:35:47,924 - nvidia_integration - INFO - Fetching ESPP details from NVIDIA ESPP page
+2025-09-09 22:35:49,128 - __main__ - INFO - Test completed in 7.10 seconds
+2025-09-09 22:35:49,130 - __main__ - INFO - Test setup completed successfully
+2025-09-09 22:35:49,131 - __main__ - INFO - Testing concurrent access...
+2025-09-09 22:37:01,304 - nvidia_control_panel_enhanced - ERROR - Error getting GPU count: <x_wmi: WMI returned a syntax error: you're probably running inside a thread without first calling pythoncom.CoInitialize[Ex] (no underlying exception)>
+2025-09-09 22:37:01,304 - nvidia_control_panel_enhanced - ERROR - Error getting GPU count: <x_wmi: WMI returned a syntax error: you're probably running inside a thread without first calling pythoncom.CoInitialize[Ex] (no underlying exception)>
+2025-09-09 22:37:01,304 - nvidia_control_panel_enhanced - ERROR - Error getting GPU count: <x_wmi: WMI returned a syntax error: you're probably running inside a thread without first calling pythoncom.CoInitialize[Ex] (no underlying exception)>
+2025-09-09 22:37:01,304 - nvidia_control_panel_enhanced - ERROR - Error getting GPU count: <x_wmi: WMI returned a syntax error: you're probably running inside a thread without first calling pythoncom.CoInitialize[Ex] (no underlying exception)>
+2025-09-09 22:37:01,304 - nvidia_control_panel_enhanced - INFO - No GPUs detected, mocking 1 GPU for testing purposes
+2025-09-09 22:37:01,304 - nvidia_control_panel_enhanced - INFO - No GPUs detected, mocking 1 GPU for testing purposes
+2025-09-09 22:37:01,304 - nvidia_control_panel_enhanced - INFO - No GPUs detected, mocking 1 GPU for testing purposes
+2025-09-09 22:37:01,304 - nvidia_control_panel_enhanced - INFO - No GPUs detected, mocking 1 GPU for testing purposes
+2025-09-09 22:37:01,370 - nvidia_control_panel_enhanced - WARNING - nvidia-smi driver version fallback failed: [WinError 2] The system cannot find the file specified
+2025-09-09 22:37:01,371 - nvidia_control_panel_enhanced - INFO - NVIDIA Control Panel initialized: 1 GPUs, NVAPI: False
+2025-09-09 22:37:01,372 - nvidia_control_panel_enhanced - WARNING - nvidia-smi driver version fallback failed: [WinError 2] The system cannot find the file specified
+2025-09-09 22:37:01,372 - nvidia_control_panel_enhanced - ERROR - Error retrieving GPU settings: 'NVIDIAControlPanel' object has no attribute '_get_settings_via_registry'
+2025-09-09 22:37:01,372 - nvidia_control_panel_enhanced - WARNING - nvidia-smi driver version fallback failed: [WinError 2] The system cannot find the file specified
+2025-09-09 22:37:01,372 - nvidia_control_panel_enhanced - WARNING - nvidia-smi driver version fallback failed: [WinError 2] The system cannot find the file specified
+2025-09-09 22:37:01,372 - nvidia_control_panel_enhanced - INFO - NVIDIA Control Panel initialized: 1 GPUs, NVAPI: False
+2025-09-09 22:37:01,393 - nvidia_integration - INFO - Retrieved GPU settings: {'power_mode': 'Optimal Power', 'texture_filtering': 'Quality', 'vertical_sync': 'Off', 'gpu_clock': 0, 'memory_clock': 0, 'temperature': 0, 'utilization': 0, 'power_usage': 0, 'fan_speed': 0, 'gpu_index': 0, 'gpu_count': 1, 'driver_version': 'Unknown', 'nvapi_available': False, 'platform': 'Windows'}
+2025-09-09 22:37:01,394 - nvidia_control_panel_enhanced - INFO - NVIDIA Control Panel initialized: 1 GPUs, NVAPI: False
+2025-09-09 22:37:01,395 - nvidia_control_panel_enhanced - INFO - NVIDIA Control Panel initialized: 1 GPUs, NVAPI: False
+2025-09-09 22:37:01,395 - nvidia_integration - INFO - Retrieved GPU settings: {'power_mode': 'Optimal Power', 'texture_filtering': 'Quality', 'vertical_sync': 'Off', 'gpu_clock': 0, 'memory_clock': 0, 'temperature': 0, 'utilization': 0, 'power_usage': 0, 'fan_speed': 0, 'gpu_index': 0, 'gpu_count': 1, 'driver_version': 'Unknown', 'nvapi_available': False, 'platform': 'Windows'}
+2025-09-09 22:37:01,396 - nvidia_integration - INFO - Retrieved GPU settings: {'power_mode': 'Optimal Power', 'texture_filtering': 'Quality', 'vertical_sync': 'Off', 'gpu_clock': 0, 'memory_clock': 0, 'temperature': 0, 'utilization': 0, 'power_usage': 0, 'fan_speed': 0, 'gpu_index': 0, 'gpu_count': 1, 'driver_version': 'Unknown', 'nvapi_available': False, 'platform': 'Windows'}
+2025-09-09 22:37:01,397 - nvidia_integration - INFO - Retrieved GPU settings: {'power_mode': 'Optimal Power', 'texture_filtering': 'Quality', 'vertical_sync': 'Off', 'gpu_clock': 0, 'memory_clock': 0, 'temperature': 0, 'utilization': 0, 'power_usage': 0, 'fan_speed': 0, 'gpu_index': 0, 'gpu_count': 1, 'driver_version': 'Unknown', 'nvapi_available': False, 'platform': 'Windows'}
+2025-09-09 22:37:05,521 - nvidia_control_panel_enhanced - WARNING - nvidia-smi GPU count fallback failed: [WinError 2] The system cannot find the file specified
+2025-09-09 22:37:05,521 - nvidia_control_panel_enhanced - INFO - No GPUs detected, mocking 1 GPU for testing purposes
+2025-09-09 22:37:05,537 - nvidia_control_panel_enhanced - INFO - NVIDIA Control Panel initialized: 1 GPUs, NVAPI: False
+2025-09-09 22:37:05,537 - nvidia_integration - INFO - Retrieved GPU settings: {'power_mode': 'Optimal Power', 'texture_filtering': 'Quality', 'vertical_sync': 'Off', 'gpu_clock': 0, 'memory_clock': 0, 'temperature': 0, 'utilization': 0, 'power_usage': 0, 'fan_speed': 0, 'gpu_index': 0, 'gpu_count': 1, 'driver_version': 'Unknown', 'nvapi_available': False, 'platform': 'Windows'}
+2025-09-09 22:37:05,546 - __main__ - INFO - Test completed in 76.42 seconds
+2025-09-09 22:37:05,548 - __main__ - INFO - Test setup completed successfully
+2025-09-09 22:37:05,548 - __main__ - INFO - Testing contacts and policy numbers...
+2025-09-09 22:37:05,549 - nvidia_integration - INFO - Fetching contacts and policy numbers from NVIDIA website
+2025-09-09 22:37:07,450 - __main__ - INFO - Test completed in 1.90 seconds
+2025-09-09 22:37:07,463 - __main__ - INFO - Test setup completed successfully
+2025-09-09 22:37:07,463 - __main__ - INFO - Testing data validation...
+2025-09-09 22:37:07,464 - nvidia_integration - INFO - Retrieved GPU settings: {'power_mode': 'Optimal Power', 'texture_filtering': 'Quality', 'vertical_sync': 'Off', 'gpu_clock': 0, 'memory_clock': 0, 'temperature': 0, 'utilization': 0, 'power_usage': 0, 'fan_speed': 0, 'gpu_index': 0, 'gpu_count': 1, 'driver_version': 'Unknown', 'nvapi_available': False, 'platform': 'Windows'}
+2025-09-09 22:37:07,465 - __main__ - INFO - Test completed in 0.00 seconds
+2025-09-09 22:37:07,466 - __main__ - INFO - Test setup completed successfully
+2025-09-09 22:37:07,466 - __main__ - INFO - Testing driver updates fetching...
+2025-09-09 22:37:07,467 - nvidia_integration - INFO - Fetching driver updates from NVIDIA drivers page
+2025-09-09 22:37:08,071 - __main__ - INFO - Test completed in 0.60 seconds
+2025-09-09 22:37:08,077 - __main__ - INFO - Test setup completed successfully
+2025-09-09 22:37:08,077 - __main__ - INFO - Testing edge cases...
+2025-09-09 22:37:08,078 - nvidia_integration - INFO - Processing auto loan application through NVIDIA benefits
+2025-09-09 22:37:08,078 - nvidia_integration - ERROR - Error processing auto loan application: float division by zero
+2025-09-09 22:37:08,084 - __main__ - INFO - Test completed in 0.01 seconds
+2025-09-09 22:37:08,085 - __main__ - INFO - Test setup completed successfully
+2025-09-09 22:37:08,096 - __main__ - INFO - Testing error handling...
+2025-09-09 22:37:08,097 - nvidia_integration - INFO - Processing auto loan application through NVIDIA benefits
+2025-09-09 22:37:08,097 - nvidia_integration - ERROR - Error processing auto loan application: Missing required vehicle information: model
+2025-09-09 22:37:08,102 - __main__ - INFO - Test completed in 0.02 seconds
+2025-09-09 22:37:08,103 - __main__ - INFO - Test setup completed successfully
+2025-09-09 22:37:08,103 - __main__ - INFO - Testing GPU settings application...
+2025-09-09 22:37:08,104 - nvidia_integration - INFO - Setting GPU settings: {'power_mode': 'Optimal Power', 'texture_filtering': 'Quality', 'vertical_sync': 'Off'}
+2025-09-09 22:37:08,104 - nvidia_control_panel_enhanced - INFO - Setting GPU settings: {'power_mode': 'Optimal Power', 'texture_filtering': 'Quality', 'vertical_sync': 'Off'}
+2025-09-09 22:37:08,104 - nvidia_control_panel_enhanced - ERROR - Error applying GPU settings: 'NVIDIAControlPanel' object has no attribute '_set_settings_via_registry'
+2025-09-09 22:37:08,105 - nvidia_integration - INFO - GPU settings applied: Error applying settings: 'NVIDIAControlPanel' object has no attribute '_set_settings_via_registry'
+2025-09-09 22:37:08,109 - __main__ - INFO - Test completed in 0.01 seconds
+2025-09-09 22:37:08,110 - __main__ - INFO - Test setup completed successfully
+2025-09-09 22:37:08,110 - __main__ - INFO - Testing GPU settings retrieval...
+2025-09-09 22:37:08,110 - nvidia_integration - INFO - Retrieved GPU settings: {'power_mode': 'Optimal Power', 'texture_filtering': 'Quality', 'vertical_sync': 'Off', 'gpu_clock': 0, 'memory_clock': 0, 'temperature': 0, 'utilization': 0, 'power_usage': 0, 'fan_speed': 0, 'gpu_index': 0, 'gpu_count': 1, 'driver_version': 'Unknown', 'nvapi_available': False, 'platform': 'Windows'}
+2025-09-09 22:37:08,172 - __main__ - INFO - Test completed in 0.06 seconds
+2025-09-09 22:37:08,174 - __main__ - INFO - Test setup completed successfully
+2025-09-09 22:37:08,174 - __main__ - INFO - Testing health provider network...
+2025-09-09 22:37:08,175 - nvidia_integration - INFO - Fetching health provider network from NVIDIA website
+2025-09-09 22:37:08,958 - __main__ - INFO - Test completed in 0.78 seconds
+2025-09-09 22:37:09,039 - __main__ - INFO - Test setup completed successfully
+2025-09-09 22:37:09,039 - __main__ - INFO - Testing loan status checking...
+2025-09-09 22:37:09,039 - nvidia_integration - INFO - Processing auto loan application through NVIDIA benefits
+2025-09-09 22:37:09,039 - nvidia_integration - INFO - Fetching benefits resources from NVIDIA money benefits page
+2025-09-09 22:37:09,473 - nvidia_integration - INFO - Fetching ESPP details from NVIDIA ESPP page
+2025-09-09 22:37:10,069 - __main__ - INFO - Skipping loan status test - loan application not successful
+2025-09-09 22:37:10,069 - __main__ - INFO - Test completed in 1.03 seconds
+2025-09-09 22:37:10,069 - __main__ - INFO - Test setup completed successfully
+2025-09-09 22:37:10,069 - __main__ - INFO - Testing memory usage...
+2025-09-09 22:37:10,084 - nvidia_integration - INFO - Fetching benefits resources from NVIDIA money benefits page
+2025-09-09 22:37:10,587 - nvidia_integration - INFO - Fetching ESPP details from NVIDIA ESPP page
+2025-09-09 22:37:11,085 - nvidia_integration - INFO - Fetching driver updates from NVIDIA drivers page
+2025-09-09 22:37:11,784 - nvidia_integration - INFO - Fetching health provider network from NVIDIA website
+2025-09-09 22:37:12,466 - nvidia_integration - INFO - Fetching benefits resources from NVIDIA money benefits page
+2025-09-09 22:37:13,031 - nvidia_integration - INFO - Fetching ESPP details from NVIDIA ESPP page
+2025-09-09 22:37:13,391 - nvidia_integration - INFO - Fetching driver updates from NVIDIA drivers page
+2025-09-09 22:37:14,065 - nvidia_integration - INFO - Fetching health provider network from NVIDIA website
+2025-09-09 22:37:14,490 - nvidia_integration - INFO - Fetching benefits resources from NVIDIA money benefits page
+2025-09-09 22:37:14,914 - nvidia_integration - INFO - Fetching ESPP details from NVIDIA ESPP page
+2025-09-09 22:37:15,416 - nvidia_integration - INFO - Fetching driver updates from NVIDIA drivers page
+2025-09-09 22:37:16,090 - nvidia_integration - INFO - Fetching health provider network from NVIDIA website
+2025-09-09 22:37:17,297 - nvidia_integration - INFO - Fetching benefits resources from NVIDIA money benefits page
+2025-09-09 22:37:17,705 - nvidia_integration - INFO - Fetching ESPP details from NVIDIA ESPP page
+2025-09-09 22:37:18,286 - nvidia_integration - INFO - Fetching driver updates from NVIDIA drivers page
+2025-09-09 22:37:19,023 - nvidia_integration - INFO - Fetching health provider network from NVIDIA website
+2025-09-09 22:37:19,463 - nvidia_integration - INFO - Fetching benefits resources from NVIDIA money benefits page
+2025-09-09 22:37:19,932 - nvidia_integration - INFO - Fetching ESPP details from NVIDIA ESPP page
+2025-09-09 22:37:20,448 - nvidia_integration - INFO - Fetching driver updates from NVIDIA drivers page
+2025-09-09 22:37:21,218 - nvidia_integration - INFO - Fetching health provider network from NVIDIA website
+2025-09-09 22:37:21,632 - nvidia_integration - INFO - Fetching benefits resources from NVIDIA money benefits page
+2025-09-09 22:37:22,158 - nvidia_integration - INFO - Fetching ESPP details from NVIDIA ESPP page
+2025-09-09 22:37:22,519 - nvidia_integration - INFO - Fetching driver updates from NVIDIA drivers page
+2025-09-09 22:37:23,245 - nvidia_integration - INFO - Fetching health provider network from NVIDIA website
+2025-09-09 22:37:23,946 - nvidia_integration - INFO - Fetching benefits resources from NVIDIA money benefits page
+2025-09-09 22:37:24,353 - nvidia_integration - INFO - Fetching ESPP details from NVIDIA ESPP page
+2025-09-09 22:37:25,216 - nvidia_integration - INFO - Fetching driver updates from NVIDIA drivers page
+2025-09-09 22:37:25,734 - nvidia_integration - INFO - Fetching health provider network from NVIDIA website
+2025-09-09 22:37:26,109 - nvidia_integration - INFO - Fetching benefits resources from NVIDIA money benefits page
+2025-09-09 22:37:26,565 - nvidia_integration - INFO - Fetching ESPP details from NVIDIA ESPP page
+2025-09-09 22:37:27,082 - nvidia_integration - INFO - Fetching driver updates from NVIDIA drivers page
+2025-09-09 22:37:27,552 - nvidia_integration - INFO - Fetching health provider network from NVIDIA website
+2025-09-09 22:37:27,965 - nvidia_integration - INFO - Fetching benefits resources from NVIDIA money benefits page
+2025-09-09 22:37:28,398 - nvidia_integration - INFO - Fetching ESPP details from NVIDIA ESPP page
+2025-09-09 22:37:29,357 - nvidia_integration - INFO - Fetching driver updates from NVIDIA drivers page
+2025-09-09 22:37:29,873 - nvidia_integration - INFO - Fetching health provider network from NVIDIA website
+2025-09-09 22:37:30,438 - nvidia_integration - INFO - Fetching benefits resources from NVIDIA money benefits page
+2025-09-09 22:37:31,049 - nvidia_integration - INFO - Fetching ESPP details from NVIDIA ESPP page
+2025-09-09 22:37:31,819 - nvidia_integration - INFO - Fetching driver updates from NVIDIA drivers page
+2025-09-09 22:37:32,351 - nvidia_integration - INFO - Fetching health provider network from NVIDIA website
+2025-09-09 22:37:35,022 - __main__ - INFO - Test completed in 24.95 seconds
+2025-09-09 22:37:35,214 - __main__ - INFO - Test setup completed successfully
+2025-09-09 22:37:35,256 - __main__ - INFO - Testing module import...
+2025-09-09 22:37:35,367 - __main__ - INFO - Test completed in 0.15 seconds
+2025-09-09 22:37:35,369 - __main__ - INFO - Test setup completed successfully
+2025-09-09 22:37:35,369 - __main__ - INFO - Testing performance benchmarks...
+2025-09-09 22:37:35,374 - nvidia_integration - INFO - Fetching benefits resources from NVIDIA money benefits page
+2025-09-09 22:37:36,115 - nvidia_integration - INFO - Fetching ESPP details from NVIDIA ESPP page
+2025-09-09 22:37:37,102 - nvidia_integration - INFO - Fetching benefits resources from NVIDIA money benefits page
+2025-09-09 22:37:37,672 - nvidia_integration - INFO - Fetching ESPP details from NVIDIA ESPP page
+2025-09-09 22:37:38,060 - nvidia_integration - INFO - Fetching benefits resources from NVIDIA money benefits page
+2025-09-09 22:37:38,525 - nvidia_integration - INFO - Fetching ESPP details from NVIDIA ESPP page
+2025-09-09 22:37:39,371 - nvidia_integration - INFO - Fetching benefits resources from NVIDIA money benefits page
+2025-09-09 22:37:39,868 - nvidia_integration - INFO - Fetching ESPP details from NVIDIA ESPP page
+2025-09-09 22:37:40,473 - nvidia_integration - INFO - Fetching benefits resources from NVIDIA money benefits page
+2025-09-09 22:37:41,115 - nvidia_integration - INFO - Fetching ESPP details from NVIDIA ESPP page
+2025-09-09 22:37:41,981 - nvidia_integration - INFO - Fetching driver updates from NVIDIA drivers page
+2025-09-09 22:37:42,759 - nvidia_integration - INFO - Fetching driver updates from NVIDIA drivers page
+2025-09-09 22:37:43,261 - nvidia_integration - INFO - Fetching driver updates from NVIDIA drivers page
+2025-09-09 22:37:43,996 - nvidia_integration - INFO - Fetching driver updates from NVIDIA drivers page
+2025-09-09 22:37:44,757 - nvidia_integration - INFO - Fetching driver updates from NVIDIA drivers page
+2025-09-09 22:37:46,083 - __main__ - INFO - Test completed in 10.71 seconds
+2025-09-09 22:37:46,084 - __main__ - INFO - Test setup completed successfully
+2025-09-09 22:37:46,085 - __main__ - INFO - Testing complete purchase integration...
+2025-09-09 22:37:46,085 - nvidia_integration - INFO - Integrating auto purchase with NVIDIA loan financing
+2025-09-09 22:37:46,086 - nvidia_integration - INFO - Processing auto loan application through NVIDIA benefits
+2025-09-09 22:37:46,086 - nvidia_integration - INFO - Fetching benefits resources from NVIDIA money benefits page
+2025-09-09 22:37:46,541 - nvidia_integration - INFO - Fetching ESPP details from NVIDIA ESPP page
+2025-09-09 22:37:47,395 - __main__ - INFO - Test completed in 1.31 seconds
+2025-09-09 22:37:47,404 - __main__ - INFO - Running additional performance tests...
+2025-09-09 22:37:47,406 - nvidia_integration - INFO - Fetching benefits resources from NVIDIA money benefits page
+2025-09-09 22:37:47,962 - nvidia_integration - INFO - Fetching ESPP details from NVIDIA ESPP page
+2025-09-09 22:37:48,424 - nvidia_integration - INFO - Fetching driver updates from NVIDIA drivers page
+2025-09-09 22:37:49,127 - nvidia_integration - INFO - Fetching benefits resources from NVIDIA money benefits page
+2025-09-09 22:37:49,791 - nvidia_integration - INFO - Fetching ESPP details from NVIDIA ESPP page
+2025-09-09 22:37:50,360 - nvidia_integration - INFO - Fetching driver updates from NVIDIA drivers page
+2025-09-09 22:37:50,959 - nvidia_integration - INFO - Fetching benefits resources from NVIDIA money benefits page
+2025-09-09 22:37:51,592 - nvidia_integration - INFO - Fetching ESPP details from NVIDIA ESPP page
+2025-09-09 22:37:52,292 - nvidia_integration - INFO - Fetching driver updates from NVIDIA drivers page
+2025-09-09 22:37:52,859 - nvidia_integration - INFO - Fetching benefits resources from NVIDIA money benefits page
+2025-09-09 22:37:53,326 - nvidia_integration - INFO - Fetching ESPP details from NVIDIA ESPP page
+2025-09-09 22:37:54,551 - nvidia_integration - INFO - Fetching driver updates from NVIDIA drivers page
+2025-09-09 22:37:56,881 - nvidia_integration - INFO - Fetching benefits resources from NVIDIA money benefits page
+2025-09-09 22:37:58,122 - nvidia_integration - INFO - Fetching ESPP details from NVIDIA ESPP page
+2025-09-09 22:37:59,188 - nvidia_integration - INFO - Fetching driver updates from NVIDIA drivers page
+2025-09-09 22:38:00,441 - __main__ - INFO - Running integration tests...
+2025-09-09 22:38:00,443 - nvidia_integration - INFO - Fetching benefits resources from NVIDIA money benefits page
+2025-09-09 22:38:01,044 - nvidia_integration - INFO - Fetching ESPP details from NVIDIA ESPP page

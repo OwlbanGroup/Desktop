@@ -1,0 +1,22 @@
+
+[Unit]
+Description=NVIDIA Control Panel API
+After=network.target
+Requires=redis-server.service
+
+[Service]
+Type=exec
+User=www-data
+Group=www-data
+WorkingDirectory=C:\Users\tiffa\OneDrive\Desktop
+Environment=PATH=C:\Users\tiffa\OneDrive\Desktop/.venv/bin
+ExecStart=C:\Users\tiffa\OneDrive\Desktop/.venv/bin/gunicorn --config gunicorn.conf.py app_production:app
+ExecReload=/bin/kill -s HUP $MAINPID
+KillMode=mixed
+TimeoutStopSec=5
+PrivateTmp=true
+RestartSec=5
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

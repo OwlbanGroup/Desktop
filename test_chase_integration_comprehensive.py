@@ -303,7 +303,8 @@ def run_performance_benchmark():
                 'samples': len(times)
             }
 
-            print(".3f"
+            print(f"Endpoint: {endpoint}, Avg: {avg_time:.3f}s, Min: {min_time:.3f}s, Max: {max_time:.3f}s")
+
     return results
 
 def run_integration_test():
@@ -373,7 +374,7 @@ def main():
     if benchmark_results:
         print("\nPerformance Benchmarks:")
         for endpoint, data in benchmark_results.items():
-            print(".3f"
+            print(f"Endpoint: {endpoint}, Avg: {data['avg']:.3f}s, Min: {data['min']:.3f}s, Max: {data['max']:.3f}s")
     print(f"\nIntegration Test: {'✅ PASSED' if integration_success else '❌ FAILED'}")
 
     # Overall assessment
