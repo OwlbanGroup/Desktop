@@ -25,6 +25,13 @@ spec_auto.loader.exec_module(chase_auto_finance)
 
 app.register_blueprint(chase_auto_finance.router, url_prefix='/chase-auto-finance')
 
+# Import chase_credit_cards using importlib
+spec_credit = importlib.util.spec_from_file_location("chase_credit_cards", os.path.join(os.getcwd(), 'OSCAR-BROOME-REVENUE', 'earnings_dashboard', 'chase_credit_cards.py'))
+chase_credit_cards = importlib.util.module_from_spec(spec_credit)
+spec_credit.loader.exec_module(chase_credit_cards)
+
+app.register_blueprint(chase_credit_cards.router, url_prefix='/chase-credit-cards')
+
 def main():
     parser = argparse.ArgumentParser(
         description="Organizational Leadership CLI",
