@@ -6,7 +6,7 @@ Provides SQLAlchemy engine and session management with MySQL and PostgreSQL supp
 import os
 import logging
 from typing import Optional, Any
-from sqlalchemy import create_engine, MetaData
+from sqlalchemy import create_engine, MetaData, text
 from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy.pool import QueuePool
 from sqlalchemy.exc import SQLAlchemyError
@@ -63,7 +63,7 @@ class DatabaseManager:
 
             # Test connection
             with self.engine.connect() as conn:
-                conn.execute("SELECT 1")
+                conn.execute(text("SELECT 1"))
                 logger.info("Database connection established successfully")
 
         except SQLAlchemyError as e:
@@ -102,22 +102,56 @@ class DatabaseManager:
             db.close()
 
     def health_check(self) -> dict:
-        """Perform database health check"""
+        """Perform comprehensive database health check"""
         try:
             with self.engine.connect() as conn:
-                result = conn.execute("SELECT 1 as health_check")
+                # Test basic connectivity
+                result = conn.execute(text("SELECT 1 as health_check, NOW() as current_time"))
                 row = result.fetchone()
+
+                # Test connection pool status
+                pool_status = {
+                    "pool_size": self.engine.pool.size(),
+                    "checked_out": self.engine.pool.checkedout(),
+                    "overflow": self.engine.pool.overflow(),
+                    "invalid": self.engine.pool.invalid()
+                }
+
+                # Test database-specific queries
+                db_info = {}
+                if self._connection_string.startswith('mysql'):
+                    db_result = conn.execute(text("SELECT VERSION() as version, DATABASE() as database_name"))
+                    db_row = db_result.fetchone()
+                    db_info = {
+                        "version": db_row[0],
+                        "database_name": db_row[1],
+                        "type": "MySQL"
+                    }
+                elif self._connection_string.startswith('postgresql'):
+                    db_result = conn.execute(text("SELECT version(), current_database()"))
+                    db_row = db_result.fetchone()
+                    db_info = {
+                        "version": db_row[0][:50] + "...",  # Truncate long version string
+                        "database_name": db_row[1],
+                        "type": "PostgreSQL"
+                    }
+
                 return {
                     "status": "healthy",
                     "message": "Database connection is working",
-                    "timestamp": str(result)
+                    "timestamp": str(row[1]),
+                    "pool_status": pool_status,
+                    "database_info": db_info,
+                    "response_time_ms": 0  # Could be enhanced with timing
                 }
         except Exception as e:
             logger.error(f"Database health check failed: {e}")
             return {
                 "status": "unhealthy",
                 "message": f"Database connection failed: {str(e)}",
-                "timestamp": str(e)
+                "timestamp": str(e),
+                "pool_status": None,
+                "database_info": None
             }
 
     def close(self) -> None:
