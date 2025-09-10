@@ -36,30 +36,31 @@ interface EmployeeId {
   department?: string;
 }
 
+// Mock data for testing
+const mockEmployee: PayrollEmployee = {
+  id: 'EMP001',
+  accountNumber: '123456789',
+  routingNumber: '021000021',
+  name: 'John Doe',
+  department: 'Engineering',
+  salary: 75000,
+  taxRate: 0.25
+};
+
+const mockPayrollData: PayrollData = {
+  employeeId: 'EMP001',
+  salary: 75000,
+  taxRate: 0.25,
+  deductions: 5000,
+  bonuses: 2000,
+  date: '2024-01-15',
+  amount: 60000
+};
+
 // Final Integration Test Suite
 describe('Payroll Integration Final Comprehensive Tests', () => {
   let payrollIntegration: PayrollIntegration;
   let qbPayrollIntegration: QuickBooksPayrollIntegration;
-
-  const mockEmployee: PayrollEmployee = {
-    id: 'EMP001',
-    accountNumber: '123456789',
-    routingNumber: '021000021',
-    name: 'John Doe',
-    department: 'Engineering',
-    salary: 75000,
-    taxRate: 0.25
-  };
-
-  const mockPayrollData: PayrollData = {
-    employeeId: 'EMP001',
-    salary: 75000,
-    taxRate: 0.25,
-    deductions: 5000,
-    bonuses: 2000,
-    date: '2024-01-15',
-    amount: 60000
-  };
 
   beforeEach(() => {
     payrollIntegration = new PayrollIntegration('https://api.payroll.com', 'test-token');
@@ -379,4 +380,4 @@ describe('Payroll Integration Final Comprehensive Tests', () => {
 });
 
 // Export for use in other test files
-export { mockEmployee, PayrollData as mockPayrollData };
+export { mockEmployee, mockPayrollData };
