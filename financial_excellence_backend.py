@@ -87,6 +87,10 @@ def real_time_monitoring():
             dashboard_data = tracker.generate_executive_dashboard(period_days=30)
             socketio.emit('dashboard_update', dashboard_data)
 
+            # Send excellence scorecard updates
+            excellence_data = excellence_manager.get_excellence_scorecard()
+            socketio.emit('excellence_update', excellence_data)
+
             # Sleep for 30 seconds
             time.sleep(30)
 
@@ -100,6 +104,11 @@ def index():
     """Serve the main dashboard"""
     return render_template('dashboard.html')
 
+@app.route('/financial-excellence')
+def financial_excellence_dashboard():
+    """Serve the financial excellence dashboard"""
+    return render_template('financial_excellence.html')
+
 @app.route('/api/dashboard')
 def get_dashboard():
     """Get comprehensive dashboard data"""
@@ -107,6 +116,33 @@ def get_dashboard():
         period_days = int(request.args.get('period', 30))
         dashboard_data = tracker.generate_executive_dashboard(period_days=period_days)
         return jsonify(dashboard_data)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/excellence-dashboard')
+def get_excellence_dashboard():
+    """Get financial excellence dashboard data"""
+    try:
+        executive_summary = dashboard.get_executive_summary()
+        performance_trends = dashboard.get_performance_trends()
+        category_analysis = dashboard.get_category_analysis()
+        excellence_scorecard = excellence_manager.get_excellence_scorecard()
+
+        return jsonify({
+            'executive_summary': executive_summary,
+            'performance_trends': performance_trends,
+            'category_analysis': category_analysis,
+            'excellence_scorecard': excellence_scorecard
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/excellence-scorecard')
+def get_excellence_scorecard():
+    """Get financial excellence scorecard"""
+    try:
+        scorecard = excellence_manager.get_excellence_scorecard()
+        return jsonify(scorecard)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
@@ -154,6 +190,26 @@ def get_alerts():
     try:
         alerts = tracker.generate_financial_alerts()
         return jsonify({'alerts': alerts})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/performance-trends')
+def get_performance_trends():
+    """Get performance trends analysis"""
+    try:
+        months = int(request.args.get('months', 6))
+        trends = dashboard.get_performance_trends(months=months)
+        return jsonify(trends)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/category-analysis')
+def get_category_analysis():
+    """Get category performance analysis"""
+    try:
+        period_days = int(request.args.get('period', 30))
+        analysis = dashboard.get_category_analysis(period_days=period_days)
+        return jsonify(analysis)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
@@ -295,6 +351,15 @@ def handle_dashboard_request():
     except Exception as e:
         emit('error', {'message': str(e)})
 
+@socketio.on('request_excellence_update')
+def handle_excellence_request():
+    """Handle request for excellence dashboard update"""
+    try:
+        excellence_data = excellence_manager.get_excellence_scorecard()
+        emit('excellence_update', excellence_data)
+    except Exception as e:
+        emit('error', {'message': str(e)})
+
 if __name__ == '__main__':
     # Initialize sample data
     initialize_sample_data()
@@ -305,3 +370,5 @@ if __name__ == '__main__':
 
     # Run the Flask app with SocketIO
     socketio.run(app, host='0.0.0.0', port=5000, debug=True)
+
+
