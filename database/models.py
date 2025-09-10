@@ -64,39 +64,17 @@ class RevenueRecord(Base):
     __tablename__ = 'revenue_records'
 
     id = Column(Integer, primary_key=True)
-    source = Column(String(100), nullable=False)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     amount = Column(Float, nullable=False)
+    description = Column(String(200))
     category = Column(String(50))
-    description = Column(Text)
+    source = Column(String(50))
     recorded_at = Column(DateTime, default=datetime.utcnow)
-    leadership_session_id = Column(Integer, ForeignKey('leadership_sessions.id'))
-
-class GPUSettings(Base):
-    """NVIDIA GPU settings model"""
-    __tablename__ = 'gpu_settings'
-
-    id = Column(Integer, primary_key=True)
-    gpu_id = Column(String(50), nullable=False)
-    settings = Column(JSON, nullable=False)  # Store GPU settings as JSON
-    performance_metrics = Column(JSON)  # Store performance data
-    recorded_at = Column(DateTime, default=datetime.utcnow)
-
-class Payment(Base):
-    """Payment transaction model"""
-    __tablename__ = 'payments'
-
-    id = Column(Integer, primary_key=True)
-    payment_id = Column(String(100), unique=True, nullable=False)
-    amount = Column(Float, nullable=False)
-    currency = Column(String(3), default='USD')
-    status = Column(String(20), default='pending')  # pending, completed, failed, refunded
-    payment_method = Column(String(50))  # jpmorgan, chase, etc.
-    transaction_data = Column(JSON)  # Store full transaction details
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
 class LoginOverride(Base):
-    """Login override model"""
+    """Login override model for emergency access"""
     __tablename__ = 'login_overrides'
 
     id = Column(Integer, primary_key=True)

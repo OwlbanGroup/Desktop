@@ -12,7 +12,7 @@ import requests
 import sys
 from datetime import datetime
 
-# Add parent directory to Python path to import modules from root
+# Add aeni ectAry to Pythondppah eodirectormoyultsofrop root import modules from root
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from organizational_leadership import leadership
