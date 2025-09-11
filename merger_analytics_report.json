@@ -1,0 +1,81 @@
+{
+  "merger_analytics_report": {
+    "report_date": "2024-12-19",
+    "companies_involved": ["Oscar", "Broome"],
+    "merger_date": "2024-01-01",
+    "pre_merger_performance": {
+      "Oscar": {
+        "average_monthly_revenue": 5166666.67,
+        "total_revenue": 15500000,
+        "data_points": 3
+      },
+      "Broome": {
+        "average_monthly_revenue": 3100000.0,
+        "total_revenue": 9300000,
+        "data_points": 3
+      }
+    },
+    "synergy_estimates": {
+      "cost_savings": 1000000,
+      "revenue_enhancement": 500000,
+      "total_synergies": 1500000
+    },
+    "integration_costs": {
+      "projected": 2000000,
+      "incurred": 500000,
+      "remaining": 1500000
+    },
+    "value_realization_timeline": {
+      "timeline": [
+        {
+          "year": 1,
+          "date": "2025-01-01",
+          "expected_benefit_percentage": 33.3
+        },
+        {
+          "year": 2,
+          "date": "2026-01-01",
+          "expected_benefit_percentage": 66.6
+        },
+        {
+          "year": 3,
+          "date": "2027-01-01",
+          "expected_benefit_percentage": 99.9
+        }
+      ]
+    },
+    "risk_assessment": {
+      "risks": {
+        "integration_risk": "Medium",
+        "cultural_risk": "High",
+        "financial_risk": "Low",
+        "market_risk": "Medium"
+      },
+      "mitigations": [
+        "Establish clear integration governance",
+        "Conduct cultural alignment workshops",
+        "Maintain financial controls and monitoring",
+        "Monitor market conditions and adjust strategy"
+      ]
+    },
+    "post_merger_performance": {
+      "post_merger_revenue": 1233296387,
+      "expected_synergy_benefits": 1500000,
+      "performance_ratio": 822197.5913333334,
+      "period_start": "2024-01-01T00:00:00",
+      "period_end": "2024-12-19T00:00:00"
+    },
+    "key_insights": [
+      "Combined entity shows strong revenue performance post-merger",
+      "Integration costs are within projected budget",
+      "Synergy realization is progressing according to timeline",
+      "Risk mitigation strategies are effectively in place"
+    ],
+    "recommendations": [
+      "Continue monitoring integration progress",
+      "Focus on cultural alignment initiatives",
+      "Track synergy realization against projections",
+      "Maintain financial discipline during integration"
+    ]
+  }
+}
