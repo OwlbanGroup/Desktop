@@ -19,3 +19,32 @@ ModuleNotFoundError: No module named 'alembic'
     from alembic import command
 ModuleNotFoundError: No module named 'alembic'
 
+2025-09-10 23:29:35,199 - INFO - Executing: python database/migrations.py test
+2025-09-10 23:29:58,171 - ERROR - STDOUT: 
+2025-09-10 23:29:58,183 - ERROR - STDERR: Traceback (most recent call last):
+  File "C:\Users\tiffa\OneDrive\Desktop\database\migrations.py", line 24, in <module>
+    from database.connection import engine, test_connection
+ImportError: cannot import name 'engine' from 'database.connection' (C:\Users\tiffa\OneDrive\Desktop\database\connection.py)
+
+2025-09-10 23:29:58,191 - INFO - Executing: curl -f http://localhost:8000/health
+2025-09-10 23:30:03,428 - ERROR - STDOUT: 
+2025-09-10 23:30:03,428 - ERROR - STDERR:   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+  0     0    0     0    0     0      0      0 --:--:--  0:00:01 --:--:--     0
+  0     0    0     0    0     0      0      0 --:--:--  0:00:02 --:--:--     0
+  0     0    0     0    0     0      0      0 --:--:--  0:00:02 --:--:--     0
+curl: (7) Failed to connect to localhost port 8000 after 2256 ms: Couldn't connect to server
+
+2025-09-10 23:30:03,428 - INFO - Executing: curl -f http://localhost/health
+2025-09-10 23:30:05,868 - ERROR - STDOUT: 
+2025-09-10 23:30:05,869 - ERROR - STDERR:   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+  0     0    0     0    0     0      0      0 --:--:--  0:00:01 --:--:--     0
+  0     0    0     0    0     0      0      0 --:--:--  0:00:02 --:--:--     0
+curl: (7) Failed to connect to localhost port 80 after 2239 ms: Couldn't connect to server
+
