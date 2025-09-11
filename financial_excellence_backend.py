@@ -14,6 +14,7 @@ import time
 from datetime import datetime, timedelta
 import logging
 from financial_analytics_engine import AdvancedRevenueTracker, RevenueCategory
+from financial_dashboard import FinancialDashboard, FinancialExcellenceManager
 import os
 
 # Configure logging
@@ -26,6 +27,10 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 
 # Initialize the financial analytics engine
 tracker = AdvancedRevenueTracker()
+
+# Initialize dashboard and excellence manager
+dashboard = FinancialDashboard(tracker)
+excellence_manager = FinancialExcellenceManager(tracker)
 
 # Sample data for demonstration
 def initialize_sample_data():

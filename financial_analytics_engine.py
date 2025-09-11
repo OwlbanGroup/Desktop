@@ -368,6 +368,17 @@ class AdvancedRevenueTracker:
 
         return [{'month': month, 'total': total} for month, total in results]
 
+    def _get_category_enum(self, category_name: str) -> Optional[RevenueCategory]:
+        """Safely convert category name string to RevenueCategory enum"""
+        try:
+            # Try to match the category name to enum values
+            for enum_value in RevenueCategory:
+                if enum_value.value == category_name:
+                    return enum_value
+            return None
+        except (ValueError, AttributeError):
+            return None
+
     def calculate_comprehensive_kpis(self, current_period_days: int = 30, previous_period_days: int = 30) -> Dict[str, Any]:
         """Calculate comprehensive financial KPIs with advanced metrics"""
         now = datetime.utcnow()
@@ -392,9 +403,14 @@ class AdvancedRevenueTracker:
         # Calculate category growth rates
         category_growth = {}
         for category in category_breakdown.keys():
-            current_cat = self.get_total_revenue(category=RevenueCategory(category), start_date=current_start, end_date=now)
-            previous_cat = self.get_total_revenue(category=RevenueCategory(category), start_date=previous_start, end_date=current_start)
-            category_growth[category] = self.kpis.calculate_growth_rate(current_cat, previous_cat)
+            category_enum = self._get_category_enum(category)
+            if category_enum:
+                current_cat = self.get_total_revenue(category=category_enum, start_date=current_start, end_date=now)
+                previous_cat = self.get_total_revenue(category=category_enum, start_date=previous_start, end_date=current_start)
+                category_growth[category] = self.kpis.calculate_growth_rate(current_cat, previous_cat)
+            else:
+                # If category doesn't match enum, calculate without category filter
+                category_growth[category] = 0.0
 
         return {
             'current_period_revenue': current_revenue,

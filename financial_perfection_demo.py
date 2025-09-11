@@ -18,33 +18,47 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 def demonstrate_revenue_tracking():
     """Demonstrate revenue tracking capabilities."""
-    print("🦉 Initializing Revenue Tracking System...")
+    print("🦉 Initializing Advanced Revenue Tracking System...")
 
     try:
-        from revenue_tracking import RevenueTracker
-        tracker = RevenueTracker()
+        from financial_analytics_engine import AdvancedRevenueTracker, RevenueCategory
+        tracker = AdvancedRevenueTracker()
 
-        # Add sample revenue records
+        # Add comprehensive sample revenue records
         sample_data = [
-            ("Product Sales Q1", 150000.00),
-            ("Service Revenue Q1", 75000.00),
-            ("Consulting Fees", 45000.00),
-            ("Subscription Revenue", 25000.00),
-            ("Partnership Income", 35000.00),
-            ("Investment Returns", 55000.00),
+            ("Product Sales Q1", 150000.00, RevenueCategory.SALES),
+            ("Service Revenue Q1", 75000.00, RevenueCategory.SERVICES),
+            ("Consulting Fees", 45000.00, RevenueCategory.SERVICES),
+            ("Subscription Revenue", 25000.00, RevenueCategory.SUBSCRIPTIONS),
+            ("Partnership Income", 35000.00, RevenueCategory.INVESTMENTS),
+            ("Investment Returns", 55000.00, RevenueCategory.INVESTMENTS),
+            ("Q2 Product Sales", 180000.00, RevenueCategory.SALES),
+            ("Q2 Service Revenue", 82000.00, RevenueCategory.SERVICES),
+            ("Q2 Subscriptions", 32000.00, RevenueCategory.SUBSCRIPTIONS),
+            ("Q2 Investments", 48000.00, RevenueCategory.INVESTMENTS),
         ]
 
-        for description, amount in sample_data:
-            tracker.add_record(description, amount)
+        for description, amount, category in sample_data:
+            tracker.add_record(
+                description=description,
+                amount=amount,
+                category=category,
+                source="Financial Perfection Demo"
+            )
             time.sleep(0.1)
 
         total_revenue = tracker.get_total_revenue()
-        print(f"✅ Revenue tracking initialized: ${total_revenue:,.2f} total revenue")
-        return True, total_revenue
+        print(f"✅ Advanced revenue tracking initialized: ${total_revenue:,.2f} total revenue")
+
+        # Generate executive dashboard
+        dashboard_data = tracker.generate_executive_dashboard()
+        print(f"   📊 Dashboard generated with {len(dashboard_data.get('category_performance', {}).get('top_performers', []))} top performers")
+
+        return True, total_revenue, tracker
 
     except ImportError as e:
         print(f"⚠️  Revenue tracking not available: {e}")
-        return False, 0
+        return False, 0, None
 
 def demonstrate_leadership_simulation():
     """Demonstrate leadership simulation capabilities."""
@@ -114,6 +128,41 @@ def demonstrate_nvidia_integration():
         print(f"⚠️  NVIDIA integration not available: {e}")
         return False
 
+def demonstrate_financial_excellence():
+    """Demonstrate financial excellence components."""
+    print("\n💎 Initializing Financial Excellence System...")
+
+    try:
+        from financial_dashboard import FinancialDashboard, FinancialExcellenceManager
+        from financial_analytics_engine import AdvancedRevenueTracker
+
+        # Initialize components
+        tracker = AdvancedRevenueTracker()
+        dashboard = FinancialDashboard(tracker)
+        excellence_manager = FinancialExcellenceManager(tracker)
+
+        # Get executive summary
+        summary = dashboard.get_executive_summary()
+        print(f"✅ Executive summary generated: {len(summary)} key metrics")
+
+        # Get performance trends
+        trends = dashboard.get_performance_trends(months=6)
+        print(f"   📈 Performance trends analyzed: {len(trends.get('monthly_trends', []))} months")
+
+        # Get excellence scorecard
+        scorecard = excellence_manager.get_excellence_scorecard()
+        print(f"   🏆 Excellence scorecard: {scorecard.get('overall_score', 'N/A')}")
+
+        # Get category analysis
+        analysis = dashboard.get_category_analysis()
+        print(f"   📊 Category analysis: {len(analysis.get('categories', {}))} categories")
+
+        return True
+
+    except ImportError as e:
+        print(f"⚠️  Financial excellence not available: {e}")
+        return False
+
 def generate_financial_report(total_revenue, components_status):
     """Generate a comprehensive financial report."""
     print("\n📊 Generating Financial Perfection Report...")
@@ -125,7 +174,8 @@ def generate_financial_report(total_revenue, components_status):
         "components": {
             "revenue_tracking": components_status["revenue"],
             "leadership_simulation": components_status["leadership"],
-            "nvidia_ai": components_status["nvidia"]
+            "nvidia_ai": components_status["nvidia"],
+            "financial_excellence": components_status["excellence"]
         },
         "metrics": {
             "total_revenue": total_revenue,
@@ -138,7 +188,10 @@ def generate_financial_report(total_revenue, components_status):
             "Perfect integration between AI and financial systems",
             "Real-time analytics providing actionable insights",
             "Enterprise-grade security protecting all transactions",
-            "Scalable architecture supporting unlimited growth"
+            "Scalable architecture supporting unlimited growth",
+            "Financial excellence dashboard providing comprehensive insights",
+            "Advanced analytics engine processing real-time data",
+            "Leadership simulation optimizing decision-making processes"
         ]
     }
 
@@ -155,13 +208,14 @@ def main():
     print("=" * 60)
 
     start_time = time.time()
-    components_status = {"revenue": False, "leadership": False, "nvidia": False}
+    components_status = {"revenue": False, "leadership": False, "nvidia": False, "excellence": False}
     total_revenue = 0
 
     # Demonstrate each component
-    components_status["revenue"], total_revenue = demonstrate_revenue_tracking()
+    components_status["revenue"], total_revenue, tracker = demonstrate_revenue_tracking()
     components_status["leadership"] = demonstrate_leadership_simulation()
     components_status["nvidia"] = demonstrate_nvidia_integration()
+    components_status["excellence"] = demonstrate_financial_excellence()
 
     # Generate final report
     report = generate_financial_report(total_revenue, components_status)
@@ -172,9 +226,10 @@ def main():
     print("\n" + "=" * 60)
     print("🎉 FINANCIAL PERFECTION ACHIEVED!")
     print("=" * 60)
-    print(".2f"    print(f"Components Active: {sum(components_status.values())}/3")
+    print(f"Components Active: {sum(components_status.values())}/4")
     print(f"System Status: {report['status']}")
     print(f"Total Revenue Tracked: ${report['metrics']['total_revenue']:,.2f}")
+    print(f"Execution Time: {execution_time:.2f} seconds")
 
     print("\n🔍 Key Insights:")
     for insight in report["insights"]:
