@@ -1,21 +1,30 @@
 
 groups:
-  - name: owlban
+  - name: nvidia_control_panel
     rules:
-      - alert: HighErrorRate
-        expr: rate(http_requests_total{status=~"5.."}[5m]) / rate(http_requests_total[5m]) > 0.05
+      - alert: HighCPUUsage
+        expr: cpu_usage_percent > 90
         for: 5m
         labels:
-          severity: critical
+          severity: warning
         annotations:
-          summary: "High error rate detected"
-          description: "Error rate is above 5% for more than 5 minutes"
+          summary: "High CPU usage detected"
+          description: "CPU usage is above 90% for more than 5 minutes"
 
-      - alert: ServiceDown
+      - alert: HighMemoryUsage
+        expr: memory_usage_percent > 85
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High memory usage detected"
+          description: "Memory usage is above 85% for more than 5 minutes"
+
+      - alert: ApplicationDown
         expr: up == 0
         for: 1m
         labels:
           severity: critical
         annotations:
-          summary: "Service is down"
-          description: "Owlban service is not responding"
+          summary: "Application is down"
+          description: "NVIDIA Control Panel API is not responding"

@@ -537,10 +537,10 @@ response=$(curl -s -w "%{http_code}" -o /dev/null --max-time $TIMEOUT $HEALTH_UR
 exit_code=$?
 
 if [ $exit_code -eq 0 ] && [ "$response" = "200" ]; then
-    echo "✅ Application is healthy"
+    echo "[SUCCESS] Application is healthy"
     exit 0
 else
-    echo "❌ Application is unhealthy (HTTP $response)"
+    echo "[ERROR] Application is unhealthy (HTTP $response)"
     exit 1
 fi
 '''
@@ -749,26 +749,26 @@ volumes:
                 if result is False:
                     logger.error(f"Failed at step: {step_name}")
                     return False
-                logger.info(f"✅ Completed: {step_name}")
+                logger.info(f"[SUCCESS] Completed: {step_name}")
             except Exception as e:
                 logger.error(f"Error in {step_name}: {e}")
                 return False
 
-        logger.info("🎉 Production deployment completed successfully!")
+        logger.info("[SUCCESS] Production deployment completed successfully!")
         return True
 
     def show_deployment_info(self):
         """Show deployment information and next steps"""
         print("\n" + "="*60)
-        print("🚀 NVIDIA Control Panel API - Production Deployment Complete!")
+        print("[DEPLOYMENT] NVIDIA Control Panel API - Production Deployment Complete!")
         print("="*60)
 
-        print("\n📋 Deployment Summary:")
+        print("\n[SUMMARY] Deployment Summary:")
         print(f"   • Application: {self.config['app']['name']} v{self.config['app']['version']}")
         print(f"   • Port: {self.config['app']['port']}")
         print(f"   • Environment: {self.config['deployment']['environment']}")
 
-        print("\n🔧 Next Steps:")
+        print("\n[NEXT STEPS] Next Steps:")
 
         print("\n1. Start the application:")
         print("   ./start_production.sh")
@@ -788,16 +788,16 @@ volumes:
         print("\n6. Prometheus Metrics:")
         print(f"   http://localhost:{self.config['app']['port']}/metrics")
 
-        print("\n🔒 Security Notes:")
+        print("\n[SECURITY] Security Notes:")
         print("   • Change the default API token in production")
         print("   • Configure proper SSL/TLS certificates")
         print("   • Set up firewall rules")
         print("   • Configure log rotation")
 
-        print("\n🐳 Docker Deployment:")
+        print("\n[DOCKER] Docker Deployment:")
         print("   docker-compose -f docker-compose.production.yml up -d")
 
-        print("\n📊 Monitoring:")
+        print("\n[MONITORING] Monitoring:")
         print("   • Prometheus: localhost:9090")
         print("   • Application metrics available at /metrics")
 
@@ -814,7 +814,7 @@ def main():
     deployer = ProductionDeployer(args.config)
 
     if args.dry_run:
-        print("🔍 Dry run mode - showing deployment plan:")
+        print("[DRY RUN] Dry run mode - showing deployment plan:")
         print("\nConfiguration:")
         print(json.dumps(deployer.config, indent=2))
         return
@@ -823,9 +823,9 @@ def main():
 
     if success:
         deployer.show_deployment_info()
-        print("\n✅ Deployment completed successfully!")
+        print("\n[SUCCESS] Deployment completed successfully!")
     else:
-        print("\n❌ Deployment failed. Check logs for details.")
+        print("\n[ERROR] Deployment failed. Check logs for details.")
         sys.exit(1)
 
 if __name__ == "__main__":

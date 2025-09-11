@@ -108,3 +108,69 @@ class NVIDIAMonitor:
             try:
                 self._collect_gpu_data()
                 self._collect_system_metrics()
+            except Exception as e:
+                logger.error(f"Error in monitoring loop: {e}")
+            time.sleep(5)  # Poll every 5 seconds
+
+    def _collect_gpu_data(self):
+        """Collect GPU data using nvidia-smi command."""
+        try:
+            result = subprocess.run(
+                ['nvidia-smi', '--query-gpu=index,name,utilization.gpu,memory.total,memory.used,temperature.gpu,driver_version', '--format=csv,noheader,nounits'],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                check=True
+            )
+            gpu_info = []
+            for line in result.stdout.strip().split('\n'):
+                parts = [part.strip() for part in line.split(',')]
+                if len(parts) == 7:
+                    gpu_data = {
+                        'index': int(parts[0]),
+                        'name': parts[1],
+                        'utilization_gpu_percent': int(parts[2]),
+                        'memory_total_mb': int(parts[3]),
+                        'memory_used_mb': int(parts[4]),
+                        'temperature_celsius': int(parts[5]),
+                        'driver_version': parts[6]
+                    }
+                    gpu_info.append(gpu_data)
+            self.gpu_data = gpu_info
+            global gpu_monitoring_data
+            gpu_monitoring_data.update({'gpus': gpu_info, 'timestamp': datetime.utcnow().isoformat()})
+            logger.debug(f"Collected GPU data: {gpu_info}")
+        except subprocess.CalledProcessError as e:
+            logger.error(f"Failed to collect GPU data: {e.stderr}")
+        except Exception as e:
+            logger.error(f"Unexpected error collecting GPU data: {e}")
+
+    def _collect_system_metrics(self):
+        """Collect system metrics using psutil and platform."""
+        try:
+            cpu_percent = psutil.cpu_percent(interval=1)
+            virtual_mem = psutil.virtual_memory()
+            disk_usage = psutil.disk_usage('/')
+            net_io = psutil.net_io_counters()
+            system_info = {
+                'cpu_percent': cpu_percent,
+                'memory_total_mb': virtual_mem.total // (1024 * 1024),
+                'memory_used_mb': virtual_mem.used // (1024 * 1024),
+                'memory_percent': virtual_mem.percent,
+                'disk_total_gb': disk_usage.total // (1024 * 1024 * 1024),
+                'disk_used_gb': disk_usage.used // (1024 * 1024 * 1024),
+                'disk_percent': disk_usage.percent,
+                'net_bytes_sent': net_io.bytes_sent,
+                'net_bytes_recv': net_io.bytes_recv,
+                'platform': platform.system(),
+                'platform_release': platform.release(),
+                'platform_version': platform.version(),
+                'architecture': platform.machine(),
+                'timestamp': datetime.utcnow().isoformat()
+            }
+            self.system_info = system_info
+            global system_metrics
+            system_metrics.update(system_info)
+            logger.debug(f"Collected system metrics: {system_info}")
+        except Exception as e:
+            logger.error(f"Failed to collect system metrics: {e}")
