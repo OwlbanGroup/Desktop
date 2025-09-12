@@ -25,7 +25,7 @@ class DatabaseManager:
         self._connection_string = self._build_connection_string()
 
     def _build_connection_string(self) -> str:
-        """Build database connection string from environment variables"""
+        """Build database connection string from environment variables with enhanced security"""
         db_type = os.getenv('DB_TYPE', 'mysql')
         db_host = os.getenv('DB_HOST', 'localhost')
         db_port = os.getenv('DB_PORT', '3306' if db_type == 'mysql' else '5432')
@@ -33,10 +33,22 @@ class DatabaseManager:
         db_user = os.getenv('DB_USER', 'root')
         db_password = os.getenv('DB_PASSWORD', '')
 
+        # Enhanced security: Validate inputs
+        if not db_host or db_host == 'localhost':
+            logger.warning("Using localhost database connection - ensure proper security measures are in place")
+
+        if not db_password:
+            logger.warning("No database password provided - this is a security risk in production")
+
+        # SSL configuration for production
+        ssl_mode = os.getenv('DB_SSL_MODE', 'require' if os.getenv('NODE_ENV') == 'production' else 'prefer')
+
         if db_type.lower() == 'mysql':
-            return f"mysql+pymysql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
+            ssl_params = f"?ssl_mode={ssl_mode}" if ssl_mode != 'disable' else ""
+            return f"mysql+pymysql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}{ssl_params}"
         elif db_type.lower() == 'postgresql':
-            return f"postgresql+psycopg2://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
+            ssl_params = f"?sslmode={ssl_mode}" if ssl_mode != 'disable' else ""
+            return f"postgresql+psycopg2://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}{ssl_params}"
         else:
             raise ValueError(f"Unsupported database type: {db_type}")
 
